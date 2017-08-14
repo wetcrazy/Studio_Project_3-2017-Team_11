@@ -78,16 +78,26 @@ void SceneCollision::CreateStuff()
 	platform = new GameObject(GameObject::GO_CANNON_PLATFORM);	// Platform for Cannon
 	platform->active = true;
 	platform->dir.Set(0, 1, 0);
+<<<<<<< HEAD
+	platform->pos.Set(133 / 8, 100 / 6.8, 0);
+	platform->scale.Set(1, 3, 1);
+	platform->Color.Set(1, 1, 0);
+=======
 	platform->pos.Set(133 / 8, 100 / 7.7, 0);
 	platform->scale.Set(2, 10, 1);
 	platform->Color.Set(1, 1, 1);
+>>>>>>> bda7c11d6f710f7a7da0ec06b2619f38efaee4d1
 	m_goList.push_back(platform);
 
 	cannon = new GameObject(GameObject::GO_CANNON);	// Cannon
 	cannon->active = true;
 	cannon->pos = platform->pos;
+<<<<<<< HEAD
+	cannon->scale.Set(1, 2.5, 1);
+=======
 	cannon->scale.Set(2, 7, 1);
 	cannon->Color.Set(1, 0, 0);
+>>>>>>> bda7c11d6f710f7a7da0ec06b2619f38efaee4d1
 	m_goList.push_back(cannon);
 }
 
@@ -480,6 +490,8 @@ void SceneCollision::RenderGO(GameObject *go)
 		RenderMesh(meshList[GEO_CUBE], true, go->Color);
 		modelStack.PopMatrix();
 		break;
+<<<<<<< HEAD
+=======
 	case GameObject::GO_CANNON_PLATFORM:
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
@@ -488,6 +500,7 @@ void SceneCollision::RenderGO(GameObject *go)
 		RenderMesh(meshList[GEO_CANNON_PLATFORM], true, go->Color);
 		modelStack.PopMatrix();
 		break;
+>>>>>>> bda7c11d6f710f7a7da0ec06b2619f38efaee4d1
 	case GameObject::GO_CANNON:
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
@@ -495,10 +508,23 @@ void SceneCollision::RenderGO(GameObject *go)
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 
 		modelStack.PushMatrix();
+<<<<<<< HEAD
+		modelStack.Translate(0, 2, 1);
+		RenderMesh(meshList[GEO_CANNON], true);
+=======
 		modelStack.Translate(0, 0.5, 0);
 		RenderMesh(meshList[GEO_CANNON_PLATFORM], true, go->Color);
+>>>>>>> bda7c11d6f710f7a7da0ec06b2619f38efaee4d1
 		modelStack.PopMatrix();
 
+		modelStack.PopMatrix();
+		break;
+	case GameObject::GO_CANNON_PLATFORM:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Rotate(90, 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_CANNON_PLATFORM], true);
 		modelStack.PopMatrix();
 		break;
 	}
