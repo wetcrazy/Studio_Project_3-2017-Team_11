@@ -284,6 +284,7 @@ void SceneCollision::Update(double dt)
 
 		m_ghost->pos.Set(posX, posY, 0); //IMPT
 		m_ghost->active = true;
+		m_ghost->active = false;
 		float sc = 2;
 		m_ghost->scale.Set(sc, sc, sc);
 	}
@@ -310,9 +311,11 @@ void SceneCollision::Update(double dt)
 		go->pos += platform->dir * 0.5;
 		go->vel = aim;
 		if (go->vel.Length() > 50)
+		if (go->vel.Length() > 100)
 		{
 			go->vel.Normalize();
 			go->vel *= 50;
+			go->vel *= 100;
 		}
 		if (go->vel.y < 0)
 			go->vel.y *= -1;
@@ -353,6 +356,7 @@ void SceneCollision::Update(double dt)
 	}
 
 	if (Application::IsKeyPressed(VK_SPACE))
+	else if (Application::IsKeyPressed(VK_SPACE))
 	{
 		for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 		{
