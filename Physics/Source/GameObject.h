@@ -26,11 +26,11 @@ struct GameObject
 	Vector3 vel;
 	Vector3 scale;
 	Vector3 dir;
+	Vector3 Color;
 	float momentOfInertia;
 	float angularVeloctiy;
 	bool active;
 	float mass;
-	Material material;
 
 	GameObject(GAMEOBJECT_TYPE typeValue = GO_BALL);
 	~GameObject();

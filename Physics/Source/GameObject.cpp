@@ -7,8 +7,8 @@ GameObject::GameObject(GAMEOBJECT_TYPE typeValue)
 	active(false),
 	mass(1.f),
 	momentOfInertia(1.f),
-	angularVeloctiy(1.f), 
-	material()
+	angularVeloctiy(1.f),
+	Color(1.f, 1.f, 1.f)
 {
 }
 

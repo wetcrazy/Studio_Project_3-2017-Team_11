@@ -27,49 +27,48 @@ void SceneCollision::Init()
 	m_ghost = new GameObject(GameObject::GO_BALL);
 	gravity.Set(0.0f, -9.8f, 0.0f);
 
+	int w = Application::GetWindowWidth();
+	int h = Application::GetWindowHeight();
+
 	GameObject *wall = FetchGO();
-	wall->type = GameObject::GO_WALL;
+
+	wall->type = GameObject::GO_WALL;	// Left Wall
+	wall->active = true;
+	wall->dir.Set(1, 0, 0);
+	wall->pos.Set(wall->scale.x / 2, h / 2, 0);
+	wall->scale.Set(2, h, 1);
+	wall->Color.Set(0.486, 0.988, 0);
+
+	wall = FetchGO();
+	wall->type = GameObject::GO_WALL;	// Ground
 	wall->active = true;
 	wall->dir.Set(0, -1, 0);
-	wall->pos.Set(133 / 2, 99, 0);
-	wall->scale.Set(2, 60, 1);
+	wall->pos.Set(133 / 2, wall->scale.y / 2, 0);
+	wall->scale.Set(2, w, 1);
+	wall->Color.Set(0.486, 0.988, 0);
 
 	wall = FetchGO();
-	wall->type = GameObject::GO_WALL;
+	wall->type = GameObject::GO_WALL;	// Elevated Ground
 	wall->active = true;
-	wall->dir.Set(1, 0, 0);
-	wall->pos.Set(133 / 2 - 30, 60, 0);
-	wall->scale.Set(2, 80, 1);
-	wall = FetchGO();
-	wall->type = GameObject::GO_WALL;
-	wall->active = true;
-	wall->dir.Set(1, 0, 0);
-	wall->pos.Set(133 / 2 + 30, 60, 0);
-	wall->scale.Set(2, 80, 1);
+	wall->dir.Set(0, -1, 0);
+	wall->pos.Set(133 / 8, 100 / 9, 0);
+	wall->scale.Set(2, 100 / 3, 1);
+	wall->Color.Set(0.486, 0.988, 0);
 
 	wall = FetchGO();
-	wall->type = GameObject::GO_WALL;
+	wall->type = GameObject::GO_WALL;	// Slanted Ground
 	wall->active = true;
-	wall->dir.Set(1, 1, 0);
-	wall->pos.Set(133 / 2 - 20 - 5 * cos(45) - .5, 20 - 7.5 * sin(45), 0);
-	wall->scale.Set(2, 20, 1);
-	wall = FetchGO();
-	wall->type = GameObject::GO_WALL;
-	wall->active = true;
-	wall->dir.Set(-1, 1, 0);
-	wall->pos.Set(133 / 2 + 20 + 5 * cos(45) + .5, 20 - 7.5 * sin(45), 0);
-	wall->scale.Set(2, 20, 1); 
+	wall->dir.Set(-1, -1, 0);
+	wall->pos.Set(133 / 5 + 11.5, 100 / 9 - 5.3, 0);
+	wall->scale.Set(2, 100 / 6, 1);
+	wall->Color.Set(0.486, 0.988, 0);
 
-	GameObject *pillar = FetchGO(); 
-	pillar->type = GameObject::GO_PILLAR;
+	GameObject* pillar = FetchGO();
+	pillar->type = GameObject::GO_PILLAR;	// Pillar for Elevated Ground
 	pillar->active = true;
-	pillar->pos.Set(133 / 2 - 20 + 7.5 * cos(45) + .75 - .5, 20 - 15 * sin(45) - 1, 0);
-	pillar->scale.Set(1, 1, 1); 
-	pillar = FetchGO();
-	pillar->type = GameObject::GO_PILLAR;
-	pillar->active = true;
-	pillar->pos.Set(133 / 2 + 20 - 7.5 * cos(45) - .75 + .5, 20 - 15 * sin(45) - 1, 0);
-	pillar->scale.Set(1, 1, 1);
+	pillar->pos.Set(133 / 8 + 16, 100 / 9, 0);
+	pillar->scale.Set(1.4, 1.4, 1.4);
+	pillar->Color.Set(0.486, 0.988, 0);
 }
 
 GameObject* SceneCollision::FetchGO()
@@ -258,6 +257,8 @@ void SceneCollision::Update(double dt)
 		float sc = 2;
 		go->scale.Set(sc, sc, sc);
 		go->mass = sc * sc * sc;
+
+		go->Color.Set(Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1));
 	}
 	static bool bRButtonState = false;
 	if(!bRButtonState && Application::IsMousePressed(1))
@@ -270,7 +271,7 @@ void SceneCollision::Update(double dt)
 		float sc = 3;
 		m_ghost->scale.Set(sc, sc, sc);
 	}
-	else if(bRButtonState && !Application::IsMousePressed(1))
+	else if (bRButtonState && !Application::IsMousePressed(1))
 	{
 		bRButtonState = false;
 		std::cout << "RBUTTON UP" << std::endl;
@@ -286,7 +287,8 @@ void SceneCollision::Update(double dt)
 		float sc = 3;
 		go->scale.Set(sc, sc, sc);
 		go->mass = sc * sc * sc;
-		go->material.kAmbient.Set(Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1));
+
+		go->Color.Set(Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1));
 	}
 
 	if (Application::IsKeyPressed(VK_SPACE))
@@ -373,29 +375,35 @@ void SceneCollision::Update(double dt)
 
 void SceneCollision::RenderGO(GameObject *go)
 {
-	switch(go->type)
+	float angle;
+
+	switch (go->type)
 	{
 	case GameObject::GO_BALL:
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_BALL], meshList[GEO_BALL]->material, false);
+		RenderMesh(meshList[GEO_BALL], true, go->Color);
 		modelStack.PopMatrix();
 		break;
-	case GameObject::GO_WALL:
-		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Rotate(Math::RadianToDegree(atan2(go->dir.y, go->dir.x)), 0, 0, 1);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_CUBE], meshList[GEO_CUBE]->material, false);
-		modelStack.PopMatrix();
-		break; 
+
 	case GameObject::GO_PILLAR:
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Rotate(Math::RadianToDegree(atan2(go->dir.y, go->dir.x)), 0, 0, 1);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_BALL], meshList[GEO_BALL]->material, false);
+		RenderMesh(meshList[GEO_BALL], true, go->Color);
+		modelStack.PopMatrix();
+		break;
+
+	case GameObject::GO_WALL:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+
+		angle = Math::RadianToDegree(atan2(go->dir.y, go->dir.x));
+
+		modelStack.Rotate(angle, 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_CUBE], true, go->Color);
 		modelStack.PopMatrix();
 		break;
 	}
@@ -424,7 +432,7 @@ void SceneCollision::Render()
 	// Model matrix : an identity matrix (model will be at the origin)
 	modelStack.LoadIdentity();
 
-	RenderMesh(meshList[GEO_AXES], meshList[GEO_AXES]->material, false);
+	RenderMesh(meshList[GEO_AXES], false);
 
 	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 	{

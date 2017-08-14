@@ -1,1 +1,16 @@
-﻿
+﻿  SceneCollision.cpp
+c:\users\530\documents\studio_project_3-2017-team_11\physics\source\scenecollision.cpp(38): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\530\documents\studio_project_3-2017-team_11\physics\source\scenecollision.cpp(39): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\530\documents\studio_project_3-2017-team_11\physics\source\scenecollision.cpp(47): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\530\documents\studio_project_3-2017-team_11\physics\source\scenecollision.cpp(62): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\530\documents\studio_project_3-2017-team_11\physics\source\scenecollision.cpp(70): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\530\documents\studio_project_3-2017-team_11\physics\source\scenecollision.cpp(71): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\530\documents\studio_project_3-2017-team_11\physics\source\scenecollision.cpp(173): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\530\documents\studio_project_3-2017-team_11\physics\source\scenecollision.cpp(174): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\530\documents\studio_project_3-2017-team_11\physics\source\scenecollision.cpp(194): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\530\documents\studio_project_3-2017-team_11\physics\source\scenecollision.cpp(204): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\530\documents\studio_project_3-2017-team_11\physics\source\scenecollision.cpp(317): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+c:\users\530\documents\studio_project_3-2017-team_11\physics\source\scenecollision.cpp(356): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+c:\users\530\documents\studio_project_3-2017-team_11\physics\source\scenecollision.cpp(138): warning C4715: 'SceneCollision::CheckCollision': not all control paths return a value
+  Physics.vcxproj -> C:\Users\530\Documents\Studio_Project_3-2017-Team_11\Debug\Physics.exe
+  Physics.vcxproj -> C:\Users\530\Documents\Studio_Project_3-2017-Team_11\Debug\Physics.pdb (Full PDB)
