@@ -80,13 +80,14 @@ void SceneCollision::CreateStuff()
 	platform->dir.Set(0, 1, 0);
 	platform->pos.Set(133 / 8, 100 / 7.7, 0);
 	platform->scale.Set(2, 10, 1);
-	platform->Color.Set(1, 1, 0);
+	platform->Color.Set(1, 1, 1);
 	m_goList.push_back(platform);
 
 	cannon = new GameObject(GameObject::GO_CANNON);	// Cannon
 	cannon->active = true;
 	cannon->pos = platform->pos;
 	cannon->scale.Set(2, 7, 1);
+	cannon->Color.Set(1, 0, 0);
 	m_goList.push_back(cannon);
 }
 
@@ -272,12 +273,14 @@ void SceneCollision::Update(double dt)
 	float posX = static_cast<float>(x) / w * m_worldWidth;
 	float posY = (h - static_cast<float>(y)) / h * m_worldHeight;
 
-	// Movement for Cannon
-	aim.Set(posX, posY, 0);
-	aim = aim - platform->pos;
-	cannon->dir = aim.Cross(Vector3(0, 0, 1));
-	cannon->dir.Normalize();
-	
+	{
+		// Movement for Cannon
+		aim.Set(posX, posY, 0);
+		aim = aim - platform->pos;
+		cannon->dir = aim.Cross(Vector3(0, 0, 1));
+		cannon->dir.Normalize();
+	}
+
 	if(!bLButtonState && Application::IsMousePressed(0))
 	{
 		bLButtonState = true;
@@ -307,8 +310,12 @@ void SceneCollision::Update(double dt)
 		//go->scale.Set(sc, sc, sc);
 		//go->mass = sc * sc * sc;
 
-		go->pos = platform->pos;
+		/*go->pos = platform->pos;
+		go->pos += platform->dir * 0.5;*/
+
+		go->pos = cannon->pos;
 		go->pos += platform->dir * 0.5;
+
 		go->vel = aim;
 		if (go->vel.Length() > 50)
 		{
@@ -379,14 +386,14 @@ void SceneCollision::Update(double dt)
 				go->vel += gravity * dt;
 
 				//Exercise 2a: Rebound game object at screen edges
-				//if (go->pos.x > m_worldWidth - go->scale.x || go->pos.x < go->scale.x)
-				//{
-				//	go->vel.x = -go->vel.x;
-				//}
-				//if (go->pos.y > m_worldHeight - go->scale.y || go->pos.y < go->scale.x)
-				//{
-				//	go->vel.y = -go->vel.y;
-				//}
+				/*if (go->pos.x > m_worldWidth - go->scale.x || go->pos.x < go->scale.x)
+				{
+					go->vel.x = -go->vel.x;
+				}
+				if (go->pos.y > m_worldHeight - go->scale.y || go->pos.y < go->scale.x)
+				{
+					go->vel.y = -go->vel.y;
+				}*/
 				if (go->pos.x > m_worldWidth + go->scale.x || go->pos.x < -go->scale.x || go->pos.y > m_worldHeight + go->scale.y || go->pos.y < -go->scale.y)
 				{
 					go->active = false;
@@ -473,7 +480,7 @@ void SceneCollision::RenderGO(GameObject *go)
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Rotate(90, 0, 0, 1);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_CANNON_PLATFORM], true);
+		RenderMesh(meshList[GEO_CANNON_PLATFORM], true, go->Color);
 		modelStack.PopMatrix();
 		break;
 	case GameObject::GO_CANNON:
@@ -484,7 +491,7 @@ void SceneCollision::RenderGO(GameObject *go)
 
 		modelStack.PushMatrix();
 		modelStack.Translate(0, 0.5, 0);
-		RenderMesh(meshList[GEO_CANNON_PLATFORM], true);
+		RenderMesh(meshList[GEO_CANNON_PLATFORM], true, go->Color);
 		modelStack.PopMatrix();
 
 		modelStack.PopMatrix();
