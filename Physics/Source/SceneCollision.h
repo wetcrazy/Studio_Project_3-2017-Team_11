@@ -17,6 +17,7 @@ public:
 	~SceneCollision();
 
 	virtual void Init();
+	virtual void CreateStuff();	//create game objects here
 	virtual void Update(double dt);
 	virtual void Render();
 	virtual void Exit();
@@ -45,6 +46,11 @@ protected:
 	Vector3 initialMomentum, finalMomentum;
 	Vector3 gravity;
 	float initialKE, finalKE;
+
+	//Cannon
+	GameObject *platform;
+	GameObject *cannon;
+	Vector3 aim;
 };
 
 #endif

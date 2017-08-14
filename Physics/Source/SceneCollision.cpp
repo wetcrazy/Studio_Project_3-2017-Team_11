@@ -27,6 +27,11 @@ void SceneCollision::Init()
 	m_ghost = new GameObject(GameObject::GO_BALL);
 	gravity.Set(0.0f, -9.8f, 0.0f);
 
+	CreateStuff();
+}
+
+void SceneCollision::CreateStuff()
+{
 	int w = Application::GetWindowWidth();
 	int h = Application::GetWindowHeight();
 
@@ -69,6 +74,20 @@ void SceneCollision::Init()
 	pillar->pos.Set(133 / 8 + 16, 100 / 9, 0);
 	pillar->scale.Set(1.4, 1.4, 1.4);
 	pillar->Color.Set(0.486, 0.988, 0);
+
+	platform = new GameObject(GameObject::GO_CANNON_PLATFORM);	// Platform for Cannon
+	platform->active = true;
+	platform->dir.Set(0, 1, 0);
+	platform->pos.Set(133 / 8, 100 / 7.7, 0);
+	platform->scale.Set(2, 10, 1);
+	platform->Color.Set(1, 1, 0);
+	m_goList.push_back(platform);
+
+	cannon = new GameObject(GameObject::GO_CANNON);	// Cannon
+	cannon->active = true;
+	cannon->pos = platform->pos;
+	cannon->scale.Set(2, 7, 1);
+	m_goList.push_back(cannon);
 }
 
 GameObject* SceneCollision::FetchGO()
@@ -133,6 +152,21 @@ bool SceneCollision::CheckCollision(GameObject *go1, GameObject *go2, float dt)
 		return ((p2 - p1).LengthSquared() < (r1 + r1) * (r1 + r2)) &&
 			((p2 - p1).LengthSquared() > 0.0f) && 
 			((p2 - p1).Dot(go1->vel) > 0.0f);
+	}
+	case GameObject::GO_CANNON_PLATFORM:
+	{
+		Vector3 w0 = go2->pos;
+		Vector3 b1 = go1->pos;
+		Vector3 N = go2->dir;
+		Vector3 NP = N.Cross(Vector3(0, 0, 1));
+		float l = go2->scale.y;
+		float r = go1->scale.x;
+		float h = go2->scale.x;
+		if ((w0 - b1).Dot(N) < 0)
+			N = -N;
+
+		return go1->vel.Dot(N) > 0 && (abs((w0 - b1).Dot(N)) < r + h * 0.5f) &&
+			(abs((w0 - b1).Dot(NP)) < r + l * 0.5f);
 	}
 	}
 }
@@ -205,6 +239,13 @@ void SceneCollision::CollisionResponse(GameObject * go1, GameObject * go2)
 
 		break;
 	}
+	case GameObject::GO_CANNON_PLATFORM:
+	{
+		Vector3 vel = go1->vel;
+		Vector3 N = go2->dir;
+		go1->vel = vel - (2.f * vel.Dot(N)) * N;
+		break;
+	}
 	}
 }
 
@@ -230,6 +271,12 @@ void SceneCollision::Update(double dt)
 	int h = Application::GetWindowHeight();
 	float posX = static_cast<float>(x) / w * m_worldWidth;
 	float posY = (h - static_cast<float>(y)) / h * m_worldHeight;
+
+	// Movement for Cannon
+	aim.Set(posX, posY, 0);
+	aim = aim - platform->pos;
+	cannon->dir = aim.Cross(Vector3(0, 0, 1));
+	cannon->dir.Normalize();
 	
 	if(!bLButtonState && Application::IsMousePressed(0))
 	{
@@ -251,12 +298,27 @@ void SceneCollision::Update(double dt)
 		go->active = true;
 		go->type = GameObject::GO_BALL;
 
-		go->pos = m_ghost->pos;
-		go->vel.Set(m_ghost->pos.x - posX, m_ghost->pos.y - posY, 0);
+		//********OLD COD********//
+		//**********************//
+		//go->pos = m_ghost->pos;
+		//go->vel.Set(m_ghost->pos.x - posX, m_ghost->pos.y - posY, 0);
+		//m_ghost->active = false;
+		//float sc = 2;
+		//go->scale.Set(sc, sc, sc);
+		//go->mass = sc * sc * sc;
+
+		go->pos = platform->pos;
+		go->pos += platform->dir * 0.5;
+		go->vel = aim;
+		if (go->vel.Length() > 50)
+		{
+			go->vel.Normalize();
+			go->vel *= 50;
+		}
+		if (go->vel.y < 0)
+			go->vel.y *= -1;
 		m_ghost->active = false;
-		float sc = 2;
-		go->scale.Set(sc, sc, sc);
-		go->mass = sc * sc * sc;
+		go->scale.Set(1, 1, 1);
 
 		go->Color.Set(Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1));
 	}
@@ -404,6 +466,27 @@ void SceneCollision::RenderGO(GameObject *go)
 		modelStack.Rotate(angle, 0, 0, 1);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_CUBE], true, go->Color);
+		modelStack.PopMatrix();
+		break;
+	case GameObject::GO_CANNON_PLATFORM:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Rotate(90, 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_CANNON_PLATFORM], true);
+		modelStack.PopMatrix();
+		break;
+	case GameObject::GO_CANNON:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Rotate(Math::RadianToDegree(atan2(go->dir.y, go->dir.x)), 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+
+		modelStack.PushMatrix();
+		modelStack.Translate(0, 0.5, 0);
+		RenderMesh(meshList[GEO_CANNON_PLATFORM], true);
+		modelStack.PopMatrix();
+
 		modelStack.PopMatrix();
 		break;
 	}

@@ -112,6 +112,8 @@ void SceneBase::Init()
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 	meshList[GEO_TEXT]->material.kAmbient.Set(1, 0, 0);
 
+	meshList[GEO_CANNON_PLATFORM] = MeshBuilder::GenerateCube("rectangle", Color(1, 1, 1), 1.f);
+
 	bLightEnabled = true;
 }
 

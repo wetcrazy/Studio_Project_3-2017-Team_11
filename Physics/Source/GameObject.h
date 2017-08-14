@@ -19,6 +19,10 @@ struct GameObject
 		GO_ENEMY,
 		GO_ENEMY_BULLET,
 		GO_POWERUP,
+
+		GO_CANNON_PLATFORM,
+		GO_CANNON,
+		
 		GO_TOTAL, //must be last
 	};
 	GAMEOBJECT_TYPE type;

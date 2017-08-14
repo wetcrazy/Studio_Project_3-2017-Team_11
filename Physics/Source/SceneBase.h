@@ -49,6 +49,9 @@ public:
 		GEO_CUBE,
 		GEO_ASTEROID,
 		GEO_SHIP,
+
+		GEO_CANNON_PLATFORM,
+
 		NUM_GEOMETRY,
 	};
 public:
