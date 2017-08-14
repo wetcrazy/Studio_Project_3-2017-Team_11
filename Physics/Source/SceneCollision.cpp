@@ -1,0 +1,497 @@
+#include "SceneCollision.h"
+#include "GL\glew.h"
+#include "Application.h"
+#include <sstream>
+
+SceneCollision::SceneCollision()
+{
+}
+
+SceneCollision::~SceneCollision()
+{
+}
+
+void SceneCollision::Init()
+{
+	SceneBase::Init();
+
+	//Physics code here
+	m_speed = 1.f;
+	
+	Math::InitRNG();
+
+	m_objectCount = 0;
+	initialKE = 0;
+	finalKE = 0;
+
+	m_ghost = new GameObject(GameObject::GO_BALL);
+	gravity.Set(0.0f, -9.8f, 0.0f);
+
+	GameObject *wall = FetchGO();
+	wall->type = GameObject::GO_WALL;
+	wall->active = true;
+	wall->dir.Set(0, -1, 0);
+	wall->pos.Set(133 / 2, 99, 0);
+	wall->scale.Set(2, 60, 1);
+
+	wall = FetchGO();
+	wall->type = GameObject::GO_WALL;
+	wall->active = true;
+	wall->dir.Set(1, 0, 0);
+	wall->pos.Set(133 / 2 - 30, 60, 0);
+	wall->scale.Set(2, 80, 1);
+	wall = FetchGO();
+	wall->type = GameObject::GO_WALL;
+	wall->active = true;
+	wall->dir.Set(1, 0, 0);
+	wall->pos.Set(133 / 2 + 30, 60, 0);
+	wall->scale.Set(2, 80, 1);
+
+	wall = FetchGO();
+	wall->type = GameObject::GO_WALL;
+	wall->active = true;
+	wall->dir.Set(1, 1, 0);
+	wall->pos.Set(133 / 2 - 20 - 5 * cos(45) - .5, 20 - 7.5 * sin(45), 0);
+	wall->scale.Set(2, 20, 1);
+	wall = FetchGO();
+	wall->type = GameObject::GO_WALL;
+	wall->active = true;
+	wall->dir.Set(-1, 1, 0);
+	wall->pos.Set(133 / 2 + 20 + 5 * cos(45) + .5, 20 - 7.5 * sin(45), 0);
+	wall->scale.Set(2, 20, 1); 
+
+	GameObject *pillar = FetchGO(); 
+	pillar->type = GameObject::GO_PILLAR;
+	pillar->active = true;
+	pillar->pos.Set(133 / 2 - 20 + 7.5 * cos(45) + .75 - .5, 20 - 15 * sin(45) - 1, 0);
+	pillar->scale.Set(1, 1, 1); 
+	pillar = FetchGO();
+	pillar->type = GameObject::GO_PILLAR;
+	pillar->active = true;
+	pillar->pos.Set(133 / 2 + 20 - 7.5 * cos(45) - .75 + .5, 20 - 15 * sin(45) - 1, 0);
+	pillar->scale.Set(1, 1, 1);
+}
+
+GameObject* SceneCollision::FetchGO()
+{
+	for(std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	{
+		GameObject *go = (GameObject *)*it;
+		if(!go->active)
+		{
+			go->active = true;
+			++m_objectCount;
+			return go;
+		}
+	}
+	for(unsigned i = 0; i < 10; ++i)
+	{
+		GameObject *go = new GameObject(GameObject::GO_BALL);
+		m_goList.push_back(go);
+	}
+	GameObject *go = m_goList.back();
+	go->active = true;
+	++m_objectCount;
+	return go;
+}
+
+bool SceneCollision::CheckCollision(GameObject *go1, GameObject *go2, float dt)
+{
+	switch (go2->type)
+	{
+	case GameObject::GO_BALL:
+	{
+		Vector3 dis =  go1->pos - go2->pos;
+		Vector3 vel = go1->vel - go2->vel;
+		float r1 = go1->scale.x;
+		float r2 = go2->scale.x;
+
+		return vel.Dot(dis) < 0 &&
+			dis.LengthSquared() < (r1 + r2) * (r1 + r2);
+	}
+	case GameObject::GO_WALL:
+	{
+		Vector3 w0 = go2->pos;
+		Vector3 b1 = go1->pos;
+		Vector3 N = go2->dir;
+		Vector3 NP = N.Cross(Vector3(0, 0, 1));
+		float l = go2->scale.y;
+		float r = go1->scale.x;
+		float h = go2->scale.x;
+		if ((w0 - b1).Dot(N) < 0)
+			N = -N;
+
+		return go1->vel.Dot(N) > 0 && (abs((w0 - b1).Dot(N)) < r + h * 0.5f) &&
+			(abs((w0 - b1).Dot(NP)) < r + l * 0.5f);
+	}
+	case GameObject::GO_PILLAR:
+	{
+		Vector3 p1 = go1->pos;
+		Vector3 p2 = go2->pos;
+		float r1 = go1->scale.x;
+		float r2 = go2->scale.x;
+
+		return ((p2 - p1).LengthSquared() < (r1 + r1) * (r1 + r2)) &&
+			((p2 - p1).LengthSquared() > 0.0f) && 
+			((p2 - p1).Dot(go1->vel) > 0.0f);
+	}
+	}
+}
+
+float SceneCollision::CheckCollision2(GameObject *go1, GameObject *go2)
+{
+	Vector3 rel = go1->vel - go2->vel;
+	Vector3 dir = go1->pos - go2->pos;
+	float r = go1->scale.x + go2->scale.x;
+	if (rel.Dot(dir) > 0)
+		return -1;
+
+	float a = rel.Dot(rel);
+	float b = 2 * rel.Dot(dir);
+	float c = dir.Dot(dir) - r * r;
+	float d = b * b - 4 * a * c;
+	if (d < 0)
+		return -1;
+	float t = (-b - sqrt(d)) / (2 * a);
+	if (t < 0)
+		t = (-b - sqrt(d)) / (2 * a);
+	return 0;
+}
+
+void SceneCollision::CollisionResponse(GameObject * go1, GameObject * go2)
+{
+	switch (go2->type)
+	{
+	case GameObject::GO_BALL:
+	{
+		Vector3 u1 = go1->vel;
+		Vector3 u2 = go2->vel;
+		Vector3 N = (go2->pos - go1->pos).Normalize();
+		Vector3 u1N = u1.Dot(N) * N;
+		Vector3 u2N = u2.Dot(N) * N;
+		go1->vel = u1 + ((2 * m2) / (m1 + m2))* (u2N - u1N);
+		go2->vel = u2 + ((2 * m2) / (m1 + m2)) * (u1N - u2N);
+		go1->vel *= 0.85;
+		go2->vel *= 0.85;
+
+		break;
+	}
+	case GameObject::GO_WALL:
+	{
+		float mag = go1->vel.Length();
+		std::cout << mag << std::endl;
+		Vector3 vel = go1->vel;
+		Vector3 N = go2->dir;
+		go1->vel = vel - (2.f * vel.Dot(N)) * N;
+		if (go1->vel.y < 9.0f)
+			go1->vel.y /= 1.5;
+		if (go1->vel.y < 7.0f)
+			go1->vel.y /= 1.5;
+		if (go1->vel.y < 5.0f)
+			go1->vel.y /= 1.5;
+		else if (go1->vel.y < 2.0f)
+			go1->vel.y = 0.f;
+		else
+			go1->vel = go1->vel.Normalized() * mag * 0.85;
+	
+
+		break;
+	}
+	case GameObject::GO_PILLAR:
+	{
+		Vector3 vel = go1->vel;
+		Vector3 N = (go2->pos - go1->pos).Normalize();
+		go1->vel = vel - (2.f * vel.Dot(N)) * N;
+		go1->vel *= 0.85;
+
+		break;
+	}
+	}
+}
+
+void SceneCollision::Update(double dt)
+{
+	SceneBase::Update(dt);
+	
+	if(Application::IsKeyPressed('9'))
+	{
+		m_speed = Math::Max(0.f, m_speed - 0.1f);
+	}
+	if(Application::IsKeyPressed('0'))
+	{
+		m_speed += 0.1f;
+	}
+
+	//Mouse Section
+	static bool bLButtonState = false;
+	
+	double x, y;
+	Application::GetCursorPos(&x, &y);
+	int w = Application::GetWindowWidth();
+	int h = Application::GetWindowHeight();
+	float posX = static_cast<float>(x) / w * m_worldWidth;
+	float posY = (h - static_cast<float>(y)) / h * m_worldHeight;
+	
+	if(!bLButtonState && Application::IsMousePressed(0))
+	{
+		bLButtonState = true;
+		std::cout << "LBUTTON DOWN" << std::endl;
+
+		m_ghost->pos.Set(posX, posY, 0); //IMPT
+		m_ghost->active = true;
+		float sc = 2;
+		m_ghost->scale.Set(sc, sc, sc);
+	}
+	else if(bLButtonState && !Application::IsMousePressed(0))
+	{
+		bLButtonState = false;
+		std::cout << "LBUTTON UP" << std::endl;
+
+		//spawn small GO_BALL
+		GameObject *go = FetchGO();
+		go->active = true;
+		go->type = GameObject::GO_BALL;
+
+		go->pos = m_ghost->pos;
+		go->vel.Set(m_ghost->pos.x - posX, m_ghost->pos.y - posY, 0);
+		m_ghost->active = false;
+		float sc = 2;
+		go->scale.Set(sc, sc, sc);
+		go->mass = sc * sc * sc;
+	}
+	static bool bRButtonState = false;
+	if(!bRButtonState && Application::IsMousePressed(1))
+	{
+		bRButtonState = true;
+		std::cout << "RBUTTON DOWN" << std::endl;
+
+		m_ghost->pos.Set(posX, posY, 0); //IMPT
+		m_ghost->active = true;
+		float sc = 3;
+		m_ghost->scale.Set(sc, sc, sc);
+	}
+	else if(bRButtonState && !Application::IsMousePressed(1))
+	{
+		bRButtonState = false;
+		std::cout << "RBUTTON UP" << std::endl;
+
+		//spawn large GO_BALL
+		GameObject *go = FetchGO();
+		go->active = true;
+		go->type = GameObject::GO_BALL;
+
+		go->pos = m_ghost->pos;
+		go->vel.Set(m_ghost->pos.x - posX, m_ghost->pos.y - posY, 0);
+		m_ghost->active = false;
+		float sc = 3;
+		go->scale.Set(sc, sc, sc);
+		go->mass = sc * sc * sc;
+		go->material.kAmbient.Set(Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1));
+	}
+
+	if (Application::IsKeyPressed(VK_SPACE))
+	{
+		for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+		{
+			GameObject *go = (GameObject *)*it;
+			if (go->active && go->type == GameObject::GO_BALL)
+				go->active = false;
+
+			m_objectCount = 0;
+		}
+	}
+
+	//Physics Simulation Section
+	dt *= m_speed;
+
+	for(std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	{
+		GameObject *go = (GameObject *)*it;
+		if(go->active)
+		{
+			if (go->type == GameObject::GO_BALL)
+			{
+				go->pos += go->vel * static_cast<float>(dt);
+				go->vel += gravity * dt;
+
+				//Exercise 2a: Rebound game object at screen edges
+				//if (go->pos.x > m_worldWidth - go->scale.x || go->pos.x < go->scale.x)
+				//{
+				//	go->vel.x = -go->vel.x;
+				//}
+				//if (go->pos.y > m_worldHeight - go->scale.y || go->pos.y < go->scale.x)
+				//{
+				//	go->vel.y = -go->vel.y;
+				//}
+				if (go->pos.x > m_worldWidth + go->scale.x || go->pos.x < -go->scale.x || go->pos.y > m_worldHeight + go->scale.y || go->pos.y < -go->scale.y)
+				{
+					go->active = false;
+					--m_objectCount;
+				}
+			}
+
+			for(std::vector<GameObject *>::iterator it2 = it + 1; it2 != m_goList.end(); ++it2)
+			{
+				GameObject *go2 = static_cast<GameObject *>(*it2);
+				if (!go2->active)
+					continue;
+				if (go->type != GameObject::GO_BALL && go2->type != GameObject::GO_BALL)
+					continue;
+
+				GameObject *goA, *goB;
+
+				if(go->type == GameObject::GO_BALL)
+				{
+					goA = go;
+					goB = go2;
+				}
+				else
+				{
+					goA = go2;
+					goB = go;
+				}
+
+				if(CheckCollision(goA, goB, dt))
+				{
+					m1 = goA->mass;
+					m2 = goB->mass;
+					u1 = goA->vel;
+					u2 = goB->vel;
+
+					CollisionResponse(goA, goB);
+
+					v1 = goA->vel;
+					v2 = goB->vel;
+
+					break;
+				}
+			}
+		}
+	}
+}
+
+
+void SceneCollision::RenderGO(GameObject *go)
+{
+	switch(go->type)
+	{
+	case GameObject::GO_BALL:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_BALL], meshList[GEO_BALL]->material, false);
+		modelStack.PopMatrix();
+		break;
+	case GameObject::GO_WALL:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Rotate(Math::RadianToDegree(atan2(go->dir.y, go->dir.x)), 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_CUBE], meshList[GEO_CUBE]->material, false);
+		modelStack.PopMatrix();
+		break; 
+	case GameObject::GO_PILLAR:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Rotate(Math::RadianToDegree(atan2(go->dir.y, go->dir.x)), 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_BALL], meshList[GEO_BALL]->material, false);
+		modelStack.PopMatrix();
+		break;
+	}
+}
+
+void SceneCollision::Render()
+{
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	//Calculating aspect ratio
+	m_worldHeight = 100.f;
+	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
+
+	// Projection matrix : Orthographic Projection
+	Mtx44 projection;
+	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
+	projectionStack.LoadMatrix(projection);
+
+	// Camera matrix
+	viewStack.LoadIdentity();
+	viewStack.LookAt(
+		camera.position.x, camera.position.y, camera.position.z,
+		camera.target.x, camera.target.y, camera.target.z,
+		camera.up.x, camera.up.y, camera.up.z
+	);
+	// Model matrix : an identity matrix (model will be at the origin)
+	modelStack.LoadIdentity();
+
+	RenderMesh(meshList[GEO_AXES], meshList[GEO_AXES]->material, false);
+
+	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	{
+		GameObject *go = (GameObject *)*it;
+		if (go->active)
+		{
+			RenderGO(go);
+		}
+	}
+	if (m_ghost->active)
+		RenderGO(m_ghost);
+
+	if (Application::IsKeyPressed(VK_RETURN))
+	{
+		//On screen text
+		std::ostringstream ss;
+		ss << "Object count: " << m_objectCount;
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 9);
+
+		ss.str(std::string());
+		ss.precision(5);
+		ss << "Initial momentum: " << initialMomentum;
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 15);
+
+		ss.str(std::string());
+		ss.precision(5);
+		ss << "Final momentum: " << finalMomentum;
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 12);
+
+		//Exercise 3: render initial and final kinetic energy
+		ss.str(std::string());
+		ss.precision(5);
+		ss << "Initial KE: " << initialKE;
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 21);
+
+		ss.str(std::string());
+		ss.precision(5);
+		ss << "Final KE: " << finalKE;
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 18);
+
+		ss.str(std::string());
+		ss.precision(3);
+		ss << "Speed: " << m_speed;
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 6);
+
+		ss.str(std::string());
+		ss.precision(5);
+		ss << "FPS: " << fps;
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 3);
+
+		RenderTextOnScreen(meshList[GEO_TEXT], "Collision", Color(0, 1, 0), 3, 0, 0);
+	}
+}
+
+void SceneCollision::Exit()
+{
+	SceneBase::Exit();
+	//Cleanup GameObjects
+	while(m_goList.size() > 0)
+	{
+		GameObject *go = m_goList.back();
+		delete go;
+		m_goList.pop_back();
+	}
+	if(m_ghost)
+	{
+		delete m_ghost;
+		m_ghost = NULL;
+	}
+}
