@@ -313,8 +313,13 @@ void SceneCollision::Update(double dt)
 		/*go->pos = platform->pos;
 		go->pos += platform->dir * 0.5;*/
 
-		go->pos = cannon->pos;
+		//go->pos = cannon->pos;
+		//go->pos += platform->dir * 0.5;
+		go->pos.Set(16, 20, 1);
+
+		
 		go->pos += platform->dir * 0.5;
+		std::cout << go->pos << std::endl;
 
 		go->vel = aim;
 		if (go->vel.Length() > 50)
