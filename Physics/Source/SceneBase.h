@@ -53,6 +53,10 @@ public:
 		GEO_CANNON,
 		GEO_CANNON_PLATFORM,
 
+		// Scene Manager
+		GEO_ARROW,
+		GEO_UPGRADEMENU,
+
 		NUM_GEOMETRY,
 	};
 public:
