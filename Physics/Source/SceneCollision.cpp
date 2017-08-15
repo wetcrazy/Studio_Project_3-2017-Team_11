@@ -272,6 +272,11 @@ void SceneCollision::Update(double dt)
 	float posX = static_cast<float>(x) / w * m_worldWidth;
 	float posY = (h - static_cast<float>(y)) / h * m_worldHeight;
 
+	int h_temp = 100;
+	int w_temp = 100 * Application::GetWindowWidth() / Application::GetWindowHeight();
+	background->pos.Set(w_temp / 2, h_temp / 2, -5);
+	background->scale.Set(w_temp + 2, h_temp, 1);
+
 	if (posY > cannon->pos.y)        // Cannon cannot move when cursor is below cannon	
 	if (!b_shootIsTrue)
 	{		
@@ -496,8 +501,8 @@ void SceneCollision::CreateStuff()
 
 	background = new GameObject(GameObject::GO_BACKGROUND);	// Background
 	background->active = true;
-	background->pos.Set(w_temp / 2 + 28, h_temp / 2, -5);
-	background->scale.Set(38, 20, 1);
+	background->pos.Set(w_temp / 2, h_temp / 2, -5);
+	background->scale.Set(w_temp, h_temp, 1);
 	m_goList.push_back(background);
 	
 	platform = new GameObject(GameObject::GO_CANNON_PLATFORM);	// Platform for Cannon
