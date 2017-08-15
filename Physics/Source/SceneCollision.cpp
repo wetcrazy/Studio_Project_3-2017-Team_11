@@ -215,6 +215,7 @@ void SceneCollision::Update(double dt)
 	// Movement for Cannon
 	aim.Set(posX, posY, 0);
 	aim = aim - platform->pos;
+	aim.Set(aim.x - platform->pos.x, Math::Clamp(aim.y, platform->pos.y, 100 - platform->pos.y), 0);
 	cannon->dir = aim.Cross(Vector3(0, 0, 1));
 	cannon->dir.Normalize();
 	
@@ -240,7 +241,9 @@ void SceneCollision::Update(double dt)
 		go->type = GameObject::GO_BALL;
 		go->pos = platform->pos;
 		go->pos += platform->dir * 0.5;
+		go->pos += aim.Normalized() * 0.5;
 		go->vel = aim;
+
 		if (go->vel.Length() > 50)
 		if (go->vel.Length() > 100)
 		{
@@ -250,6 +253,7 @@ void SceneCollision::Update(double dt)
 		}
 		if (go->vel.y < 0)
 			go->vel.y *= -1;
+	
 		m_ghost->active = false;
 		go->scale.Set(1, 1, 1);
 
@@ -357,6 +361,64 @@ void SceneCollision::Update(double dt)
 	}
 }
 
+void SceneCollision::CreateStuff()
+{
+	int w = Application::GetWindowWidth();
+	int h = Application::GetWindowHeight();
+
+	GameObject *wall = FetchGO();
+
+	wall->type = GameObject::GO_WALL;	// Left Wall
+	wall->active = true;
+	wall->dir.Set(1, 0, 0);
+	wall->pos.Set(wall->scale.x / 2, h / 2, 0);
+	wall->scale.Set(2, h, 1);
+	wall->Color.Set(0.486, 0.988, 0);
+
+	wall = FetchGO();
+	wall->type = GameObject::GO_WALL;	// Ground
+	wall->active = true;
+	wall->dir.Set(0, -1, 0);
+	wall->pos.Set(133 / 2, wall->scale.y / 2, 0);
+	wall->scale.Set(2, w, 1);
+	wall->Color.Set(0.486, 0.988, 0);
+
+	wall = FetchGO();
+	wall->type = GameObject::GO_WALL;	// Elevated Ground
+	wall->active = true;
+	wall->dir.Set(0, -1, 0);
+	wall->pos.Set(133 / 8, 100 / 9, 0);
+	wall->scale.Set(2, 100 / 3, 1);
+	wall->Color.Set(0.486, 0.988, 0);
+
+	wall = FetchGO();
+	wall->type = GameObject::GO_WALL;	// Slanted Ground
+	wall->active = true;
+	wall->dir.Set(-1, -1, 0);
+	wall->pos.Set(133 / 5 + 11.5, 100 / 9 - 5.3, 0);
+	wall->scale.Set(2, 100 / 6, 1);
+	wall->Color.Set(0.486, 0.988, 0);
+
+	GameObject* pillar = FetchGO();
+	pillar->type = GameObject::GO_PILLAR;	// Pillar for Elevated Ground
+	pillar->active = true;
+	pillar->pos.Set(133 / 8 + 16, 100 / 9, 0);
+	pillar->scale.Set(1.4, 1.4, 1.4);
+	pillar->Color.Set(0.486, 0.988, 0);
+
+	platform = new GameObject(GameObject::GO_CANNON_PLATFORM);	// Platform for Cannon
+	platform->active = true;
+	platform->dir.Set(0, 1, 0);
+	platform->pos.Set(133 / 8, 100 / 6.8, 0);
+	platform->scale.Set(1, 3, 1);
+	m_goList.push_back(platform);
+
+	cannon = new GameObject(GameObject::GO_CANNON);	// Cannon
+	cannon->active = true;
+	cannon->pos = platform->pos;
+	cannon->scale.Set(1, 2.5, 1);
+	m_goList.push_back(cannon);
+}
 
 void SceneCollision::RenderGO(GameObject *go)
 {

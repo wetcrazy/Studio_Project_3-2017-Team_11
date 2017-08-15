@@ -19,6 +19,7 @@ public:
 	virtual void Init();
 	virtual void CreateStuff();	//create game objects here
 	virtual void Update(double dt);
+	virtual void CreateStuff();	//create game objects here
 	virtual void Render();
 	virtual void Exit();
 
