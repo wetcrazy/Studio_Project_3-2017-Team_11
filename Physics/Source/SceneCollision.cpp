@@ -222,7 +222,7 @@ void SceneCollision::Update(double dt)
 	if (!b_shootIsTrue)
 	{
 		aim.Set(posX, posY, 0);
-		aim = aim - platform->pos;
+		aim.Set(aim.x - platform->pos.x, Math::Clamp(aim.y, platform->pos.y, 100 - platform->pos.y), 0);
 		cannon->dir = aim.Cross(Vector3(0, 0, 1));
 		cannon->dir.Normalize();
 	}
@@ -248,7 +248,7 @@ void SceneCollision::Update(double dt)
 		go->active = true;
 		go->type = GameObject::GO_BALL;
 		go->pos = platform->pos;
-		go->pos += platform->dir * 0.5;
+		go->pos += aim.Normalized() * 0.5;
 		go->vel = aim;
 
 		if (go->vel.Length() > 50)
@@ -261,7 +261,7 @@ void SceneCollision::Update(double dt)
 		m_ghost->active = false;
 		go->scale.Set(1, 1, 1);
 
-		// Limit spawn rate of cannon balls
+		// Limit spawn rate of cannon balls AND prevents movement of cannon immediately after shooting
 		ft_shootTime = ft_elapsedTime + 0.25f;
 
 		// Cannon ball has been shot
