@@ -27,6 +27,11 @@ void SceneCollision::Init()
 	m_ghost = new GameObject(GameObject::GO_BALL);
 	gravity.Set(0.0f, -9.8f, 0.0f);
 
+	// Cannon stuff
+	ft_shootTime = 0.f;
+	ft_elapsedTime = 0.f;
+	b_shootIsTrue = false;
+
 	CreateStuff();
 }
 
@@ -192,7 +197,8 @@ void SceneCollision::CollisionResponse(GameObject * go1, GameObject * go2)
 void SceneCollision::Update(double dt)
 {
 	SceneBase::Update(dt);
-	
+	ft_elapsedTime += dt;
+
 	if(Application::IsKeyPressed('9'))
 	{
 		m_speed = Math::Max(0.f, m_speed - 0.1f);
@@ -213,11 +219,13 @@ void SceneCollision::Update(double dt)
 	float posY = (h - static_cast<float>(y)) / h * m_worldHeight;
 
 	// Movement for Cannon
-	aim.Set(posX, posY, 0);
-	aim = aim - platform->pos;
-	aim.Set(aim.x - platform->pos.x, Math::Clamp(aim.y, platform->pos.y, 100 - platform->pos.y), 0);
-	cannon->dir = aim.Cross(Vector3(0, 0, 1));
-	cannon->dir.Normalize();
+	if (!b_shootIsTrue)
+	{
+		aim.Set(posX, posY, 0);
+		aim = aim - platform->pos;
+		cannon->dir = aim.Cross(Vector3(0, 0, 1));
+		cannon->dir.Normalize();
+	}
 	
 	if(!bLButtonState && Application::IsMousePressed(0))
 	{
@@ -230,7 +238,7 @@ void SceneCollision::Update(double dt)
 		float sc = 2;
 		m_ghost->scale.Set(sc, sc, sc);
 	}
-	else if(bLButtonState && !Application::IsMousePressed(0))
+	else if (bLButtonState && !Application::IsMousePressed(0) && ft_elapsedTime > ft_shootTime)
 	{
 		bLButtonState = false;
 		std::cout << "LBUTTON UP" << std::endl;
@@ -241,24 +249,32 @@ void SceneCollision::Update(double dt)
 		go->type = GameObject::GO_BALL;
 		go->pos = platform->pos;
 		go->pos += platform->dir * 0.5;
-		go->pos += aim.Normalized() * 0.5;
 		go->vel = aim;
 
 		if (go->vel.Length() > 50)
-		if (go->vel.Length() > 100)
 		{
 			go->vel.Normalize();
-			go->vel *= 50;
-			go->vel *= 100;
+			go->vel *= 100;	// Speed of cannon shooting
 		}
 		if (go->vel.y < 0)
 			go->vel.y *= -1;
-	
 		m_ghost->active = false;
 		go->scale.Set(1, 1, 1);
 
+		// Limit spawn rate of cannon balls
+		ft_shootTime = ft_elapsedTime + 0.25f;
+
+		// Cannon ball has been shot
+		b_shootIsTrue = true;
+
+		// Randomize color of ball
 		go->Color.Set(Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1));
 	}
+
+	// Cannon ball has not been shot
+	else if (ft_elapsedTime > ft_shootTime)
+		b_shootIsTrue = false;
+
 	static bool bRButtonState = false;
 	if(!bRButtonState && Application::IsMousePressed(1))
 	{
@@ -287,6 +303,7 @@ void SceneCollision::Update(double dt)
 		go->scale.Set(sc, sc, sc);
 		go->mass = sc * sc * sc;
 
+		// Randomize color of ball
 		go->Color.Set(Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1));
 	}
 

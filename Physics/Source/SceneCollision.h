@@ -17,7 +17,6 @@ public:
 	~SceneCollision();
 
 	virtual void Init();
-	virtual void CreateStuff();	//create game objects here
 	virtual void Update(double dt);
 	virtual void CreateStuff();	//create game objects here
 	virtual void Render();
@@ -52,6 +51,9 @@ protected:
 	GameObject *platform;
 	GameObject *cannon;
 	Vector3 aim;
+	float ft_shootTime;
+	float ft_elapsedTime;
+	bool b_shootIsTrue;
 };
 
 #endif
