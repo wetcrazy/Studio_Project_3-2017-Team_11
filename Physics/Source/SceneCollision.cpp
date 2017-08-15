@@ -314,7 +314,7 @@ void SceneCollision::Update(double dt)
 		go->pos += aim.Normalized() * 0.5;
 		go->vel = aim;
 
-		if (go->vel.Length() > 50)
+		if (go->vel.Length() > 50) // 50 is distance
 		{
 			go->vel.Normalize();
 			go->vel *= 100;	// Speed of cannon shooting
@@ -451,6 +451,8 @@ void SceneCollision::CreateStuff()
 {
 	int w = Application::GetWindowWidth();
 	int h = Application::GetWindowHeight();
+	float w_temp = 133;
+	float h_temp = 100;
 
 	GameObject *wall = FetchGO();
 
@@ -492,6 +494,12 @@ void SceneCollision::CreateStuff()
 	pillar->scale.Set(1.4, 1.4, 1.4);
 	pillar->Color.Set(0.486, 0.988, 0);
 
+	background = new GameObject(GameObject::GO_BACKGROUND);	// Background
+	background->active = true;
+	background->pos.Set(w_temp / 2 + 28, h_temp / 2, -5);
+	background->scale.Set(38, 20, 1);
+	m_goList.push_back(background);
+	
 	platform = new GameObject(GameObject::GO_CANNON_PLATFORM);	// Platform for Cannon
 	platform->active = true;
 	platform->dir.Set(0, 1, 0);
@@ -576,6 +584,13 @@ void SceneCollision::RenderGO(GameObject *go)
 		modelStack.Rotate(90, 0, 0, 1);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_CANNON_PLATFORM], true, go->Color);
+		modelStack.PopMatrix();
+		break;
+	case GameObject::GO_BACKGROUND:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_BACKGROUND], true, go->Color);
 		modelStack.PopMatrix();
 		break;
 	}

@@ -21,6 +21,8 @@ struct GameObject
 		GO_ENEMY_BULLET,
 		GO_POWERUP,
 
+		GO_BACKGROUND,
+
 		GO_CANNON_PLATFORM,
 		GO_CANNON,
 		

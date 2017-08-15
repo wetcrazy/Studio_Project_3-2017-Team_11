@@ -112,6 +112,9 @@ void SceneBase::Init()
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 	meshList[GEO_TEXT]->material.kAmbient.Set(1, 0, 0);
 
+	meshList[GEO_BACKGROUND] = MeshBuilder::GenerateQuad("background", Color(1, 1, 1), 5.f);
+	meshList[GEO_BACKGROUND]->textureID = LoadTGA("Image//background.tga");
+
 	meshList[GEO_CANNON] = MeshBuilder::GenerateQuad("cannon", Color(1, 1, 1), 5.f);
 	meshList[GEO_CANNON]->textureID = LoadTGA("Image//cannon.tga");
 	meshList[GEO_CANNON_PLATFORM] = MeshBuilder::GenerateQuad("cannon platform", Color(1, 1, 1), 5.f);

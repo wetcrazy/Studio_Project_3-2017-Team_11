@@ -53,6 +53,7 @@ protected:
 	//Cannon
 	GameObject *platform;
 	GameObject *cannon;
+	GameObject *background;
 	Vector3 aim;
 	float ft_shootTime;
 	float ft_elapsedTime;
