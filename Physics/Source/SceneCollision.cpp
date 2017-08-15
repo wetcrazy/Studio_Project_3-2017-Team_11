@@ -219,12 +219,15 @@ void SceneCollision::Update(double dt)
 	float posY = (h - static_cast<float>(y)) / h * m_worldHeight;
 
 	// Movement for Cannon
-	if (!b_shootIsTrue)
+	if (posY > cannon->pos.y)	// Cannon cannot move when cursor is below cannon
 	{
-		aim.Set(posX, posY, 0);
-		aim.Set(aim.x - platform->pos.x, Math::Clamp(aim.y, platform->pos.y, 100 - platform->pos.y), 0);
-		cannon->dir = aim.Cross(Vector3(0, 0, 1));
-		cannon->dir.Normalize();
+		if (!b_shootIsTrue)
+		{
+			aim.Set(posX, posY, 0);
+			aim.Set(aim.x - platform->pos.x, Math::Clamp(aim.y, platform->pos.y, 100 - platform->pos.y), 0);
+			cannon->dir = aim.Cross(Vector3(0, 0, 1));
+			cannon->dir.Normalize();
+		}
 	}
 	
 	if(!bLButtonState && Application::IsMousePressed(0))
@@ -243,32 +246,35 @@ void SceneCollision::Update(double dt)
 		bLButtonState = false;
 		std::cout << "LBUTTON UP" << std::endl;
 
-		//spawn small GO_BALL
-		GameObject *go = FetchGO();
-		go->active = true;
-		go->type = GameObject::GO_BALL;
-		go->pos = platform->pos;
-		go->pos += aim.Normalized() * 0.5;
-		go->vel = aim;
-
-		if (go->vel.Length() > 50)
+		if (posY > cannon->pos.y)	// Cannon cannot shoot balls when cursor is below cannon
 		{
-			go->vel.Normalize();
-			go->vel *= 100;	// Speed of cannon shooting
+			//spawn small GO_BALL
+			GameObject *go = FetchGO();
+			go->active = true;
+			go->type = GameObject::GO_BALL;
+			go->pos = platform->pos;
+			go->pos += aim.Normalized() * 0.5;
+			go->vel = aim;
+
+			if (go->vel.Length() > 50)
+			{
+				go->vel.Normalize();
+				go->vel *= 100;	// Speed of cannon shooting
+			}
+			if (go->vel.y < 0)
+				go->vel.y *= -1;
+			m_ghost->active = false;
+			go->scale.Set(1, 1, 1);
+
+			// Limit spawn rate of cannon balls AND prevents movement of cannon immediately after shooting
+			ft_shootTime = ft_elapsedTime + 0.25f;
+
+			// Cannon ball has been shot
+			b_shootIsTrue = true;
+
+			// Randomize color of ball
+			go->Color.Set(Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1));
 		}
-		if (go->vel.y < 0)
-			go->vel.y *= -1;
-		m_ghost->active = false;
-		go->scale.Set(1, 1, 1);
-
-		// Limit spawn rate of cannon balls AND prevents movement of cannon immediately after shooting
-		ft_shootTime = ft_elapsedTime + 0.25f;
-
-		// Cannon ball has been shot
-		b_shootIsTrue = true;
-
-		// Randomize color of ball
-		go->Color.Set(Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1));
 	}
 
 	// Cannon ball has not been shot
