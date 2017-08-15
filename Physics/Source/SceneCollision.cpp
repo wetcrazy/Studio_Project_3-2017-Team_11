@@ -297,16 +297,6 @@ void SceneCollision::Update(double dt)
 		GameObject *go = FetchGO();
 		go->active = true;
 		go->type = GameObject::GO_BALL;
-
-		//********OLD COD********//
-		//**********************//
-		//go->pos = m_ghost->pos;
-		//go->vel.Set(m_ghost->pos.x - posX, m_ghost->pos.y - posY, 0);
-		//m_ghost->active = false;
-		//float sc = 2;
-		//go->scale.Set(sc, sc, sc);
-		//go->mass = sc * sc * sc;
-
 		go->pos = platform->pos;
 		go->pos += platform->dir * 0.5;
 		go->vel = aim;
@@ -356,7 +346,6 @@ void SceneCollision::Update(double dt)
 	}
 
 	if (Application::IsKeyPressed(VK_SPACE))
-	else if (Application::IsKeyPressed(VK_SPACE))
 	{
 		for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 		{
@@ -380,16 +369,6 @@ void SceneCollision::Update(double dt)
 			{
 				go->pos += go->vel * static_cast<float>(dt);
 				go->vel += gravity * dt;
-
-				//Exercise 2a: Rebound game object at screen edges
-				//if (go->pos.x > m_worldWidth - go->scale.x || go->pos.x < go->scale.x)
-				//{
-				//	go->vel.x = -go->vel.x;
-				//}
-				//if (go->pos.y > m_worldHeight - go->scale.y || go->pos.y < go->scale.x)
-				//{
-				//	go->vel.y = -go->vel.y;
-				//}
 				if (go->pos.x > m_worldWidth + go->scale.x || go->pos.x < -go->scale.x || go->pos.y > m_worldHeight + go->scale.y || go->pos.y < -go->scale.y)
 				{
 					go->active = false;
@@ -451,7 +430,6 @@ void SceneCollision::RenderGO(GameObject *go)
 		RenderMesh(meshList[GEO_BALL], true, go->Color);
 		modelStack.PopMatrix();
 		break;
-
 	case GameObject::GO_PILLAR:
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
@@ -459,13 +437,10 @@ void SceneCollision::RenderGO(GameObject *go)
 		RenderMesh(meshList[GEO_BALL], true, go->Color);
 		modelStack.PopMatrix();
 		break;
-
 	case GameObject::GO_WALL:
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-
 		angle = Math::RadianToDegree(atan2(go->dir.y, go->dir.x));
-
 		modelStack.Rotate(angle, 0, 0, 1);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_CUBE], true, go->Color);
@@ -476,12 +451,10 @@ void SceneCollision::RenderGO(GameObject *go)
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Rotate(Math::RadianToDegree(atan2(go->dir.y, go->dir.x)), 0, 0, 1);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-
-		modelStack.PushMatrix();
-		modelStack.Translate(0, 2, 2);
-		RenderMesh(meshList[GEO_CANNON], true, go->Color);
-		modelStack.PopMatrix();
-
+			modelStack.PushMatrix();
+			modelStack.Translate(0, 2, 2);
+			RenderMesh(meshList[GEO_CANNON], true, go->Color);
+			modelStack.PopMatrix();
 		modelStack.PopMatrix();
 		break;
 	case GameObject::GO_CANNON_PLATFORM:
