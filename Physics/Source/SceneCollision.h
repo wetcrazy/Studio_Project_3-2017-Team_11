@@ -34,10 +34,13 @@ protected:
 
 	//Physics
 	std::vector<GameObject *> m_goList;
+	
+	GameObject *m_ghost01;
+	GameObject *m_ghost02;
+
 	float m_speed;
 	float m_worldWidth;
 	float m_worldHeight;
-	GameObject *m_ghost;
 	int m_objectCount;
 
 	//Auditing

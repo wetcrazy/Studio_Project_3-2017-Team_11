@@ -17,14 +17,15 @@ void SceneCollision::Init()
 
 	//Physics code here
 	m_speed = 1.f;
-	
+
 	Math::InitRNG();
 
 	m_objectCount = 0;
 	initialKE = 0;
 	finalKE = 0;
 
-	m_ghost = new GameObject(GameObject::GO_BALL);
+	m_ghost01 = new GameObject(GameObject::GO_BALL);
+	m_ghost02 = new GameObject(GameObject::GO_CUBE);
 	gravity.Set(0.0f, -9.8f, 0.0f);
 
 	// Cannon stuff
@@ -37,19 +38,24 @@ void SceneCollision::Init()
 
 GameObject* SceneCollision::FetchGO()
 {
-	for(std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 	{
 		GameObject *go = (GameObject *)*it;
-		if(!go->active)
+		if (!go->active)
 		{
 			go->active = true;
 			++m_objectCount;
 			return go;
 		}
 	}
-	for(unsigned i = 0; i < 10; ++i)
+	for (unsigned i = 0; i < 40; ++i)
 	{
 		GameObject *go = new GameObject(GameObject::GO_BALL);
+		m_goList.push_back(go);
+	}
+	for (unsigned i = 0; i < 40; ++i)
+	{
+		GameObject *go = new GameObject(GameObject::GO_CUBE);
 		m_goList.push_back(go);
 	}
 	GameObject *go = m_goList.back();
@@ -64,7 +70,7 @@ bool SceneCollision::CheckCollision(GameObject *go1, GameObject *go2, float dt)
 	{
 	case GameObject::GO_BALL:
 	{
-		Vector3 dis =  go1->pos - go2->pos;
+		Vector3 dis = go1->pos - go2->pos;
 		Vector3 vel = go1->vel - go2->vel;
 		float r1 = go1->scale.x;
 		float r2 = go2->scale.x;
@@ -78,9 +84,9 @@ bool SceneCollision::CheckCollision(GameObject *go1, GameObject *go2, float dt)
 		Vector3 b1 = go1->pos;
 		Vector3 N = go2->dir;
 		Vector3 NP = N.Cross(Vector3(0, 0, 1));
-		float l = go2->scale.y;
-		float r = go1->scale.x;
-		float h = go2->scale.x;
+		float l = go2->scale.y * 0.7;
+		float r = go1->scale.x * 0.7;
+		float h = go2->scale.x * 0.7;
 		if ((w0 - b1).Dot(N) < 0)
 			N = -N;
 
@@ -95,7 +101,7 @@ bool SceneCollision::CheckCollision(GameObject *go1, GameObject *go2, float dt)
 		float r2 = go2->scale.x;
 
 		return ((p2 - p1).LengthSquared() < (r1 + r1) * (r1 + r2)) &&
-			((p2 - p1).LengthSquared() > 0.0f) && 
+			((p2 - p1).LengthSquared() > 0.0f) &&
 			((p2 - p1).Dot(go1->vel) > 0.0f);
 	}
 	case GameObject::GO_CANNON_PLATFORM:
@@ -161,17 +167,6 @@ void SceneCollision::CollisionResponse(GameObject * go1, GameObject * go2)
 		Vector3 vel = go1->vel;
 		Vector3 N = go2->dir;
 		go1->vel = vel - (2.f * vel.Dot(N)) * N;
-		if (go1->vel.y < 9.0f)
-			go1->vel.y /= 1.5;
-		if (go1->vel.y < 7.0f)
-			go1->vel.y /= 1.5;
-		if (go1->vel.y < 5.0f)
-			go1->vel.y /= 1.5;
-		else if (go1->vel.y < 2.0f)
-			go1->vel.y = 0.f;
-		else
-			go1->vel = go1->vel.Normalized() * mag * 0.85;
-	
 
 		break;
 	}
@@ -199,18 +194,18 @@ void SceneCollision::Update(double dt)
 	SceneBase::Update(dt);
 	ft_elapsedTime += dt;
 
-	if(Application::IsKeyPressed('9'))
+	if (Application::IsKeyPressed('9'))
 	{
 		m_speed = Math::Max(0.f, m_speed - 0.1f);
 	}
-	if(Application::IsKeyPressed('0'))
+	if (Application::IsKeyPressed('0'))
 	{
 		m_speed += 0.1f;
 	}
 
 	//Mouse Section
 	static bool bLButtonState = false;
-	
+
 	double x, y;
 	Application::GetCursorPos(&x, &y);
 	int w = Application::GetWindowWidth();
@@ -218,62 +213,67 @@ void SceneCollision::Update(double dt)
 	float posX = static_cast<float>(x) / w * m_worldWidth;
 	float posY = (h - static_cast<float>(y)) / h * m_worldHeight;
 
-	// Movement for Cannon
-	if (posY > cannon->pos.y)	// Cannon cannot move when cursor is below cannon
-	{
-		if (!b_shootIsTrue)
+	if (posY > cannon->pos.y)        // Cannon cannot move when cursor is below cannon	
+	if (!b_shootIsTrue)
+	{		
 		{
-			aim.Set(posX, posY, 0);
-			aim.Set(aim.x - platform->pos.x, Math::Clamp(aim.y, platform->pos.y, 100 - platform->pos.y), 0);
-			cannon->dir = aim.Cross(Vector3(0, 0, 1));
-			cannon->dir.Normalize();
+			if (!b_shootIsTrue)
+			{
+				aim.Set(posX, posY, 0);	
+				aim.Set(aim.x - platform->pos.x, Math::Clamp(aim.y, platform->pos.y, 90 - platform->pos.y), 0);
+				cannon->dir = aim.Cross(Vector3(0, 0, 1));
+				cannon->dir.Normalize();
+			}
 		}
 	}
-	
-	if(!bLButtonState && Application::IsMousePressed(0))
+	std::cout << platform->pos.y << std::endl;
+
+	if (!bLButtonState && Application::IsMousePressed(0))
 	{
 		bLButtonState = true;
 		std::cout << "LBUTTON DOWN" << std::endl;
 
-		m_ghost->pos.Set(posX, posY, 0); //IMPT
-		m_ghost->active = true;
-		m_ghost->active = false;
+		m_ghost01->pos.Set(posX, posY, 0); //IMPT
+		m_ghost01->active = true;
+		m_ghost01->active = false;
 		float sc = 2;
-		m_ghost->scale.Set(sc, sc, sc);
+		m_ghost01->scale.Set(sc, sc, sc);
 	}
+
 	else if (bLButtonState && !Application::IsMousePressed(0) && ft_elapsedTime > ft_shootTime)
 	{
 		bLButtonState = false;
 		std::cout << "LBUTTON UP" << std::endl;
 
-		if (posY > cannon->pos.y)	// Cannon cannot shoot balls when cursor is below cannon
+		if (posY > cannon->pos.y)
 		{
-			//spawn small GO_BALL
-			GameObject *go = FetchGO();
-			go->active = true;
-			go->type = GameObject::GO_BALL;
-			go->pos = platform->pos;
-			go->pos += aim.Normalized() * 0.5;
-			go->vel = aim;
+		//spawn small GO_BALL
+		GameObject *go = FetchGO();
+		go->active = true;
+		go->type = GameObject::GO_CUBE;
+		go->pos = platform->pos;
+		go->pos += aim.Normalized() * 0.5;
+		go->vel = aim;
 
-			if (go->vel.Length() > 50)
-			{
-				go->vel.Normalize();
-				go->vel *= 100;	// Speed of cannon shooting
-			}
-			if (go->vel.y < 0)
-				go->vel.y *= -1;
-			m_ghost->active = false;
-			go->scale.Set(1, 1, 1);
+		if (go->vel.Length() > 50)
+		{
+			go->vel.Normalize();
+			go->vel *= 100;	// Speed of cannon shooting
+		}
+		if (go->vel.y < 0)
+			go->vel.y *= -1;
+		go->scale.Set(2, 2, 2);
+		m_ghost01->active = false;
 
-			// Limit spawn rate of cannon balls AND prevents movement of cannon immediately after shooting
-			ft_shootTime = ft_elapsedTime + 0.25f;
+		// Limit spawn rate of cannon balls AND prevents movement of cannon immediately after shooting
+		ft_shootTime = ft_elapsedTime + 0.25f;
 
-			// Cannon ball has been shot
-			b_shootIsTrue = true;
+		// Cannon ball has been shot
+		b_shootIsTrue = true;
 
-			// Randomize color of ball
-			go->Color.Set(Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1));
+		// Randomize color of ball
+		go->Color.Set(Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1));
+
 		}
 	}
 
@@ -282,15 +282,15 @@ void SceneCollision::Update(double dt)
 		b_shootIsTrue = false;
 
 	static bool bRButtonState = false;
-	if(!bRButtonState && Application::IsMousePressed(1))
+	if (!bRButtonState && Application::IsMousePressed(1))
 	{
 		bRButtonState = true;
 		std::cout << "RBUTTON DOWN" << std::endl;
 
-		m_ghost->pos.Set(posX, posY, 0); //IMPT
-		m_ghost->active = true;
+		m_ghost02->pos.Set(posX, posY, 0); //IMPT
+		m_ghost02->active = true;
 		float sc = 3;
-		m_ghost->scale.Set(sc, sc, sc);
+		m_ghost02->scale.Set(sc, sc, sc);
 	}
 	else if (bRButtonState && !Application::IsMousePressed(1))
 	{
@@ -300,11 +300,11 @@ void SceneCollision::Update(double dt)
 		//spawn large GO_BALL
 		GameObject *go = FetchGO();
 		go->active = true;
-		go->type = GameObject::GO_BALL;
+		go->type = GameObject::GO_CUBE;
 
-		go->pos = m_ghost->pos;
-		go->vel.Set(m_ghost->pos.x - posX, m_ghost->pos.y - posY, 0);
-		m_ghost->active = false;
+		go->pos = m_ghost02->pos;
+		go->vel.Set(m_ghost02->pos.x - posX, m_ghost02->pos.y - posY, 0);
+		m_ghost02->active = false;
 		float sc = 3;
 		go->scale.Set(sc, sc, sc);
 		go->mass = sc * sc * sc;
@@ -318,7 +318,8 @@ void SceneCollision::Update(double dt)
 		for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 		{
 			GameObject *go = (GameObject *)*it;
-			if (go->active && go->type == GameObject::GO_BALL)
+			//if (go->active && go->type == GameObject::GO_BALL)
+			if (go->active && go->type == GameObject::GO_CUBE)
 				go->active = false;
 
 			m_objectCount = 0;
@@ -328,12 +329,13 @@ void SceneCollision::Update(double dt)
 	//Physics Simulation Section
 	dt *= m_speed;
 
-	for(std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 	{
 		GameObject *go = (GameObject *)*it;
-		if(go->active)
+		if (go->active)
 		{
-			if (go->type == GameObject::GO_BALL)
+			//if (go->type == GameObject::GO_BALL)
+			if (go->type == GameObject::GO_CUBE)
 			{
 				go->pos += go->vel * static_cast<float>(dt);
 				go->vel += gravity * dt;
@@ -344,17 +346,19 @@ void SceneCollision::Update(double dt)
 				}
 			}
 
-			for(std::vector<GameObject *>::iterator it2 = it + 1; it2 != m_goList.end(); ++it2)
+			for (std::vector<GameObject *>::iterator it2 = it + 1; it2 != m_goList.end(); ++it2)
 			{
 				GameObject *go2 = static_cast<GameObject *>(*it2);
 				if (!go2->active)
 					continue;
-				if (go->type != GameObject::GO_BALL && go2->type != GameObject::GO_BALL)
+				//if (go->type != GameObject::GO_BALL && go2->type != GameObject::GO_BALL)
+				if (go->type != GameObject::GO_CUBE && go2->type != GameObject::GO_CUBE)
 					continue;
 
 				GameObject *goA, *goB;
 
-				if(go->type == GameObject::GO_BALL)
+				//if(go->type == GameObject::GO_BALL)
+				if (go->type == GameObject::GO_CUBE)
 				{
 					goA = go;
 					goB = go2;
@@ -365,7 +369,7 @@ void SceneCollision::Update(double dt)
 					goB = go;
 				}
 
-				if(CheckCollision(goA, goB, dt))
+				if (CheckCollision(goA, goB, dt))
 				{
 					m1 = goA->mass;
 					m2 = goB->mass;
@@ -394,8 +398,8 @@ void SceneCollision::CreateStuff()
 	wall->type = GameObject::GO_WALL;	// Left Wall
 	wall->active = true;
 	wall->dir.Set(1, 0, 0);
-	wall->pos.Set(wall->scale.x / 2, h / 2, 0);
-	wall->scale.Set(2, h, 1);
+	wall->pos.Set(wall->scale.x / 2, wall->scale.y, 0);
+	wall->scale.Set(2, h / 27, 1);
 	wall->Color.Set(0.486, 0.988, 0);
 
 	wall = FetchGO();
@@ -456,6 +460,13 @@ void SceneCollision::RenderGO(GameObject *go)
 		RenderMesh(meshList[GEO_BALL], true, go->Color);
 		modelStack.PopMatrix();
 		break;
+	case GameObject::GO_CUBE:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_CUBE], true, go->Color);
+		modelStack.PopMatrix();
+		break;
 	case GameObject::GO_PILLAR:
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
@@ -477,10 +488,10 @@ void SceneCollision::RenderGO(GameObject *go)
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Rotate(Math::RadianToDegree(atan2(go->dir.y, go->dir.x)), 0, 0, 1);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-			modelStack.PushMatrix();
-			modelStack.Translate(0, 2, 2);
-			RenderMesh(meshList[GEO_CANNON], true, go->Color);
-			modelStack.PopMatrix();
+		modelStack.PushMatrix();
+		modelStack.Translate(0, 2, 2);
+		RenderMesh(meshList[GEO_CANNON], true, go->Color);
+		modelStack.PopMatrix();
 		modelStack.PopMatrix();
 		break;
 	case GameObject::GO_CANNON_PLATFORM:
@@ -527,64 +538,71 @@ void SceneCollision::Render()
 			RenderGO(go);
 		}
 	}
-	if (m_ghost->active)
-		RenderGO(m_ghost);
+	if (m_ghost01->active)
+		RenderGO(m_ghost01);
+	if (m_ghost02->active)
+		RenderGO(m_ghost02);
 
-	if (Application::IsKeyPressed(VK_RETURN))
-	{
-		//On screen text
-		std::ostringstream ss;
-		ss << "Object count: " << m_objectCount;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 9);
+	//if (Application::IsKeyPressed(VK_RETURN))
+	//{
+	//	//On screen text
+	//	std::ostringstream ss;
+	//	ss << "Object count: " << m_objectCount;
+	//	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 9);
 
-		ss.str(std::string());
-		ss.precision(5);
-		ss << "Initial momentum: " << initialMomentum;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 15);
+	//	ss.str(std::string());
+	//	ss.precision(5);
+	//	ss << "Initial momentum: " << initialMomentum;
+	//	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 15);
 
-		ss.str(std::string());
-		ss.precision(5);
-		ss << "Final momentum: " << finalMomentum;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 12);
+	//	ss.str(std::string());
+	//	ss.precision(5);
+	//	ss << "Final momentum: " << finalMomentum;
+	//	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 12);
 
-		//Exercise 3: render initial and final kinetic energy
-		ss.str(std::string());
-		ss.precision(5);
-		ss << "Initial KE: " << initialKE;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 21);
+	//	//Exercise 3: render initial and final kinetic energy
+	//	ss.str(std::string());
+	//	ss.precision(5);
+	//	ss << "Initial KE: " << initialKE;
+	//	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 21);
 
-		ss.str(std::string());
-		ss.precision(5);
-		ss << "Final KE: " << finalKE;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 18);
+	//	ss.str(std::string());
+	//	ss.precision(5);
+	//	ss << "Final KE: " << finalKE;
+	//	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 18);
 
-		ss.str(std::string());
-		ss.precision(3);
-		ss << "Speed: " << m_speed;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 6);
+	//	ss.str(std::string());
+	//	ss.precision(3);
+	//	ss << "Speed: " << m_speed;
+	//	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 6);
 
-		ss.str(std::string());
-		ss.precision(5);
-		ss << "FPS: " << fps;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 3);
+	//	ss.str(std::string());
+	//	ss.precision(5);
+	//	ss << "FPS: " << fps;
+	//	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 3);
 
-		RenderTextOnScreen(meshList[GEO_TEXT], "Collision", Color(0, 1, 0), 3, 0, 0);
-	}
+	//	RenderTextOnScreen(meshList[GEO_TEXT], "Collision", Color(0, 1, 0), 3, 0, 0);
+	//}
 }
 
 void SceneCollision::Exit()
 {
 	SceneBase::Exit();
 	//Cleanup GameObjects
-	while(m_goList.size() > 0)
+	while (m_goList.size() > 0)
 	{
 		GameObject *go = m_goList.back();
 		delete go;
 		m_goList.pop_back();
 	}
-	if(m_ghost)
+	if (m_ghost01)
 	{
-		delete m_ghost;
-		m_ghost = NULL;
+		delete m_ghost01;
+		m_ghost01 = NULL;
+	}
+	if (m_ghost02)
+	{
+		delete m_ghost02;
+		m_ghost02 = NULL;
 	}
 }
