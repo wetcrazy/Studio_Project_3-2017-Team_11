@@ -274,7 +274,6 @@ void SceneCollision::Update(double dt)
 	// Movement for Cannon
 	aim.Set(posX, posY, 0);
 	aim = aim - platform->pos;
-	aim.Set(aim.x - platform->pos.x, Math::Clamp(aim.y, platform->pos.y, 100 - platform->pos.y), 0);
 	cannon->dir = aim.Cross(Vector3(0, 0, 1));
 	cannon->dir.Normalize();
 	
