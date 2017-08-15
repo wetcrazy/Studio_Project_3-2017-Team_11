@@ -93,6 +93,20 @@ bool SceneCollision::CheckCollision(GameObject *go1, GameObject *go2, float dt)
 		return go1->vel.Dot(N) > 0 && (abs((w0 - b1).Dot(N)) < r + h * 0.5f) &&
 			(abs((w0 - b1).Dot(NP)) < r + l * 0.5f);
 	}
+	case GameObject::GO_BLOCKS:
+	{
+		Vector3 dis = go1->pos - go2->pos;
+		Vector3 vel = go1->vel - go2->vel;
+		float r1 = go1->scale.x * 0.65;
+		float r2 = go2->scale.x * 0.65;
+
+		if (vel.Dot(dis) < 0 && dis.LengthSquared() < (r1 + r2) * (r1 + r2))
+		{
+			std::cout << "THis is being collided with!" << std::endl;
+			return true;
+		}
+		return false;
+	}
 	case GameObject::GO_PILLAR:
 	{
 		Vector3 p1 = go1->pos;
@@ -170,6 +184,51 @@ void SceneCollision::CollisionResponse(GameObject * go1, GameObject * go2)
 
 		break;
 	}
+	case GameObject::GO_BLOCKS:
+	{
+		float mag = go1->vel.Length();
+		std::cout << mag << std::endl;
+		Vector3 vel = go1->vel;
+		Vector3 N = go2->dir;
+
+		float closex, closey;
+		int side = 0;
+		Vector3 norm = (0, 0, 0);
+		closex = go1->pos.x;
+		closey = go1->pos.y;
+		if (closex < go2->pos.x) { closex = go2->pos.x; side = 1; }
+		if (closex > go2->pos.x + go2->scale.x * 1) { closex = go2->pos.x + go2->scale.x * 1; side = 2; }
+
+		if (closey < go2->pos.y) { closey = go2->pos.y; side = 3; }
+		if (closey > go2->pos.y + go2->scale.y * 1) { closey = go2->pos.y + go2->scale.y * 1; side = 4; }
+
+		if (side == 1)
+		{
+			norm = (-1, 0, 0);
+			std::cout << "Left!" << std::endl;
+		}
+		else if (side == 2)
+		{
+			std::cout << "Right!" << std::endl;
+			norm = (1, 0, 0);
+		}
+		else if (side == 3)
+		{
+			std::cout << "Bottom!" << std::endl;
+			norm = (0, 1, 0);
+		}
+		else
+		{
+			std::cout << "Top!" << std::endl;
+			norm = (0, -1, 0);
+		}
+		go1->vel = (vel - (2.f * vel.Dot(N)) * N);
+		if (side == 1 || side == 2)
+			go1->vel.x = -go1->vel.x;
+		if (side == 3 || side == 4)
+			go1->vel.y = -go1->vel.y;
+		break;
+	}
 	case GameObject::GO_PILLAR:
 	{
 		Vector3 vel = go1->vel;
@@ -226,7 +285,7 @@ void SceneCollision::Update(double dt)
 			}
 		}
 	}
-	std::cout << platform->pos.y << std::endl;
+	//std::cout << platform->pos.y << std::endl;
 
 	if (!bLButtonState && Application::IsMousePressed(0))
 	{
@@ -445,6 +504,16 @@ void SceneCollision::CreateStuff()
 	cannon->pos = platform->pos;
 	cannon->scale.Set(1, 2.5, 1);
 	m_goList.push_back(cannon);
+
+	{
+		GameObject* pillar = FetchGO();
+		pillar->type = GameObject::GO_BLOCKS;	// Pillar for Elevated Ground
+		pillar->active = true;
+		pillar->pos.Set(133 / 2 + 16, 100 / 2 + 16, 0);
+		pillar->scale.Set(3, 3, 3);
+		pillar->Color.Set(1, 1, 1);
+		std::cout << "This is spawned!" << std::endl;
+	}
 }
 
 void SceneCollision::RenderGO(GameObject *go)
@@ -461,6 +530,13 @@ void SceneCollision::RenderGO(GameObject *go)
 		modelStack.PopMatrix();
 		break;
 	case GameObject::GO_CUBE:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_CUBE], true, go->Color);
+		modelStack.PopMatrix();
+		break;
+	case GameObject::GO_BLOCKS:
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
