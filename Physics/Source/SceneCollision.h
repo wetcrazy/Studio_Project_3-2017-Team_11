@@ -64,8 +64,8 @@ protected:
 
 	//Upgrades Menu
 	GameObject *upgradesMenu;
-	GameObject *arrow1;
-	GameObject *arrow2;
+	GameObject *arrow_upgrade1;
+	GameObject *arrow_return;
 	GameObject *grade1;
 	bool b_upgradesMenu_IsOpen;
 	float pressDelay = 0.f;

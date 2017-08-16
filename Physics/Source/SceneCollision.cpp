@@ -287,30 +287,41 @@ void SceneCollision::Update(double dt)
 	//Upgrades Menu resizing according to window size
 	if (b_upgradesMenu_IsOpen)
 	{
-		//Arrow1 (Grade 1)
-		arrow1->pos.Set(w_temp / 2, h_temp / 2, -5);
-		//arrow1->scale.Set(w_temp + 2, h_temp, 1);
+		//Position values
+		float posXDownArrow = 2.5f;
+		float posYDownArrow_Upgrade1 = 0.71f;
+		float posYDownArrow_Return = 5.f;
+		float posYDown_Upgrade1 = 0.72f;
+
+		//Scale values
+		float scaleDown_Arrow = 10.f;
+		float scaleXDown_Upgrade = 2.4f;
+		float scaleYDown_Upgrade = 17.f;
+
+		//Arrow (Grade 1)
+		arrow_upgrade1->pos.Set((w_temp / 2) / posXDownArrow, (h_temp / 2) / posYDownArrow_Upgrade1, -5);
+		arrow_upgrade1->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
+		//Arrow (Return)
+		arrow_return->pos.Set((w_temp / 2) / posXDownArrow, (h_temp / 2) / posYDownArrow_Return, -5);
+		arrow_return->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
 		//Grade1
-		grade1->pos.Set(w_temp / 2, h_temp / 2, -5);
-		//grade1->scale.Set(w_temp + 2, h_temp, 1);
-		//Arrow2 (Return)
-		arrow1->pos.Set(w_temp / 2, h_temp / 2, -5);
-		arrow1->scale.Set(w_temp + 2, h_temp, 1);
+		grade1->pos.Set(w_temp / 2, (h_temp / 2) / posYDown_Upgrade1, -5);
+		grade1->scale.Set((w_temp + 2) / scaleXDown_Upgrade, h_temp / scaleYDown_Upgrade, 1);
 		//Upgrade Menu
 		upgradesMenu->pos.Set(w_temp / 2, h_temp / 2, -5);
 		upgradesMenu->scale.Set(w_temp + 2, h_temp, 1);
 	}
 	else
 	{
-		//Arrow1 (Grade 1)
-		arrow1->pos.Set(-10, -10, -5);
-		arrow1->scale.Set(1, 1, 1);
+		//Arrow (Grade 1)
+		arrow_upgrade1->pos.Set(-10, -10, -5);
+		arrow_upgrade1->scale.Set(1, 1, 1);
 		//Grade1
 		grade1->pos.Set(-10, -10, -5);
 		grade1->scale.Set(1, 1, 1);
-		//Arrow2 (Return)
-		arrow2->pos.Set(-10, -10, -5);
-		arrow2->scale.Set(1, 1, 1);
+		//Arrow (Return)
+		arrow_return->pos.Set(-10, -10, -5);
+		arrow_return->scale.Set(1, 1, 1);
 		//Upgrade Menu
 		upgradesMenu->pos.Set(-10, -10, -5);
 		upgradesMenu->scale.Set(1, 1, 1);
@@ -511,31 +522,61 @@ void SceneCollision::Update(double dt)
 		RenderUpgradesMenu(dt);
 
 		int h_temp = 100;
-		int w_temp = 100 * Application::GetWindowWidth() / Application::GetWindowHeight();
+		int w_temp = 100 * Application::GetWindowWidth() / Application::GetWindowHeight();		
 
-		upgradesMenu->active = true;
-		upgradesMenu->pos.Set(w_temp / 2, h_temp / 2, -5);
-		upgradesMenu->scale.Set(w_temp + 2, h_temp, 1);
+		//Position values
+		float posXDownArrow = 2.5f;
+		float posYDownArrow_Upgrade1 = 0.71f;
+		float posYDownArrow_Return = 5.f;
+		float posYDown_Upgrade1 = 0.72f;
 
-		/*switch (selectOptions)
+		//Scale values
+		float scaleDown_Arrow = 10.f;
+		float scaleXDown_Upgrade = 2.4f;
+		float scaleYDown_Upgrade = 17.f;
+
+		switch (selectOptions)
 		{
 		case GRADE_1:
-			arrow1->active = true;
-			arrow1->pos.Set(w_temp / 2, h_temp / 2, -5);
-			arrow1->scale.Set(w_temp + 2 / 10, h_temp / 10, 1);
+			//Render in arrow 
+			arrow_upgrade1->active = true;
+			arrow_upgrade1->pos.Set((w_temp / 2) / posXDownArrow, (h_temp / 2) / posYDownArrow_Upgrade1, -5);
+			arrow_return->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
 
-			grade1->active = true;
-			grade1->pos.Set(w_temp / 2, h_temp / 2, -5);
-			grade1->scale.Set(w_temp + 2, h_temp, 1);
+			//Render in upgrades menu
+			upgradesMenu->active = true;
+			upgradesMenu->pos.Set(w_temp / 2, h_temp / 2, -5);
+			upgradesMenu->scale.Set(w_temp + 2, h_temp, 1);
+
+			//Active->false
+			arrow_return->active = false;
 			break;
 
 		case RETURN:
-			arrow2->active = true;
-			arrow2->pos.Set(w_temp / 2, h_temp / 2, -5);
-			arrow2->scale.Set(w_temp + 2, h_temp, 1);
-			break;
-		}*/
+			//Render in arrow
+			arrow_return->active = true;
+			arrow_return->pos.Set((w_temp / 2) / posXDownArrow, (h_temp / 2) / posYDownArrow_Return, -5);
+			arrow_return->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
 
+			//Render in upgrades menu
+			upgradesMenu->active = true;
+			upgradesMenu->pos.Set(w_temp / 2, h_temp / 2, -5);
+			upgradesMenu->scale.Set(w_temp + 2, h_temp, 1);
+
+			//Active->false
+			arrow_upgrade1->active = false;
+			grade1->active = false;
+			break;
+		}
+
+		//If player has bought the first upgrade
+		if (b_upgrades1)
+		{
+			//Render in upgrade1
+			grade1->active = true;
+			grade1->pos.Set(w_temp / 2, (h_temp / 2) / posYDown_Upgrade1, -5);
+			grade1->scale.Set((w_temp + 2) / scaleXDown_Upgrade, h_temp / scaleYDown_Upgrade, 1);
+		}
 	}
 }
 
@@ -547,19 +588,6 @@ void SceneCollision::CreateStuff()
 	float h_temp = 100;
 
 	GameObject *wall = FetchGO();
-
-	arrow1 = new GameObject(GameObject::GO_ARROW);	// Arrow1 for upgrade Menu
-	arrow1->pos.Set(-10, -10, -10);
-	m_goList.push_back(arrow1);
-	arrow2 = new GameObject(GameObject::GO_ARROW);	// Arrow2 for upgrade Menu
-	arrow2->pos.Set(-10, -10, -10);
-	m_goList.push_back(arrow2);
-	grade1 = new GameObject(GameObject::GO_GRADE1);	// First upgrade for Menu
-	grade1->pos.Set(-10, -10, -10);
-	m_goList.push_back(grade1);
-	upgradesMenu = new GameObject(GameObject::GO_UPGRADESMENU);	// Upgrade Menu
-	upgradesMenu->pos.Set(-10, -10, -10);
-	m_goList.push_back(upgradesMenu);
 
 	wall->type = GameObject::GO_WALL;	// Left Wall
 	wall->active = true;
@@ -599,6 +627,19 @@ void SceneCollision::CreateStuff()
 	pillar->scale.Set(1.4, 1.4, 1.4);
 	pillar->Color.Set(0.486, 0.988, 0);
 
+	arrow_upgrade1 = new GameObject(GameObject::GO_ARROW);	// Arrow for upgrade Menu
+	arrow_upgrade1->pos.Set(-10, -10, -10);
+	m_goList.push_back(arrow_upgrade1);
+	arrow_return = new GameObject(GameObject::GO_ARROW);	// Arrow for upgrade Menu
+	arrow_return->pos.Set(-10, -10, -10);
+	m_goList.push_back(arrow_return);
+	grade1 = new GameObject(GameObject::GO_GRADE1);	// First upgrade for Menu
+	grade1->pos.Set(-10, -10, -10);
+	m_goList.push_back(grade1);
+	upgradesMenu = new GameObject(GameObject::GO_UPGRADESMENU);	// Upgrade Menu
+	upgradesMenu->pos.Set(-10, -10, -10);
+	m_goList.push_back(upgradesMenu);
+
 	background = new GameObject(GameObject::GO_BACKGROUND);	// Background
 	background->active = true;
 	background->pos.Set(w_temp / 2, h_temp / 2, -5);
@@ -627,12 +668,6 @@ void SceneCollision::CreateStuff()
 		pillar->Color.Set(1, 1, 1);
 		std::cout << "This is spawned!" << std::endl;
 	}
-
-	background = new GameObject(GameObject::GO_BACKGROUND);	// Background
-	background->active = true;
-	background->pos.Set(w_temp / 2, h_temp / 2, -5);
-	background->scale.Set(w_temp, h_temp, 1);
-	m_goList.push_back(background);
 }
 
 void SceneCollision::RenderUpgradesMenu(double dt)
