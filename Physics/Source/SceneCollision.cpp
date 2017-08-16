@@ -287,6 +287,9 @@ void SceneCollision::Update(double dt)
 	//Upgrades Menu resizing according to window size
 	if (b_upgradesMenu_IsOpen)
 	{
+		platform->active = false;
+		cannon->active = false;
+
 		//Position values
 		float posXDownArrow = 2.5f;
 		float posYDownArrow_Upgrade1 = 0.71f;
@@ -313,18 +316,13 @@ void SceneCollision::Update(double dt)
 	}
 	else
 	{
-		//Arrow (Grade 1)
-		arrow_upgrade1->pos.Set(-10, -10, -5);
-		arrow_upgrade1->scale.Set(1, 1, 1);
-		//Grade1
-		grade1->pos.Set(-10, -10, -5);
-		grade1->scale.Set(1, 1, 1);
-		//Arrow (Return)
-		arrow_return->pos.Set(-10, -10, -5);
-		arrow_return->scale.Set(1, 1, 1);
-		//Upgrade Menu
-		upgradesMenu->pos.Set(-10, -10, -5);
-		upgradesMenu->scale.Set(1, 1, 1);
+		platform->active = true;
+		cannon->active = true;
+
+		arrow_upgrade1->active = false;
+		grade1->active = false;
+		arrow_return->active = false;
+		upgradesMenu->active = false;
 	}
 	
 
@@ -627,18 +625,20 @@ void SceneCollision::CreateStuff()
 	pillar->scale.Set(1.4, 1.4, 1.4);
 	pillar->Color.Set(0.486, 0.988, 0);
 
-	arrow_upgrade1 = new GameObject(GameObject::GO_ARROW);	// Arrow for upgrade Menu
-	arrow_upgrade1->pos.Set(-10, -10, -10);
-	m_goList.push_back(arrow_upgrade1);
-	arrow_return = new GameObject(GameObject::GO_ARROW);	// Arrow for upgrade Menu
-	arrow_return->pos.Set(-10, -10, -10);
-	m_goList.push_back(arrow_return);
-	grade1 = new GameObject(GameObject::GO_GRADE1);	// First upgrade for Menu
-	grade1->pos.Set(-10, -10, -10);
-	m_goList.push_back(grade1);
-	upgradesMenu = new GameObject(GameObject::GO_UPGRADESMENU);	// Upgrade Menu
-	upgradesMenu->pos.Set(-10, -10, -10);
-	m_goList.push_back(upgradesMenu);
+	{
+		arrow_upgrade1 = new GameObject(GameObject::GO_ARROW);	// Arrow for upgrade Menu
+		arrow_upgrade1->pos.Set(-10, -10, 10);
+		m_goList.push_back(arrow_upgrade1);
+		arrow_return = new GameObject(GameObject::GO_ARROW);	// Arrow for upgrade Menu
+		arrow_return->pos.Set(-10, -10, 10);
+		m_goList.push_back(arrow_return);
+		grade1 = new GameObject(GameObject::GO_GRADE1);	// First upgrade for Menu
+		grade1->pos.Set(-10, -10, 10);
+		m_goList.push_back(grade1);
+		upgradesMenu = new GameObject(GameObject::GO_UPGRADESMENU);	// Upgrade Menu
+		upgradesMenu->pos.Set(-10, -10, 10);
+		m_goList.push_back(upgradesMenu);
+	}
 
 	background = new GameObject(GameObject::GO_BACKGROUND);	// Background
 	background->active = true;
@@ -646,18 +646,20 @@ void SceneCollision::CreateStuff()
 	background->scale.Set(w_temp, h_temp, 1);
 	m_goList.push_back(background);
 	
-	platform = new GameObject(GameObject::GO_CANNON_PLATFORM);	// Platform for Cannon
-	platform->active = true;
-	platform->dir.Set(0, 1, 0);
-	platform->pos.Set(133 / 8, 100 / 6.8, 0);
-	platform->scale.Set(1, 3, 1);
-	m_goList.push_back(platform);
+	{
+		platform = new GameObject(GameObject::GO_CANNON_PLATFORM);	// Platform for Cannon
+		platform->active = true;
+		platform->dir.Set(0, 1, 0);
+		platform->pos.Set(133 / 8, 100 / 6.8, 0);
+		platform->scale.Set(1, 3, 1);
+		m_goList.push_back(platform);
 
-	cannon = new GameObject(GameObject::GO_CANNON);	// Cannon
-	cannon->active = true;
-	cannon->pos = platform->pos;
-	cannon->scale.Set(1, 2.5, 1);
-	m_goList.push_back(cannon);
+		cannon = new GameObject(GameObject::GO_CANNON);	// Cannon
+		cannon->active = true;
+		cannon->pos = platform->pos;
+		cannon->scale.Set(1, 2.5, 1);
+		m_goList.push_back(cannon);
+	}
 
 	{
 		GameObject* pillar = FetchGO();
