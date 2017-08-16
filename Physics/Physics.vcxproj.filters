@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
     <Filter Include="SceneManager">
       <UniqueIdentifier>{0f34ed1a-43dc-4796-82fd-f7e077aeb0cb}</UniqueIdentifier>
     </Filter>
@@ -30,6 +26,10 @@
     <Filter Include="GameObject">
       <UniqueIdentifier>{0d6d874b-83a2-4ecc-9c67-d702bc2b8ac9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Other Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp">
@@ -43,9 +43,6 @@
     </ClCompile>
     <ClCompile Include="Source\Utility.cpp">
       <Filter>Other Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\SceneManager.cpp">
-      <Filter>SceneManager</Filter>
     </ClCompile>
     <ClCompile Include="Source\SceneCollision.cpp">
       <Filter>Playground Scenes</Filter>
@@ -77,28 +74,25 @@
     <ClCompile Include="Source\SceneAsteroid.cpp">
       <Filter>Playground Scenes</Filter>
     </ClCompile>
-    <ClCompile Include="Source\SceneUpgrade.cpp">
-      <Filter>SceneManager</Filter>
+    <ClCompile Include="Source\LoadCSV.cpp">
+      <Filter>Loading Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
-      <Filter>Header Files</Filter>
+      <Filter>Other Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Scene.h">
-      <Filter>Header Files</Filter>
+      <Filter>Other Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\shader.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Other Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Utility.h">
-      <Filter>Header Files</Filter>
+      <Filter>Other Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Vertex.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\SceneManager.h">
-      <Filter>SceneManager</Filter>
+      <Filter>Other Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\SceneCollision.h">
       <Filter>Playground Scenes</Filter>
@@ -136,8 +130,8 @@
     <ClInclude Include="Source\SceneAsteroid.h">
       <Filter>Playground Scenes</Filter>
     </ClInclude>
-    <ClInclude Include="Source\SceneUpgrade.h">
-      <Filter>SceneManager</Filter>
+    <ClInclude Include="Source\LoadCSV.h">
+      <Filter>Loading Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
