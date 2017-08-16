@@ -77,6 +77,9 @@
     <ClCompile Include="Source\LoadCSV.cpp">
       <Filter>Loading Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\SceneManager.cpp">
+      <Filter>SceneManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -132,6 +135,9 @@
     </ClInclude>
     <ClInclude Include="Source\LoadCSV.h">
       <Filter>Loading Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SceneManager.h">
+      <Filter>SceneManager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
