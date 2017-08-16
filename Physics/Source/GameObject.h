@@ -28,6 +28,8 @@ struct GameObject
 
 		// Upgrades Menu
 		GO_UPGRADESMENU,
+		GO_ARROW,
+		GO_GRADE1,
 		
 		GO_TOTAL, //must be last
 	};

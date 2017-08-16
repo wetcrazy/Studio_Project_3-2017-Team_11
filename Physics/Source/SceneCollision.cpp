@@ -285,8 +285,37 @@ void SceneCollision::Update(double dt)
 	background->scale.Set(w_temp + 2, h_temp, 1);
 
 	//Upgrades Menu resizing according to window size
-	upgradesMenu->pos.Set(w_temp / 2, h_temp / 2, -5);
-	upgradesMenu->scale.Set(w_temp + 2, h_temp, 1);
+	if (b_upgradesMenu_IsOpen)
+	{
+		//Arrow1 (Grade 1)
+		arrow1->pos.Set(w_temp / 2, h_temp / 2, -5);
+		//arrow1->scale.Set(w_temp + 2, h_temp, 1);
+		//Grade1
+		grade1->pos.Set(w_temp / 2, h_temp / 2, -5);
+		//grade1->scale.Set(w_temp + 2, h_temp, 1);
+		//Arrow2 (Return)
+		arrow1->pos.Set(w_temp / 2, h_temp / 2, -5);
+		arrow1->scale.Set(w_temp + 2, h_temp, 1);
+		//Upgrade Menu
+		upgradesMenu->pos.Set(w_temp / 2, h_temp / 2, -5);
+		upgradesMenu->scale.Set(w_temp + 2, h_temp, 1);
+	}
+	else
+	{
+		//Arrow1 (Grade 1)
+		arrow1->pos.Set(-10, -10, -5);
+		arrow1->scale.Set(1, 1, 1);
+		//Grade1
+		grade1->pos.Set(-10, -10, -5);
+		grade1->scale.Set(1, 1, 1);
+		//Arrow2 (Return)
+		arrow2->pos.Set(-10, -10, -5);
+		arrow2->scale.Set(1, 1, 1);
+		//Upgrade Menu
+		upgradesMenu->pos.Set(-10, -10, -5);
+		upgradesMenu->scale.Set(1, 1, 1);
+	}
+	
 
 	if (posY > cannon->pos.y)        // Cannon cannot move when cursor is below cannon	
 	if (!b_shootIsTrue)
@@ -488,16 +517,25 @@ void SceneCollision::Update(double dt)
 		upgradesMenu->pos.Set(w_temp / 2, h_temp / 2, -5);
 		upgradesMenu->scale.Set(w_temp + 2, h_temp, 1);
 
-		switch (selectOptions)
+		/*switch (selectOptions)
 		{
 		case GRADE_1:
-			RenderMeshOnScreen(meshList[GEO_ARROW], m_worldWidth / 2 + 6.5, m_worldHeight / 2 + 13.5, 3, 3, 0);
-			RenderMeshOnScreen(meshList[GEO_GRADE_1], m_worldWidth / 2 + 0.65, m_worldHeight / 2 + 13.45, 35, 3, 0);
+			arrow1->active = true;
+			arrow1->pos.Set(w_temp / 2, h_temp / 2, -5);
+			arrow1->scale.Set(w_temp + 2 / 10, h_temp / 10, 1);
+
+			grade1->active = true;
+			grade1->pos.Set(w_temp / 2, h_temp / 2, -5);
+			grade1->scale.Set(w_temp + 2, h_temp, 1);
 			break;
+
 		case RETURN:
-			RenderMeshOnScreen(meshList[GEO_ARROW], m_worldWidth / 2 + 6.5, m_worldHeight / 2 + 1.5, 3, 3, 0);
+			arrow2->active = true;
+			arrow2->pos.Set(w_temp / 2, h_temp / 2, -5);
+			arrow2->scale.Set(w_temp + 2, h_temp, 1);
 			break;
-		}
+		}*/
+
 	}
 }
 
@@ -510,6 +548,15 @@ void SceneCollision::CreateStuff()
 
 	GameObject *wall = FetchGO();
 
+	arrow1 = new GameObject(GameObject::GO_ARROW);	// Arrow1 for upgrade Menu
+	arrow1->pos.Set(-10, -10, -10);
+	m_goList.push_back(arrow1);
+	arrow2 = new GameObject(GameObject::GO_ARROW);	// Arrow2 for upgrade Menu
+	arrow2->pos.Set(-10, -10, -10);
+	m_goList.push_back(arrow2);
+	grade1 = new GameObject(GameObject::GO_GRADE1);	// First upgrade for Menu
+	grade1->pos.Set(-10, -10, -10);
+	m_goList.push_back(grade1);
 	upgradesMenu = new GameObject(GameObject::GO_UPGRADESMENU);	// Upgrade Menu
 	upgradesMenu->pos.Set(-10, -10, -10);
 	m_goList.push_back(upgradesMenu);
@@ -633,7 +680,7 @@ void SceneCollision::RenderUpgradesMenu(double dt)
 
 		case RETURN:
 		{
-			b_upgrades1 = true;
+			b_upgrades1 = false;
 			upgradesMenu->active = false;
 			b_upgradesMenu_IsOpen = false;
 			break;
@@ -720,6 +767,20 @@ void SceneCollision::RenderGO(GameObject *go)
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_UPGRADEMENU], true, go->Color);
+		modelStack.PopMatrix();
+		break;
+	case GameObject::GO_ARROW:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_ARROW], true, go->Color);
+		modelStack.PopMatrix();
+		break;
+	case GameObject::GO_GRADE1:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_GRADE_1], true, go->Color);
 		modelStack.PopMatrix();
 		break;
 	}

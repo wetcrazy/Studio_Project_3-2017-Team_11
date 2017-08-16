@@ -64,6 +64,9 @@ protected:
 
 	//Upgrades Menu
 	GameObject *upgradesMenu;
+	GameObject *arrow1;
+	GameObject *arrow2;
+	GameObject *grade1;
 	bool b_upgradesMenu_IsOpen;
 	float pressDelay = 0.f;
 	const float cooldownPressed = 0.2f;
