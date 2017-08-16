@@ -30,6 +30,12 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
+    <Filter Include="Scene UI">
+      <UniqueIdentifier>{2b1f645a-6035-4b6f-91d7-e4d04b5ce3da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes">
+      <UniqueIdentifier>{b03f6205-05c9-4917-a9b3-8925570cbed7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp">
@@ -79,6 +85,12 @@
     </ClCompile>
     <ClCompile Include="Source\SceneManager.cpp">
       <Filter>SceneManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SceneHighScore.cpp">
+      <Filter>Scene UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ClassHighScore.cpp">
+      <Filter>Classes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -138,6 +150,12 @@
     </ClInclude>
     <ClInclude Include="Source\SceneManager.h">
       <Filter>SceneManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SceneHighScore.h">
+      <Filter>Scene UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ClassHighScore.h">
+      <Filter>Classes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

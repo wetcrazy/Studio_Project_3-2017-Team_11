@@ -4,15 +4,13 @@
 #include <vector>
 #include <string>
 
+#include "ClassHighScore.h"
+
 using std::string;
 
-struct Score
-{
-	string rank;
-	string name;
-	string score;
-}; 
+// Function to Load .CSV
+// Returns vector<Score>
+std::vector<HighScore> LoadCSV(const char *file_path);
 
-std::vector<Score> LoadCSV(const char *file_path);
 
 #endif

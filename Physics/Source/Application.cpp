@@ -14,6 +14,7 @@
 #include "SceneKinematics.h"
 #include "SceneAsteroid.h"
 #include "SceneCollision.h"
+#include "SceneHighScore.h"
 #include "SceneManager.h"
 
 GLFWwindow* m_window;

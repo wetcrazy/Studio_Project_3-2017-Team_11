@@ -5,35 +5,34 @@
 
 using std::getline;
 
-std::vector<Score> LoadCSV(const char *file_path)
+// Function to Load .CSV
+// Returns vector<Score>
+std::vector<HighScore> LoadCSV(const char *file_path)
 {
-	std::vector<Score> output;
-	Score *Data;
+	std::vector<HighScore> output;
+	HighScore *temp;
+	
 	std::ifstream ip(file_path);
-	if (!ip.good())
+	if (!ip.good()) // If cannnot read, return ERROR
 	{
-		Data = new Score;
+		temp = new HighScore;
 		std::cout << "ERROR " << file_path << " Not Found~" << std::endl;	
-		Data->rank = "RANK", Data->name = "NAME", Data->score = "SCORE";
-		output.push_back(*Data);
-		delete &Data;
-		Data = new Score;
-		Data->rank = "ERROR", Data->name = "ERROR", Data->score = "ERROR";
-		output.push_back(*Data);
-		delete &Data;
+		temp->Data.rank = "RANK", temp->Data.name = "NAME", temp->Data.score = "SCORE";
+		output.push_back(*temp);
+		temp->Data.rank = "ERROR", temp->Data.name = "ERROR", temp->Data.score = "ERROR";
+		output.push_back(*temp);
 		return output;
 	}
 	else
 		std::cout << file_path << " File Opened~" << std::endl;
 	
-	while (ip.good())
+	while (ip.good()) // Returns the temp from .CSV
 	{
-		Data = new Score;
-		getline(ip, Data->rank, ',');
-		getline(ip, Data->name, ',');
-		getline(ip, Data->score, '\n');
-		output.push_back(*Data);
-		delete &Data;
+		temp = new HighScore;
+		getline(ip, temp->Data.rank, ',');
+		getline(ip, temp->Data.name, ',');
+		getline(ip, temp->Data.score, '\n');
+		output.push_back(*temp);
 	}
-	
+	return output;
 }
