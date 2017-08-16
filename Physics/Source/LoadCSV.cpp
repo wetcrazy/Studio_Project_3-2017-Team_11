@@ -1,10 +1,8 @@
 #include <fstream>
 #include <iostream>
-#include <string>
 
 #include "LoadCSV.h"
 
-using std::string;
 using std::getline;
 
 std::vector<Score> LoadCSV(const char *file_path)

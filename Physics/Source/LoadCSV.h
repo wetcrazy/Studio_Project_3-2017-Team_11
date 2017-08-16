@@ -2,6 +2,9 @@
 #define LOAD_CSV_H
 
 #include <vector>
+#include <string>
+
+using std::string;
 
 struct Score
 {
