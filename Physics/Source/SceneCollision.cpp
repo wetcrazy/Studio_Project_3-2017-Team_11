@@ -2,6 +2,7 @@
 #include "GL\glew.h"
 #include "Application.h"
 #include <sstream>
+#include "SceneManager.h"
 
 SceneCollision::SceneCollision()
 {
@@ -32,6 +33,10 @@ void SceneCollision::Init()
 	ft_shootTime = 0.f;
 	ft_elapsedTime = 0.f;
 	b_shootIsTrue = false;
+
+	// Upgrades Menu
+	b_upgradesMenu_IsOpen = false;
+	b_upgrades1 = false;
 
 	CreateStuff();
 }
@@ -274,8 +279,14 @@ void SceneCollision::Update(double dt)
 
 	int h_temp = 100;
 	int w_temp = 100 * Application::GetWindowWidth() / Application::GetWindowHeight();
+
+	//Background resizing according to window size
 	background->pos.Set(w_temp / 2, h_temp / 2, -5);
 	background->scale.Set(w_temp + 2, h_temp, 1);
+
+	//Upgrades Menu resizing according to window size
+	upgradesMenu->pos.Set(w_temp / 2, h_temp / 2, -5);
+	upgradesMenu->scale.Set(w_temp + 2, h_temp, 1);
 
 	if (posY > cannon->pos.y)        // Cannon cannot move when cursor is below cannon	
 	if (!b_shootIsTrue)
@@ -322,7 +333,15 @@ void SceneCollision::Update(double dt)
 		if (go->vel.Length() > 50) // 50 is distance
 		{
 			go->vel.Normalize();
-			go->vel *= 100;	// Speed of cannon shooting
+
+			if (!b_upgrades1)
+			{
+				go->vel *= 50;	// Speed of cannon shooting
+			}
+			if (b_upgrades1)
+			{
+				go->vel *= 100;	// Speed of cannon shooting
+			}
 		}
 		if (go->vel.y < 0)
 			go->vel.y *= -1;
@@ -450,6 +469,36 @@ void SceneCollision::Update(double dt)
 			}
 		}
 	}
+
+	// Opening Upgrades Menu
+	if (Application::IsKeyPressed('P'))
+	{
+		b_upgradesMenu_IsOpen = true;
+	}
+
+	// Upgrades Menu
+	if (b_upgradesMenu_IsOpen)
+	{
+		RenderUpgradesMenu(dt);
+
+		int h_temp = 100;
+		int w_temp = 100 * Application::GetWindowWidth() / Application::GetWindowHeight();
+
+		upgradesMenu->active = true;
+		upgradesMenu->pos.Set(w_temp / 2, h_temp / 2, -5);
+		upgradesMenu->scale.Set(w_temp + 2, h_temp, 1);
+
+		switch (selectOptions)
+		{
+		case GRADE_1:
+			RenderMeshOnScreen(meshList[GEO_ARROW], m_worldWidth / 2 + 6.5, m_worldHeight / 2 + 13.5, 3, 3, 0);
+			RenderMeshOnScreen(meshList[GEO_GRADE_1], m_worldWidth / 2 + 0.65, m_worldHeight / 2 + 13.45, 35, 3, 0);
+			break;
+		case RETURN:
+			RenderMeshOnScreen(meshList[GEO_ARROW], m_worldWidth / 2 + 6.5, m_worldHeight / 2 + 1.5, 3, 3, 0);
+			break;
+		}
+	}
 }
 
 void SceneCollision::CreateStuff()
@@ -460,6 +509,10 @@ void SceneCollision::CreateStuff()
 	float h_temp = 100;
 
 	GameObject *wall = FetchGO();
+
+	upgradesMenu = new GameObject(GameObject::GO_UPGRADESMENU);	// Upgrade Menu
+	upgradesMenu->pos.Set(-10, -10, -10);
+	m_goList.push_back(upgradesMenu);
 
 	wall->type = GameObject::GO_WALL;	// Left Wall
 	wall->active = true;
@@ -526,6 +579,70 @@ void SceneCollision::CreateStuff()
 		pillar->scale.Set(3, 3, 3);
 		pillar->Color.Set(1, 1, 1);
 		std::cout << "This is spawned!" << std::endl;
+	}
+
+	background = new GameObject(GameObject::GO_BACKGROUND);	// Background
+	background->active = true;
+	background->pos.Set(w_temp / 2, h_temp / 2, -5);
+	background->scale.Set(w_temp, h_temp, 1);
+	m_goList.push_back(background);
+}
+
+void SceneCollision::RenderUpgradesMenu(double dt)
+{
+	pressDelay += (float)dt;
+
+	//Prevent pressDelay from exceeding 0.5f
+	if (pressDelay > 0.5f)
+		pressDelay = 0.5f;
+
+	if ((Application::IsKeyPressed(VK_UP)) && pressDelay >= cooldownPressed)
+	{
+		if (selectOptions == RETURN)
+			selectOptions = GRADE_1;
+
+		else if (selectOptions == GRADE_1)
+			selectOptions = RETURN;
+
+		pressDelay = 0.f;
+	}
+
+	if ((Application::IsKeyPressed(VK_DOWN)) && pressDelay >= cooldownPressed)
+	{
+		if (selectOptions == RETURN)
+			selectOptions = GRADE_1;
+
+		else if (selectOptions == GRADE_1)
+			selectOptions = RETURN;
+
+		pressDelay = 0.f;
+	}
+
+	if (Application::IsKeyPressed(VK_RETURN) && pressDelay >= cooldownPressed)
+	{
+		switch (selectOptions)
+		{
+		case GRADE_1:
+		{
+			b_upgrades1 = true;
+			upgradesMenu->active = false;
+			b_upgradesMenu_IsOpen = false;
+			break;
+		}
+
+
+		case RETURN:
+		{
+			b_upgrades1 = true;
+			upgradesMenu->active = false;
+			b_upgradesMenu_IsOpen = false;
+			break;
+		}
+		default:
+			break;
+		}
+
+		pressDelay = 0.f;
 	}
 }
 
@@ -596,6 +713,13 @@ void SceneCollision::RenderGO(GameObject *go)
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_BACKGROUND], true, go->Color);
+		modelStack.PopMatrix();
+		break;
+	case GameObject::GO_UPGRADESMENU:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_UPGRADEMENU], true, go->Color);
 		modelStack.PopMatrix();
 		break;
 	}

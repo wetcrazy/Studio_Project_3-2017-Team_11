@@ -25,6 +25,9 @@ struct GameObject
 
 		GO_CANNON_PLATFORM,
 		GO_CANNON,
+
+		// Upgrades Menu
+		GO_UPGRADESMENU,
 		
 		GO_TOTAL, //must be last
 	};

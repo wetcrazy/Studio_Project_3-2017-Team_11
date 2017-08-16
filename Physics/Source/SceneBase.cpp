@@ -120,6 +120,14 @@ void SceneBase::Init()
 	meshList[GEO_CANNON_PLATFORM] = MeshBuilder::GenerateQuad("cannon platform", Color(1, 1, 1), 5.f);
 	meshList[GEO_CANNON_PLATFORM]->textureID = LoadTGA("Image//cannon_platform.tga");
 
+	// Upgrades Menu
+	meshList[GEO_UPGRADEMENU] = MeshBuilder::GenerateQuad("mainmenu", Color(1, 1, 1));
+	meshList[GEO_UPGRADEMENU]->textureID = LoadTGA("Image//Menu/Upgrades.tga");
+	meshList[GEO_ARROW] = MeshBuilder::GenerateQuad("arrow", Color(1, 1, 1));
+	meshList[GEO_ARROW]->textureID = LoadTGA("Image//Menu/Arrow.tga");
+	meshList[GEO_GRADE_1] = MeshBuilder::GenerateQuad("grade1", Color(1, 1, 1));
+	meshList[GEO_GRADE_1]->textureID = LoadTGA("Image//Menu/Grade1.tga");
+
 	bLightEnabled = true;
 }
 

@@ -20,6 +20,7 @@ public:
 	virtual void Update(double dt);
 	virtual void CreateStuff();	//create game objects here
 	virtual void Render();
+	virtual void RenderUpgradesMenu(double dt);	//upgrades are located here
 	virtual void Exit();
 
 	void RenderGO(GameObject *go);
@@ -53,11 +54,20 @@ protected:
 	//Cannon
 	GameObject *platform;
 	GameObject *cannon;
-	GameObject *background;
 	Vector3 aim;
 	float ft_shootTime;
 	float ft_elapsedTime;
 	bool b_shootIsTrue;
+
+	//Background
+	GameObject *background;
+
+	//Upgrades Menu
+	GameObject *upgradesMenu;
+	bool b_upgradesMenu_IsOpen;
+	float pressDelay = 0.f;
+	const float cooldownPressed = 0.2f;
+	bool b_upgrades1;
 };
 
 #endif

@@ -55,11 +55,17 @@ public:
 		GEO_CANNON,
 		GEO_CANNON_PLATFORM,
 
-		// Scene Manager
+		// Upgrades Menu
 		GEO_ARROW,
 		GEO_UPGRADEMENU,
+		GEO_GRADE_1,
 
 		NUM_GEOMETRY,
+	};
+	enum UPGRADES_MENU
+	{
+		GRADE_1 = 0,
+		RETURN,
 	};
 public:
 	SceneBase();
@@ -93,6 +99,9 @@ protected:
 	Light lights[1];
 
 	bool bLightEnabled;
+
+	//Default option
+	UPGRADES_MENU selectOptions = GRADE_1;
 
 	float fps;
 };
