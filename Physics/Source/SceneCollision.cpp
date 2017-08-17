@@ -378,13 +378,17 @@ void SceneCollision::Update(double dt)
 		{
 			go->vel.Normalize();
 
-			if (!b_upgrades1)
+			if (!b_upgrades1 && !b_upgrades2)
 			{
-				go->vel *= 50;	// Speed of cannon shooting
+				go->vel *= 50;	// Default Speed of cannon shooting
 			}
 			if (b_upgrades1)
 			{
-				go->vel *= 100;	// Speed of cannon shooting
+				go->vel *= 60;	// Speed of cannon shooting (upgrade 1)
+			}
+			if (b_upgrades2)
+			{
+				go->vel *= 70;	// Speed of cannon shooting (upgrade 2)
 			}
 		}
 		if (go->vel.y < 0)
