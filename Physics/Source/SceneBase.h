@@ -66,6 +66,9 @@ public:
 		// Upgrades Menu
 		GEO_UPGRADEMENU,
 		GEO_GRADE_1,
+		GEO_GRADE_2,
+		GEO_NEXTLEVEL,
+		GEO_NEXTPAGE,
 
 		// HighScore Menu
 		GEO_HIGHSCOREMENU,
@@ -75,7 +78,9 @@ public:
 	enum UPGRADES_MENU
 	{
 		GRADE_1 = 0,
-		RETURN,
+		GRADE_2,
+		NEXTLEVEL,
+		NEXTPAGE,
 	};
 public:
 	SceneBase();

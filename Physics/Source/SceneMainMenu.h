@@ -24,6 +24,7 @@ public:
 		NEWGAME = 0,
 		LEVELS,
 		INSTRUCTIONS,
+		HIGHSCORE,
 		OPTIONS,
 		QUIT,
 	};

@@ -37,6 +37,7 @@ void SceneCollision::Init()
 	// Upgrades Menu
 	b_upgradesMenu_IsOpen = false;
 	b_upgrades1 = false;
+	b_upgrades2 = false;
 
 	b_isBulletAlive = false;
 	ft_bulletAlive = 0;
@@ -319,47 +320,16 @@ void SceneCollision::Update(double dt)
 	background->pos.Set(w_temp / 2, h_temp / 2, -5);
 	background->scale.Set(w_temp + 2, h_temp, 1);
 
-	//Upgrades Menu resizing according to window size
-	if (b_upgradesMenu_IsOpen)
-	{
-		platform->active = false;
-		cannon->active = false;
+	//Position values (for upgrade menu)
+	float posXDownArrow = 0.7f;
+	float posXDownArrow_NextLevel = 1.1f;
+	float posXDownArrow_NextPage = 0.59f;
+	float posYDownArrow_Upgrade1 = 0.86f;
+	float posYDownArrow_Upgrade2 = 1.36f;
+	float posYDownArrow_NextPage_NextLevel = 3.7f;
 
-		//Position values
-		float posXDownArrow = 2.5f;
-		float posYDownArrow_Upgrade1 = 0.71f;
-		float posYDownArrow_Return = 5.f;
-		float posYDown_Upgrade1 = 0.72f;
-
-		//Scale values
-		float scaleDown_Arrow = 10.f;
-		float scaleXDown_Upgrade = 2.4f;
-		float scaleYDown_Upgrade = 17.f;
-
-		//Arrow (Grade 1)
-		arrow_upgrade1->pos.Set((w_temp / 2) / posXDownArrow, (h_temp / 2) / posYDownArrow_Upgrade1, -5);
-		arrow_upgrade1->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
-		//Arrow (Return)
-		arrow_return->pos.Set((w_temp / 2) / posXDownArrow, (h_temp / 2) / posYDownArrow_Return, -5);
-		arrow_return->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
-		//Grade1
-		grade1->pos.Set(w_temp / 2, (h_temp / 2) / posYDown_Upgrade1, -5);
-		grade1->scale.Set((w_temp + 2) / scaleXDown_Upgrade, h_temp / scaleYDown_Upgrade, 1);
-		//Upgrade Menu
-		upgradesMenu->pos.Set(w_temp / 2, h_temp / 2, -5);
-		upgradesMenu->scale.Set(w_temp + 2, h_temp, 1);
-	}
-	else
-	{
-		platform->active = true;
-		cannon->active = true;
-
-		arrow_upgrade1->active = false;
-		grade1->active = false;
-		arrow_return->active = false;
-		upgradesMenu->active = false;
-	}
-	
+	//Scale values (for upgrade menu)
+	float scaleDown_Arrow = 20.f;
 
 	if (posY > cannon->pos.y)        // Cannon cannot move when cursor is below cannon	
 	if (!b_shootIsTrue)
@@ -551,56 +521,62 @@ void SceneCollision::Update(double dt)
 		b_upgradesMenu_IsOpen = true;
 	}
 
-	// Upgrades Menu
+	// Opening Upgrades Menu
+	if (Application::IsKeyPressed('P'))
+	{
+		b_upgradesMenu_IsOpen = true;
+	}
+
+	// If upgrades menu is open
 	if (b_upgradesMenu_IsOpen)
 	{
 		RenderUpgradesMenu(dt);
 
-		int h_temp = 100;
-		int w_temp = 100 * Application::GetWindowWidth() / Application::GetWindowHeight();		
-
-		//Position values
-		float posXDownArrow = 2.5f;
-		float posYDownArrow_Upgrade1 = 0.71f;
-		float posYDownArrow_Return = 5.f;
-		float posYDown_Upgrade1 = 0.72f;
-
-		//Scale values
-		float scaleDown_Arrow = 10.f;
-		float scaleXDown_Upgrade = 2.4f;
-		float scaleYDown_Upgrade = 17.f;
+		platform->active = false;
+		cannon->active = false;
 
 		switch (selectOptions)
 		{
 		case GRADE_1:
 			//Render in arrow 
-			arrow_upgrade1->active = true;
-			arrow_upgrade1->pos.Set((w_temp / 2) / posXDownArrow, (h_temp / 2) / posYDownArrow_Upgrade1, -5);
-			arrow_return->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
+			arrows->active = true;
+			arrows->pos.Set((w_temp / 2) / posXDownArrow, (h_temp / 2) / posYDownArrow_Upgrade1, 1);
+			arrows->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
 
 			//Render in upgrades menu
 			upgradesMenu->active = true;
 			upgradesMenu->pos.Set(w_temp / 2, h_temp / 2, -5);
 			upgradesMenu->scale.Set(w_temp + 2, h_temp, 1);
-
-			//Active->false
-			arrow_return->active = false;
 			break;
 
-		case RETURN:
+		case GRADE_2:
 			//Render in arrow
-			arrow_return->active = true;
-			arrow_return->pos.Set((w_temp / 2) / posXDownArrow, (h_temp / 2) / posYDownArrow_Return, -5);
-			arrow_return->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
+			arrows->pos.Set((w_temp / 2) / posXDownArrow, (h_temp / 2) / posYDownArrow_Upgrade2, 1);
 
 			//Render in upgrades menu
 			upgradesMenu->active = true;
 			upgradesMenu->pos.Set(w_temp / 2, h_temp / 2, -5);
 			upgradesMenu->scale.Set(w_temp + 2, h_temp, 1);
+			break;
 
-			//Active->false
-			arrow_upgrade1->active = false;
-			grade1->active = false;
+		case NEXTLEVEL:
+			//Render in arrow
+			arrows->pos.Set((w_temp / 2) / posXDownArrow_NextLevel, (h_temp / 2) / posYDownArrow_NextPage_NextLevel, 1);
+
+			//Render in upgrades menu
+			upgradesMenu->active = true;
+			upgradesMenu->pos.Set(w_temp / 2, h_temp / 2, -5);
+			upgradesMenu->scale.Set(w_temp + 2, h_temp, 1);
+			break;
+
+		case NEXTPAGE:
+			//Render in arrow
+			arrows->pos.Set((w_temp / 2) / posXDownArrow_NextPage, (h_temp / 2) / posYDownArrow_NextPage_NextLevel, 1);
+
+			//Render in upgrades menu
+			upgradesMenu->active = true;
+			upgradesMenu->pos.Set(w_temp / 2, h_temp / 2, -5);
+			upgradesMenu->scale.Set(w_temp + 2, h_temp, 1);
 			break;
 		}
 
@@ -608,10 +584,36 @@ void SceneCollision::Update(double dt)
 		if (b_upgrades1)
 		{
 			//Render in upgrade1
-			grade1->active = true;
-			grade1->pos.Set(w_temp / 2, (h_temp / 2) / posYDown_Upgrade1, -5);
-			grade1->scale.Set((w_temp + 2) / scaleXDown_Upgrade, h_temp / scaleYDown_Upgrade, 1);
+			upgradesMenu->active = false;
+			highlight_grade2->active = false;
+			highlight_grade1->active = true;
+			highlight_grade1->pos.Set(w_temp / 2, h_temp / 2, -5);
+			highlight_grade1->scale.Set(w_temp + 2, h_temp, 1);
 		}
+		//If player has bought the second upgrade
+		if (b_upgrades2)
+		{
+			//Render in upgrade2
+			upgradesMenu->active = false;
+			highlight_grade1->active = false;
+			highlight_grade2->active = true;
+			highlight_grade2->pos.Set(w_temp / 2, h_temp / 2, -5);
+			highlight_grade2->scale.Set(w_temp + 2, h_temp, 1);
+		}
+	}
+	// If upgrades menu is not open
+	if (!b_upgradesMenu_IsOpen)
+	{
+		platform->active = true;
+		cannon->active = true;
+
+		arrows->active = false;
+		highlight_grade1->active = false;
+		highlight_grade2->active = false;
+		upgradesMenu->active = false;
+
+		//Reset default option
+		selectOptions = GRADE_1;
 	}
 }
 
@@ -661,20 +663,27 @@ void SceneCollision::CreateStuff()
 		wall->scale.Set(2, 100 / 3 + (1.5 * i), 1);
 	}
 
-		{
-			arrow_upgrade1 = new GameObject(GameObject::GO_ARROW);	// Arrow for upgrade Menu
-			arrow_upgrade1->pos.Set(-10, -10, 10);
-			m_goList.push_back(arrow_upgrade1);
-			arrow_return = new GameObject(GameObject::GO_ARROW);	// Arrow for upgrade Menu
-			arrow_return->pos.Set(-10, -10, 10);
-			m_goList.push_back(arrow_return);
-			grade1 = new GameObject(GameObject::GO_GRADE1);	// First upgrade for Menu
-			grade1->pos.Set(-10, -10, 10);
-			m_goList.push_back(grade1);
-			upgradesMenu = new GameObject(GameObject::GO_UPGRADESMENU);	// Upgrade Menu
-			upgradesMenu->pos.Set(-10, -10, 10);
-			m_goList.push_back(upgradesMenu);
-		}
+	{	//Upgrades Menu
+		arrows->type = GameObject::GO_ARROW;
+		arrows->active = true;
+		arrows->pos.Set(-10, -10, 1);
+		arrows->scale.Set(1, 1, 1);
+
+		highlight_grade1->type = GameObject::GO_GRADE1;
+		highlight_grade1->active = true;
+		highlight_grade1->pos.Set(-10, -10, 1);
+		highlight_grade1->scale.Set(1, 1, 1);
+
+		highlight_grade2->type = GameObject::GO_GRADE2;
+		highlight_grade2->active = true;
+		highlight_grade2->pos.Set(-10, -10, 1);
+		highlight_grade2->scale.Set(1, 1, 1);
+
+		upgradesMenu->type = GameObject::GO_UPGRADESMENU;
+		upgradesMenu->active = true;
+		upgradesMenu->pos.Set(-10, -10, -5);
+		upgradesMenu->scale.Set(1, 1, 1);
+	}
 
 	background = new GameObject(GameObject::GO_BACKGROUND);	// Background
 	background->active = true;
@@ -682,7 +691,7 @@ void SceneCollision::CreateStuff()
 	background->scale.Set(w_temp, h_temp, 1);
 	m_goList.push_back(background);
 	
-	{
+	{	//Cannon
 		platform = new GameObject(GameObject::GO_CANNON_PLATFORM);	// Platform for Cannon
 		platform->active = true;
 		platform->dir.Set(0, 1, 0);
@@ -697,7 +706,7 @@ void SceneCollision::CreateStuff()
 		m_goList.push_back(cannon);
 	}
 
-	{ // Testing Structure
+	{	//Testing Structure
 		GameObject* blocks = FetchGO();
 		blocks->type = GameObject::GO_BLOCKS;	// Vertical
 		blocks->active = true;
@@ -760,22 +769,34 @@ void SceneCollision::RenderUpgradesMenu(double dt)
 
 	if ((Application::IsKeyPressed(VK_UP)) && pressDelay >= cooldownPressed)
 	{
-		if (selectOptions == RETURN)
+		if (selectOptions == NEXTPAGE)
+			selectOptions = NEXTLEVEL;
+
+		else if (selectOptions == NEXTLEVEL)
+			selectOptions = GRADE_2;
+
+		else if (selectOptions == GRADE_2)
 			selectOptions = GRADE_1;
 
 		else if (selectOptions == GRADE_1)
-			selectOptions = RETURN;
+			selectOptions = NEXTPAGE;
 
 		pressDelay = 0.f;
 	}
 
 	if ((Application::IsKeyPressed(VK_DOWN)) && pressDelay >= cooldownPressed)
 	{
-		if (selectOptions == RETURN)
-			selectOptions = GRADE_1;
+		if (selectOptions == GRADE_1)
+			selectOptions = GRADE_2;
 
-		else if (selectOptions == GRADE_1)
-			selectOptions = RETURN;
+		else if (selectOptions == GRADE_2)
+			selectOptions = NEXTLEVEL;
+
+		else if (selectOptions == NEXTLEVEL)
+			selectOptions = NEXTPAGE;
+
+		else if (selectOptions == NEXTPAGE)
+			selectOptions = GRADE_1;
 
 		pressDelay = 0.f;
 	}
@@ -787,21 +808,25 @@ void SceneCollision::RenderUpgradesMenu(double dt)
 		case GRADE_1:
 		{
 			b_upgrades1 = true;
-			upgradesMenu->active = false;
-			b_upgradesMenu_IsOpen = false;
 			break;
 		}
-
-
-		case RETURN:
+		case GRADE_2:
 		{
-			b_upgrades1 = false;
+			b_upgrades2 = true;
+			break;
+		}
+		case NEXTPAGE:
+		{
 			upgradesMenu->active = false;
 			b_upgradesMenu_IsOpen = false;
 			break;
 		}
-		default:
+		case NEXTLEVEL:
+		{
+			upgradesMenu->active = false;
+			b_upgradesMenu_IsOpen = false;
 			break;
+		}
 		}
 
 		pressDelay = 0.f;
@@ -916,6 +941,13 @@ void SceneCollision::RenderGO(GameObject *go)
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_GRADE_1], true, go->Color);
+		modelStack.PopMatrix();
+		break;
+	case GameObject::GO_GRADE2:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_GRADE_2], true, go->Color);
 		modelStack.PopMatrix();
 		break;
 	}

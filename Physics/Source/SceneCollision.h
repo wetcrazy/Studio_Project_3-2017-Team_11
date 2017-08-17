@@ -63,14 +63,15 @@ protected:
 	GameObject *background;
 
 	//Upgrades Menu
-	GameObject *upgradesMenu;
-	GameObject *arrow_upgrade1;
-	GameObject *arrow_return;
-	GameObject *grade1;
+	GameObject *arrows = FetchGO();
+	GameObject *upgradesMenu = FetchGO();
+	GameObject *highlight_grade1 = FetchGO();
+	GameObject *highlight_grade2 = FetchGO();
 	bool b_upgradesMenu_IsOpen;
 	float pressDelay = 0.f;
 	const float cooldownPressed = 0.2f;
 	bool b_upgrades1;
+	bool b_upgrades2;
 
 	bool b_isBulletAlive;
 	float ft_bulletAlive;

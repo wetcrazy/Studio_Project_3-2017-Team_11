@@ -8,10 +8,12 @@
 #include "shader.hpp"
 #include "LoadTGA.h"
 #include "Camera.h"
-#include "SceneManager.h"
-#include "SceneCollision.h"
 #include "MeshBuilder.h"
 #include "Mesh.h"
+
+#include "SceneManager.h"
+#include "SceneCollision.h"
+#include "SceneHighScore.h"
 
 SceneMainMenu::SceneMainMenu()
 {
@@ -26,14 +28,6 @@ void SceneMainMenu::Init()
 	SceneBase::Init();
 
 	Math::InitRNG();
-
-	//Arrow for menus
-	meshList[GEO_ARROW] = MeshBuilder::GenerateQuad("arrow", Color(1, 1, 1), 1);
-	meshList[GEO_ARROW]->textureID = LoadTGA("Image//Menu/Arrow.tga");
-
-	//Main Menu
-	meshList[GEO_MAINMENU] = MeshBuilder::GenerateQuad("mainmenu", Color(1, 1, 1), 1);
-	meshList[GEO_MAINMENU]->textureID = LoadTGA("Image//Menu/Main Menu/main_menu.tga");
 
 	arrows->type = GameObject::GO_ARROW;	//Arrow 
 	arrows->active = true;
@@ -82,19 +76,12 @@ void SceneMainMenu::Update(double dt)
 
 	//Position values (arrows)
 	float posXDownArrow = 0.67f;
-	float posYDownArrow_Play = 0.71f;
-	float posYDownArrow_Levels = 0.85f;
-	float posYDownArrow_Instructions = 1.12f;
-	float posYDownArrow_Options = 1.55f;
-	float posYDownArrow_Quit = 2.7f;
-
-	//Position values (highlights)
-	float posXDownHighlight = 10.f;
-	float posYDownHighlight_Play = 0.71f;
-	float posYDownHighlight_Levels = 0.84f;
-	float posYDownHighlight_Instructions = 1.12f;
-	float posYDownHighlight_Options = 1.55f;
-	float posYDownHighlight_Quit = 2.f;
+	float posYDownArrow_Play = 0.69f;
+	float posYDownArrow_Levels = 0.84f;
+	float posYDownArrow_Instructions = 1.07f;
+	float posYDownArrow_Highscore = 1.45f;
+	float posYDownArrow_Options = 2.25f;
+	float posYDownArrow_Quit = 5.1f;
 
 	//Scale values
 	float scaleDown_Arrow = 20.f;
@@ -113,6 +100,9 @@ void SceneMainMenu::Update(double dt)
 				selectOptions = OPTIONS;
 
 			else if (selectOptions == OPTIONS)
+				selectOptions = HIGHSCORE;
+
+			else if (selectOptions == HIGHSCORE)
 				selectOptions = INSTRUCTIONS;
 
 			else if (selectOptions == INSTRUCTIONS)
@@ -139,6 +129,9 @@ void SceneMainMenu::Update(double dt)
 				selectOptions = INSTRUCTIONS;
 
 			else if (selectOptions == INSTRUCTIONS)
+				selectOptions = HIGHSCORE;
+
+			else if (selectOptions == HIGHSCORE)
 				selectOptions = OPTIONS;
 
 			else if (selectOptions == OPTIONS)
@@ -152,8 +145,8 @@ void SceneMainMenu::Update(double dt)
 			if (selectOptions == NEWGAME)
 				SceneManager::getInstance()->changeScene(new SceneCollision());
 
-			//else if (selectOptions == CONTROLS)
-			//SceneManager::getInstance()->changeScene(new ControlScreen());
+			else if (selectOptions == HIGHSCORE)
+			SceneManager::getInstance()->changeScene(new SceneHighScore());
 
 			else if (selectOptions == QUIT)
 				exit(0);
@@ -182,6 +175,7 @@ void SceneMainMenu::Update(double dt)
 
 		//Menu
 		menu->pos.Set(w_temp / 2, h_temp / 2, -5);
+		menu->scale.Set(w_temp + 2, h_temp, 1);
 		break;
 
 	case INSTRUCTIONS:
@@ -190,6 +184,16 @@ void SceneMainMenu::Update(double dt)
 
 		//Menu
 		menu->pos.Set(w_temp / 2, h_temp / 2, -5);
+		menu->scale.Set(w_temp + 2, h_temp, 1);
+		break;
+
+	case HIGHSCORE:
+		//Arrow
+		arrows->pos.Set((w_temp / 2) / posXDownArrow, (h_temp / 2) / posYDownArrow_Highscore, 1);
+
+		//Menu
+		menu->pos.Set(w_temp / 2, h_temp / 2, -5);
+		menu->scale.Set(w_temp + 2, h_temp, 1);
 		break;
 
 	case OPTIONS:
@@ -198,6 +202,7 @@ void SceneMainMenu::Update(double dt)
 
 		//Menu
 		menu->pos.Set(w_temp / 2, h_temp / 2, -5);
+		menu->scale.Set(w_temp + 2, h_temp, 1);
 		break;
 
 	case QUIT:
@@ -206,6 +211,7 @@ void SceneMainMenu::Update(double dt)
 
 		//Menu
 		menu->pos.Set(w_temp / 2, h_temp / 2, -5);
+		menu->scale.Set(w_temp + 2, h_temp, 1);
 		break;
 	}
 }
