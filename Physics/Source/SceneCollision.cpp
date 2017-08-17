@@ -98,6 +98,36 @@ bool SceneCollision::CheckCollision(GameObject *go1, GameObject *go2, float dt)
 		return go1->vel.Dot(N) > 0 && (abs((w0 - b1).Dot(N)) < r + h * 0.5f) &&
 			(abs((w0 - b1).Dot(NP)) < r + l * 0.5f);
 	}
+	case GameObject::GO_GROUND:
+	{
+		Vector3 w0 = go2->pos;
+		Vector3 b1 = go1->pos;
+		Vector3 N = go2->dir;
+		Vector3 NP = N.Cross(Vector3(0, 0, 1));
+		float l = go2->scale.y * 0.7;
+		float r = go1->scale.x * 0.7;
+		float h = go2->scale.x * 0.7;
+		if ((w0 - b1).Dot(N) < 0)
+			N = -N;
+
+		return go1->vel.Dot(N) > 0 && (abs((w0 - b1).Dot(N)) < r + h * 0.5f) &&
+			(abs((w0 - b1).Dot(NP)) < r + l * 0.5f);
+	}
+	case GameObject::GO_PLATFORM:
+	{
+		Vector3 w0 = go2->pos;
+		Vector3 b1 = go1->pos;
+		Vector3 N = go2->dir;
+		Vector3 NP = N.Cross(Vector3(0, 0, 1));
+		float l = go2->scale.y * 0.7;
+		float r = go1->scale.x * 0.7;
+		float h = go2->scale.x * 0.7;
+		if ((w0 - b1).Dot(N) < 0)
+			N = -N;
+
+		return go1->vel.Dot(N) > 0 && (abs((w0 - b1).Dot(N)) < r + h * 0.5f) &&
+			(abs((w0 - b1).Dot(NP)) < r + l * 0.5f);
+	}
 	case GameObject::GO_BLOCKS:
 	{
 		Vector3 dis = go1->pos - go2->pos;
@@ -191,6 +221,26 @@ void SceneCollision::CollisionResponse(GameObject * go1, GameObject * go2)
 		break;
 	}
 	case GameObject::GO_WALL:
+	{
+		float mag = go1->vel.Length();
+		std::cout << mag << std::endl;
+		Vector3 vel = go1->vel;
+		Vector3 N = go2->dir;
+		go1->vel = vel - (2.f * vel.Dot(N)) * N;
+
+		break;
+	}
+	case GameObject::GO_GROUND:
+	{
+		float mag = go1->vel.Length();
+		std::cout << mag << std::endl;
+		Vector3 vel = go1->vel;
+		Vector3 N = go2->dir;
+		go1->vel = vel - (2.f * vel.Dot(N)) * N;
+
+		break;
+	}
+	case GameObject::GO_PLATFORM:
 	{
 		float mag = go1->vel.Length();
 		std::cout << mag << std::endl;
@@ -562,58 +612,57 @@ void SceneCollision::CreateStuff()
 	float h_temp = 100;
 
 	GameObject *wall = FetchGO();
-	wall->type = GameObject::GO_WALL;	// Left Wall
+	wall->type = GameObject::GO_PLATFORM;	// Left Wall
 	wall->active = true;
 	wall->dir.Set(1, 0, 0);
 	wall->pos.Set(wall->scale.x / 2, wall->scale.y, 0);
 	wall->scale.Set(2, h / 27, 1);
-	wall->Color.Set(0.486, 0.988, 0);
 
 	wall = FetchGO();
-	wall->type = GameObject::GO_WALL;	// Ground
+	wall->type = GameObject::GO_GROUND;	// Ground
 	wall->active = true;
 	wall->dir.Set(0, -1, 0);
 	wall->pos.Set(133 / 2, wall->scale.y / 2, 0);
 	wall->scale.Set(2, w, 1);
-	wall->Color.Set(0.486, 0.988, 0);
 
 	wall = FetchGO();
-	wall->type = GameObject::GO_WALL;	// Elevated Ground
+	wall->type = GameObject::GO_PLATFORM;	// Elevated Ground
 	wall->active = true;
 	wall->dir.Set(0, -1, 0);
 	wall->pos.Set(133 / 8, 100 / 9, 0);
 	wall->scale.Set(2, 100 / 3, 1);
-	wall->Color.Set(0.486, 0.988, 0);
 
 	wall = FetchGO();
-	wall->type = GameObject::GO_WALL;	// Slanted Ground
+	wall->type = GameObject::GO_PLATFORM;	// Slanted Ground
 	wall->active = true;
 	wall->dir.Set(-1, -1, 0);
 	wall->pos.Set(133 / 5 + 11.5, 100 / 9 - 5.3, 0);
 	wall->scale.Set(2, 100 / 6, 1);
-	wall->Color.Set(0.486, 0.988, 0);
 
-	GameObject* pillar = FetchGO();
-	pillar->type = GameObject::GO_PILLAR;	// Pillar for Elevated Ground
-	pillar->active = true;
-	pillar->pos.Set(133 / 8 + 16, 100 / 9, 0);
-	pillar->scale.Set(1.4, 1.4, 1.4);
-	pillar->Color.Set(0.486, 0.988, 0);
-
+	for (unsigned i = 0; i < 6; i++)
 	{
-		arrow_upgrade1 = new GameObject(GameObject::GO_ARROW);	// Arrow for upgrade Menu
-		arrow_upgrade1->pos.Set(-10, -10, 10);
-		m_goList.push_back(arrow_upgrade1);
-		arrow_return = new GameObject(GameObject::GO_ARROW);	// Arrow for upgrade Menu
-		arrow_return->pos.Set(-10, -10, 10);
-		m_goList.push_back(arrow_return);
-		grade1 = new GameObject(GameObject::GO_GRADE1);	// First upgrade for Menu
-		grade1->pos.Set(-10, -10, 10);
-		m_goList.push_back(grade1);
-		upgradesMenu = new GameObject(GameObject::GO_UPGRADESMENU);	// Upgrade Menu
-		upgradesMenu->pos.Set(-10, -10, 10);
-		m_goList.push_back(upgradesMenu);
+		wall = FetchGO();
+		wall->type = GameObject::GO_PLATFORM;	// More Elevated Grounds
+		wall->active = true;
+		wall->dir.Set(0, -1, 0);
+		wall->pos.Set(133 / 8 + (1 * i), 100 / 9 - (2 * i), 0);
+		wall->scale.Set(2, 100 / 3 + (1.5 * i), 1);
 	}
+
+		{
+			arrow_upgrade1 = new GameObject(GameObject::GO_ARROW);	// Arrow for upgrade Menu
+			arrow_upgrade1->pos.Set(-10, -10, 10);
+			m_goList.push_back(arrow_upgrade1);
+			arrow_return = new GameObject(GameObject::GO_ARROW);	// Arrow for upgrade Menu
+			arrow_return->pos.Set(-10, -10, 10);
+			m_goList.push_back(arrow_return);
+			grade1 = new GameObject(GameObject::GO_GRADE1);	// First upgrade for Menu
+			grade1->pos.Set(-10, -10, 10);
+			m_goList.push_back(grade1);
+			upgradesMenu = new GameObject(GameObject::GO_UPGRADESMENU);	// Upgrade Menu
+			upgradesMenu->pos.Set(-10, -10, 10);
+			m_goList.push_back(upgradesMenu);
+		}
 
 	background = new GameObject(GameObject::GO_BACKGROUND);	// Background
 	background->active = true;
@@ -790,6 +839,24 @@ void SceneCollision::RenderGO(GameObject *go)
 		modelStack.Rotate(angle, 0, 0, 1);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_CUBE], true, go->Color);
+		modelStack.PopMatrix();
+		break;
+	case GameObject::GO_GROUND:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		angle = Math::RadianToDegree(atan2(go->dir.y, go->dir.x));
+		modelStack.Rotate(angle, 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_GROUND], true, go->Color);
+		modelStack.PopMatrix();
+		break;
+	case GameObject::GO_PLATFORM:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		angle = Math::RadianToDegree(atan2(go->dir.y, go->dir.x));
+		modelStack.Rotate(angle, 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_PLATFORM], true, go->Color);
 		modelStack.PopMatrix();
 		break;
 	case GameObject::GO_CANNON:
