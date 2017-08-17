@@ -16,6 +16,7 @@
 #include "SceneCollision.h"
 #include "SceneHighScore.h"
 #include "SceneManager.h"
+#include "SceneMainMenu.h"
 
 GLFWwindow* m_window;
 const unsigned char FPS = 60; // FPS of this game
@@ -146,7 +147,7 @@ void Application::Run()
 	//delete scene;
 
 	SceneManager* scene = SceneManager::getInstance();
-	scene->changeScene(new SceneCollision());
+	scene->changeScene(new SceneMainMenu());
 	scene->Update();
 }
 

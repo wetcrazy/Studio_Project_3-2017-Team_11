@@ -60,7 +60,7 @@ GameObject* SceneCollision::FetchGO()
 	}
 	for (unsigned i = 0; i < 40; ++i)
 	{
-		GameObject *go = new GameObject(GameObject::GO_CUBE);
+		GameObject *go = new GameObject(GameObject::GO_CUBE);	
 		m_goList.push_back(go);
 	}
 	GameObject *go = m_goList.back();

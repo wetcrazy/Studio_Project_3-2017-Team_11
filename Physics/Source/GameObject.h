@@ -28,9 +28,14 @@ struct GameObject
 		GO_CANNON_PLATFORM,
 		GO_CANNON,
 
-		// Upgrades Menu
-		GO_UPGRADESMENU,
+		//Arrow for Menus
 		GO_ARROW,
+
+		//Main Menu
+		GO_MAINMENU,
+
+		//Upgrades Menu
+		GO_UPGRADESMENU,
 		GO_GRADE1,
 		
 		GO_TOTAL, //must be last

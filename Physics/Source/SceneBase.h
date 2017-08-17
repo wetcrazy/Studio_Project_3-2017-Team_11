@@ -57,8 +57,13 @@ public:
 		GEO_CANNON,
 		GEO_CANNON_PLATFORM,
 
-		// Upgrades Menu
+		// Arrow for menus
 		GEO_ARROW,
+
+		// Main Menu
+		GEO_MAINMENU,
+
+		// Upgrades Menu
 		GEO_UPGRADEMENU,
 		GEO_GRADE_1,
 
