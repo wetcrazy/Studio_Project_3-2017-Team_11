@@ -102,12 +102,14 @@ bool SceneCollision::CheckCollision(GameObject *go1, GameObject *go2, float dt)
 	{
 		Vector3 dis = go1->pos - go2->pos;
 		Vector3 vel = go1->vel - go2->vel;
-		float r1 = go1->scale.x * 0.65;
-		float r2 = go2->scale.x * 0.65;
+		float r1 = go1->scale.x * 0.9f; // raw inputs
+		float r2 = go2->scale.x * 0.9f; // raw inputs
 
-		if (vel.Dot(dis) < 0 && dis.LengthSquared() < (r1 + r2) * (r1 + r2))
+		float r3 = go2->scale.y * 0.5f; // raw inputs
+
+		if (vel.Dot(dis) < 0 && dis.LengthSquared() < (r1 + r2) * (r1 + r3))
 		{
-			std::cout << "THis is being collided with!" << std::endl;
+			std::cout << "This is being collided with!" << std::endl;
 			return true;
 		}
 		return false;
@@ -179,6 +181,15 @@ void SceneCollision::CollisionResponse(GameObject * go1, GameObject * go2)
 
 		break;
 	}
+	case GameObject::GO_CUBE:
+	{
+		float mag = go1->vel.Length();
+		Vector3 vel = go1->vel;
+		Vector3 N = go2->dir;
+		go1->vel = vel - (2.f * vel.Dot(N)) * N;
+
+		break;
+	}
 	case GameObject::GO_WALL:
 	{
 		float mag = go1->vel.Length();
@@ -191,47 +202,15 @@ void SceneCollision::CollisionResponse(GameObject * go1, GameObject * go2)
 	}
 	case GameObject::GO_BLOCKS:
 	{
-		float mag = go1->vel.Length();
-		std::cout << mag << std::endl;
-		Vector3 vel = go1->vel;
-		Vector3 N = go2->dir;
-
-		float closex, closey;
-		int side = 0;
-		Vector3 norm = (0, 0, 0);
-		closex = go1->pos.x;
-		closey = go1->pos.y;
-		if (closex < go2->pos.x) { closex = go2->pos.x; side = 1; }
-		if (closex > go2->pos.x + go2->scale.x * 1) { closex = go2->pos.x + go2->scale.x * 1; side = 2; }
-
-		if (closey < go2->pos.y) { closey = go2->pos.y; side = 3; }
-		if (closey > go2->pos.y + go2->scale.y * 1) { closey = go2->pos.y + go2->scale.y * 1; side = 4; }
-
-		if (side == 1)
-		{
-			norm = (-1, 0, 0);
-			std::cout << "Left!" << std::endl;
-		}
-		else if (side == 2)
-		{
-			std::cout << "Right!" << std::endl;
-			norm = (1, 0, 0);
-		}
-		else if (side == 3)
-		{
-			std::cout << "Bottom!" << std::endl;
-			norm = (0, 1, 0);
-		}
-		else
-		{
-			std::cout << "Top!" << std::endl;
-			norm = (0, -1, 0);
-		}
-		go1->vel = (vel - (2.f * vel.Dot(N)) * N);
-		if (side == 1 || side == 2)
-			go1->vel.x = -go1->vel.x;
-		if (side == 3 || side == 4)
-			go1->vel.y = -go1->vel.y;
+		Vector3 u1 = go1->vel;
+		Vector3 u2 = go2->vel;
+		Vector3 N = (go2->pos - go1->pos).Normalize();
+		Vector3 u1N = u1.Dot(N) * N;
+		Vector3 u2N = u2.Dot(N) * N;
+		go1->vel = u1 + ((2 * m2) / (m1 + m2))* (u2N - u1N);
+		go2->vel = u2 + ((2 * m2) / (m1 + m2)) * (u1N - u2N);
+		go1->active = false;
+		go2->active = false;
 		break;
 	}
 	case GameObject::GO_PILLAR:
@@ -328,16 +307,11 @@ void SceneCollision::Update(double dt)
 
 	if (posY > cannon->pos.y)        // Cannon cannot move when cursor is below cannon	
 	if (!b_shootIsTrue)
-	{		
-		{
-			if (!b_shootIsTrue)
-			{
-				aim.Set(posX, posY, 0);	
-				aim.Set(aim.x - platform->pos.x, Math::Clamp(aim.y, platform->pos.y, 90 - platform->pos.y), 0);
-				cannon->dir = aim.Cross(Vector3(0, 0, 1));
-				cannon->dir.Normalize();
-			}
-		}
+	{
+		aim.Set(posX, posY, 0);
+		aim.Set(aim.x - platform->pos.x, aim.y - platform->pos.y, 0);
+		cannon->dir = aim.Cross(Vector3(0, 0, 1));
+		cannon->dir.Normalize();
 	}
 	//std::cout << platform->pos.y << std::endl;
 
@@ -466,15 +440,20 @@ void SceneCollision::Update(double dt)
 					--m_objectCount;
 				}
 			}
-
+			if (go->type == GameObject::GO_BLOCKS)
+			{
+				go->pos += go->vel * static_cast<float>(dt);
+				if (!go->vel.IsZero())
+					go->vel += (Vector3(0, 0, 0) - go->vel) * dt;
+			}
 			for (std::vector<GameObject *>::iterator it2 = it + 1; it2 != m_goList.end(); ++it2)
 			{
 				GameObject *go2 = static_cast<GameObject *>(*it2);
 				if (!go2->active)
 					continue;
 				//if (go->type != GameObject::GO_BALL && go2->type != GameObject::GO_BALL)
-				if (go->type != GameObject::GO_CUBE && go2->type != GameObject::GO_CUBE)
-					continue;
+				/*if (go->type != GameObject::GO_CUBE && go2->type != GameObject::GO_CUBE)
+					continue;*/
 
 				GameObject *goA, *goB;
 
@@ -489,19 +468,15 @@ void SceneCollision::Update(double dt)
 					goA = go2;
 					goB = go;
 				}
-
 				if (CheckCollision(goA, goB, dt))
 				{
 					m1 = goA->mass;
 					m2 = goB->mass;
 					u1 = goA->vel;
 					u2 = goB->vel;
-
 					CollisionResponse(goA, goB);
-
-					v1 = goA->vel;
-					v2 = goB->vel;
-
+					//v1 = goA->vel;
+					//v2 = goB->vel;
 					break;
 				}
 			}
@@ -580,13 +555,13 @@ void SceneCollision::Update(double dt)
 
 void SceneCollision::CreateStuff()
 {
-	int w = Application::GetWindowWidth();
-	int h = Application::GetWindowHeight();
+	float w = Application::GetWindowWidth();
+	float h = Application::GetWindowHeight();
+
 	float w_temp = 133;
 	float h_temp = 100;
 
 	GameObject *wall = FetchGO();
-
 	wall->type = GameObject::GO_WALL;	// Left Wall
 	wall->active = true;
 	wall->dir.Set(1, 0, 0);
@@ -661,13 +636,55 @@ void SceneCollision::CreateStuff()
 		m_goList.push_back(cannon);
 	}
 
-	{
-		GameObject* pillar = FetchGO();
-		pillar->type = GameObject::GO_BLOCKS;	// Pillar for Elevated Ground
-		pillar->active = true;
-		pillar->pos.Set(133 / 2 + 16, 100 / 2 + 16, 0);
-		pillar->scale.Set(3, 3, 3);
-		pillar->Color.Set(1, 1, 1);
+	{ // Testing Structure
+		GameObject* blocks = FetchGO();
+		blocks->type = GameObject::GO_BLOCKS;	// Vertical
+		blocks->active = true;
+		blocks->dir.Set(1, 0, 0);
+		blocks->pos.Set(133 / 2 + 16, blocks->scale.y + 5, 0);
+		blocks->scale.Set(2, 8, 1);
+		blocks->Color.Set(0.8, 0.8, 0);
+
+		blocks = FetchGO();
+		blocks->type = GameObject::GO_BLOCKS;	// Vertical
+		blocks->active = true;
+		blocks->dir.Set(1, 0, 0);
+		blocks->pos.Set(133 / 2 + 26, blocks->scale.y + 5, 0);
+		blocks->scale.Set(2, 8, 1);
+		blocks->Color.Set(0.8, 0.8, 0);
+
+		blocks = FetchGO();
+		blocks->type = GameObject::GO_BLOCKS;	// Horizontal
+		blocks->active = true;
+		blocks->dir.Set(0, 1, 0);
+		blocks->pos.Set(133 / 2 + 21, blocks->scale.y + 7.5, 0);
+		blocks->scale.Set(2, 8, 1);
+		blocks->Color.Set(0.8, 0.8, 0);
+		//
+		blocks = FetchGO();
+		blocks->type = GameObject::GO_BLOCKS;	// Vertical
+		blocks->active = true;
+		blocks->dir.Set(1, 0, 0);
+		blocks->pos.Set(133 / 2 + 6, blocks->scale.y + 8, 0);
+		blocks->scale.Set(2, 14, 1);
+		blocks->Color.Set(0.8, 0.8, 0);
+
+		blocks = FetchGO();
+		blocks->type = GameObject::GO_BLOCKS;	// Vertical
+		blocks->active = true;
+		blocks->dir.Set(1, 0, 0);
+		blocks->pos.Set(133 / 2 + 36, blocks->scale.y + 8, 0);
+		blocks->scale.Set(2, 14, 1);
+		blocks->Color.Set(0.8, 0.8, 0);
+
+		//blocks = FetchGO();
+		//blocks->type = GameObject::GO_BLOCKS;	// Horizontal
+		//blocks->active = true;
+		//blocks->dir.Set(0, 1, 0);
+		//blocks->pos.Set(133 / 2 + 21, blocks->scale.y + 16.5, 0);
+		//blocks->scale.Set(31.2, 2, 1);
+		//blocks->Color.Set(0.8, 0.8, 0);
+
 		std::cout << "This is spawned!" << std::endl;
 	}
 }
@@ -753,6 +770,8 @@ void SceneCollision::RenderGO(GameObject *go)
 	case GameObject::GO_BLOCKS:
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		angle = Math::RadianToDegree(atan2(go->dir.y, go->dir.x));
+		modelStack.Rotate(angle, 0, 0, 1);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_CUBE], true, go->Color);
 		modelStack.PopMatrix();
