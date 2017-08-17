@@ -1,10 +1,12 @@
-#include "SceneHighScore.h"
-#include "SceneManager.h"
 #include "GL\glew.h"
 #include "Application.h"
 #include "LoadCSV.h"
 #include "QuickSort.h"
 #include <sstream>
+
+#include "SceneManager.h"
+#include "SceneHighScore.h"
+#include "SceneMainMenu.h"
 
 SceneHighScore::SceneHighScore()
 {
@@ -39,11 +41,15 @@ void SceneHighScore::CreateStuff()
 	float w_temp = 133;
 	float h_temp = 100;
 
-	background = new GameObject(GameObject::GO_BACKGROUND);	// Background
-	background->active = true;
-	background->pos.Set(w_temp / 2, h_temp / 2, -5);
-	background->scale.Set(w_temp, h_temp, 1);
-	m_goList.push_back(background);
+	highscoreMenu->type = GameObject::GO_HIGHSCOREMENU;	// Background
+	highscoreMenu->active = true;
+	highscoreMenu->pos.Set(-10, -10, 1);
+	highscoreMenu->scale.Set(1, 1, 1);
+
+	arrows->type = GameObject::GO_ARROW;	// Arrow
+	arrows->active = true;
+	arrows->pos.Set(-10, -10, 1);
+	arrows->scale.Set(1, 1, 1);
 
 }
 
@@ -262,6 +268,7 @@ void SceneHighScore::CollisionResponse(GameObject * go1, GameObject * go2)
 void SceneHighScore::Update(double dt)
 {
 	SceneBase::Update(dt);
+	pressDelay += (float)dt;
 
 	if (Application::IsKeyPressed('9'))
 	{
@@ -284,31 +291,28 @@ void SceneHighScore::Update(double dt)
 
 	int h_temp = 100;
 	int w_temp = 100 * Application::GetWindowWidth() / Application::GetWindowHeight();
-	background->pos.Set(w_temp / 2, h_temp / 2, -5);
-	background->scale.Set(w_temp + 2, h_temp, 1);
+
+	//Position values (for arrows)
+	float posXArrow_Delete = 1.35f;
+	float posXArrow_Exit = 0.575f;
+	float posYArrow = 5.1f;
+
+	//Scale values (for upgrade menu)
+	float scaleDown_Arrow = 20.f;
 
 	if (!bLButtonState && Application::IsMousePressed(0))
 	{
-		
 	}
 
 	else if (bLButtonState && !Application::IsMousePressed(0))
 	{
-		
-
-		
 	}
-
-	
 
 	static bool bRButtonState = false;
 	if (!bRButtonState && Application::IsMousePressed(1))
-	{
-		
-	}
+	{	}
 	else if (bRButtonState && !Application::IsMousePressed(1))
 	{
-		
 	}
 	if (Application::IsKeyPressed('Z'))
 	{
@@ -387,6 +391,74 @@ void SceneHighScore::Update(double dt)
 			}
 		}
 	}
+
+	//UP, DOWN and ENTER controls
+	{
+		//Prevent pressDelay from exceeding 0.5f
+		if (pressDelay > 0.5f)
+			pressDelay = 0.5f;
+
+		if ((Application::IsKeyPressed(VK_LEFT)) && pressDelay >= cooldownPressed)
+		{
+			if (selectOptions == EXIT_HIGHSCORE)
+				selectOptions = DELETE_HIGHSCORE;
+
+			else if (selectOptions == DELETE_HIGHSCORE)
+				selectOptions = EXIT_HIGHSCORE;
+
+			pressDelay = 0.f;
+		}
+
+		if ((Application::IsKeyPressed(VK_RIGHT)) && pressDelay >= cooldownPressed)
+		{
+			if (selectOptions == EXIT_HIGHSCORE)
+				selectOptions = DELETE_HIGHSCORE;
+
+			else if (selectOptions == DELETE_HIGHSCORE)
+				selectOptions = EXIT_HIGHSCORE;
+
+			pressDelay = 0.f;
+		}
+
+		if (Application::IsKeyPressed(VK_RETURN) && pressDelay >= cooldownPressed)
+		{
+			/*if (selectOptions == DELETE_HIGHSCORE)
+			SceneManager::getInstance()->changeScene(new SceneCollision());*/
+
+			if (selectOptions == EXIT_HIGHSCORE)
+				SceneManager::getInstance()->changeScene(new SceneMainMenu());
+
+			pressDelay = 0.f;
+		}
+	}
+
+	//Arrows
+	{
+		switch (selectOptions)
+		{
+		case DELETE_HIGHSCORE:
+			//Render in arrow
+			arrows->active = true;
+			arrows->pos.Set((w_temp / 2) / posXArrow_Delete, (h_temp / 2) / posYArrow, 1);
+			arrows->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
+
+			//Render in highscore menu
+			highscoreMenu->active = true;
+			highscoreMenu->pos.Set(w_temp / 2, h_temp / 2, -5);
+			highscoreMenu->scale.Set(w_temp + 2, h_temp, 1);
+			break;
+
+		case EXIT_HIGHSCORE:
+			//Render in arrow
+			arrows->pos.Set((w_temp / 2) / posXArrow_Exit, (h_temp / 2) / posYArrow, 1);
+			arrows->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
+
+			//Render in highscore menu
+			highscoreMenu->pos.Set(w_temp / 2, h_temp / 2, -5);
+			highscoreMenu->scale.Set(w_temp + 2, h_temp, 1);
+			break;
+		}
+	}
 }
 
 void SceneHighScore::RenderGO(GameObject *go)
@@ -451,11 +523,18 @@ void SceneHighScore::RenderGO(GameObject *go)
 		RenderMesh(meshList[GEO_CANNON_PLATFORM], true, go->Color);
 		modelStack.PopMatrix();
 		break;
-	case GameObject::GO_BACKGROUND:
+	case GameObject::GO_HIGHSCOREMENU:
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_HIGHSCOREMENU], true, go->Color);
+		modelStack.PopMatrix();
+		break;
+	case GameObject::GO_ARROW:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_ARROW], true, go->Color);
 		modelStack.PopMatrix();
 		break;
 	}

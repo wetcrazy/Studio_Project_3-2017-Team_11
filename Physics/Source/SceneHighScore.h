@@ -23,12 +23,10 @@ public:
 	virtual void Render();
 	virtual void Exit();
 
-	enum MENU
+	enum UPGRADE_MENU
 	{
-		DELETE_DATA = 0,
-		EXIT,
-
-		NUM_MENU,
+		DELETE_HIGHSCORE = 0,
+		EXIT_HIGHSCORE,
 	};
 
 	void RenderGO(GameObject *go);
@@ -56,8 +54,19 @@ protected:
 	Vector3 gravity;
 	float initialKE, finalKE;
 
-	//Cannon
-	GameObject *background;
+	//Default option
+	UPGRADE_MENU selectOptions = DELETE_HIGHSCORE;
+
+	//Arrows
+	GameObject *arrows = FetchGO();
+	GameObject *arrowsRight = FetchGO();
+	GameObject *highscoreMenu = FetchGO();
+
+	//Options
+	float pressDelay = 0.f;
+
+	//Cooldown for Button Pressed
+	const float cooldownPressed = 0.2f;
 
 	// HighScore Stuff
 	vector<HighScore> highscore;

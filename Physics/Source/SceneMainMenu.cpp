@@ -172,6 +172,7 @@ void SceneMainMenu::Update(double dt)
 	case LEVELS:
 		//Arrow
 		arrows->pos.Set((w_temp / 2) / posXDownArrow, (h_temp / 2) / posYDownArrow_Levels, 1);
+		arrows->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
 
 		//Menu
 		menu->pos.Set(w_temp / 2, h_temp / 2, -5);
@@ -181,6 +182,7 @@ void SceneMainMenu::Update(double dt)
 	case INSTRUCTIONS:
 		//Arrow
 		arrows->pos.Set((w_temp / 2) / posXDownArrow, (h_temp / 2) / posYDownArrow_Instructions, 1);
+		arrows->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
 
 		//Menu
 		menu->pos.Set(w_temp / 2, h_temp / 2, -5);
@@ -190,6 +192,7 @@ void SceneMainMenu::Update(double dt)
 	case HIGHSCORE:
 		//Arrow
 		arrows->pos.Set((w_temp / 2) / posXDownArrow, (h_temp / 2) / posYDownArrow_Highscore, 1);
+		arrows->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
 
 		//Menu
 		menu->pos.Set(w_temp / 2, h_temp / 2, -5);
@@ -199,6 +202,7 @@ void SceneMainMenu::Update(double dt)
 	case OPTIONS:
 		//Arrow
 		arrows->pos.Set((w_temp / 2) / posXDownArrow, (h_temp / 2) / posYDownArrow_Options, 1);
+		arrows->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
 
 		//Menu
 		menu->pos.Set(w_temp / 2, h_temp / 2, -5);
@@ -208,6 +212,7 @@ void SceneMainMenu::Update(double dt)
 	case QUIT:
 		//Arrow
 		arrows->pos.Set((w_temp / 2) / posXDownArrow, (h_temp / 2) / posYDownArrow_Quit, 1);
+		arrows->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
 
 		//Menu
 		menu->pos.Set(w_temp / 2, h_temp / 2, -5);

@@ -569,6 +569,7 @@ void SceneCollision::Update(double dt)
 		case GRADE_2:
 			//Render in arrow
 			arrows->pos.Set((w_temp / 2) / posXDownArrow, (h_temp / 2) / posYDownArrow_Upgrade2, 1);
+			arrows->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
 
 			//Render in upgrades menu
 			upgradesMenu->active = true;
@@ -579,6 +580,7 @@ void SceneCollision::Update(double dt)
 		case NEXTLEVEL:
 			//Render in arrow
 			arrows->pos.Set((w_temp / 2) / posXDownArrow_NextLevel, (h_temp / 2) / posYDownArrow_NextPage_NextLevel, 1);
+			arrows->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
 
 			//Render in upgrades menu
 			upgradesMenu->active = true;
@@ -589,6 +591,7 @@ void SceneCollision::Update(double dt)
 		case NEXTPAGE:
 			//Render in arrow
 			arrows->pos.Set((w_temp / 2) / posXDownArrow_NextPage, (h_temp / 2) / posYDownArrow_NextPage_NextLevel, 1);
+			arrows->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
 
 			//Render in upgrades menu
 			upgradesMenu->active = true;

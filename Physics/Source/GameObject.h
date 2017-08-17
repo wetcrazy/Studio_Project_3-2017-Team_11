@@ -40,6 +40,9 @@ struct GameObject
 		GO_GRADE2,
 		GO_NEXTLEVEL,
 		GO_NEXTPAGE,
+
+		//Highscore Menu
+		GO_HIGHSCOREMENU,
 		
 		GO_TOTAL, //must be last
 	};
