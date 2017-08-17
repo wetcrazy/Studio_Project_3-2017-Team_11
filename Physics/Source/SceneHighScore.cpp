@@ -16,28 +16,34 @@ SceneHighScore::~SceneHighScore()
 void SceneHighScore::Init()
 {
 	SceneBase::Init();
+	Math::InitRNG();
 
 	//Physics code here
 	m_speed = 1.f;
-
-	Math::InitRNG();
-
 	m_objectCount = 0;
 	initialKE = 0;
 	finalKE = 0;
-
-	m_ghost01 = new GameObject(GameObject::GO_BALL);
-	m_ghost02 = new GameObject(GameObject::GO_CUBE);
 	gravity.Set(0.0f, -9.8f, 0.0f);
-
-	// Cannon stuff
-	ft_shootTime = 0.f;
-	ft_elapsedTime = 0.f;
-	b_shootIsTrue = false;
+	file_path = "CSV//highscore.csv";
 
 	CreateStuff();
 	highscore = LoadCSV("CSV//highscore.csv");
 	QuickSort(&highscore, 1, highscore.size()-1);
+}
+
+void SceneHighScore::CreateStuff()
+{
+	int w = Application::GetWindowWidth();
+	int h = Application::GetWindowHeight();
+	float w_temp = 133;
+	float h_temp = 100;
+
+	background = new GameObject(GameObject::GO_BACKGROUND);	// Background
+	background->active = true;
+	background->pos.Set(w_temp / 2, h_temp / 2, -5);
+	background->scale.Set(w_temp, h_temp, 1);
+	m_goList.push_back(background);
+
 }
 
 GameObject* SceneHighScore::FetchGO()
@@ -255,7 +261,6 @@ void SceneHighScore::CollisionResponse(GameObject * go1, GameObject * go2)
 void SceneHighScore::Update(double dt)
 {
 	SceneBase::Update(dt);
-	ft_elapsedTime += dt;
 
 	if (Application::IsKeyPressed('9'))
 	{
@@ -281,117 +286,33 @@ void SceneHighScore::Update(double dt)
 	background->pos.Set(w_temp / 2, h_temp / 2, -5);
 	background->scale.Set(w_temp + 2, h_temp, 1);
 
-	if (posY > cannon->pos.y)        // Cannon cannot move when cursor is below cannon	
-	if (!b_shootIsTrue)
-	{		
-		{
-			if (!b_shootIsTrue)
-			{
-				aim.Set(posX, posY, 0);	
-				aim.Set(aim.x - platform->pos.x, Math::Clamp(aim.y, platform->pos.y, 90 - platform->pos.y), 0);
-				cannon->dir = aim.Cross(Vector3(0, 0, 1));
-				cannon->dir.Normalize();
-			}
-		}
-	}
-	//std::cout << platform->pos.y << std::endl;
-
 	if (!bLButtonState && Application::IsMousePressed(0))
 	{
-		bLButtonState = true;
-		std::cout << "LBUTTON DOWN" << std::endl;
-
-		m_ghost01->pos.Set(posX, posY, 0); //IMPT
-		m_ghost01->active = true;
-		m_ghost01->active = false;
-		float sc = 2;
-		m_ghost01->scale.Set(sc, sc, sc);
+		
 	}
 
-	else if (bLButtonState && !Application::IsMousePressed(0) && ft_elapsedTime > ft_shootTime)
+	else if (bLButtonState && !Application::IsMousePressed(0))
 	{
-		bLButtonState = false;
-		std::cout << "LBUTTON UP" << std::endl;
+		
 
-		if (posY > cannon->pos.y)
-		{
-		//spawn small GO_BALL
-		GameObject *go = FetchGO();
-		go->active = true;
-		go->type = GameObject::GO_CUBE;
-		go->pos = platform->pos;
-		go->pos += aim.Normalized() * 0.5;
-		go->vel = aim;
-
-		if (go->vel.Length() > 50) // 50 is distance
-		{
-			go->vel.Normalize();
-			go->vel *= 100;	// Speed of cannon shooting
-		}
-		if (go->vel.y < 0)
-			go->vel.y *= -1;
-		go->scale.Set(2, 2, 2);
-		m_ghost01->active = false;
-
-		// Limit spawn rate of cannon balls AND prevents movement of cannon immediately after shooting
-		ft_shootTime = ft_elapsedTime + 0.25f;
-
-		// Cannon ball has been shot
-		b_shootIsTrue = true;
-
-		// Randomize color of ball
-		go->Color.Set(Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1));
-
-		}
+		
 	}
 
-	// Cannon ball has not been shot
-	else if (ft_elapsedTime > ft_shootTime)
-		b_shootIsTrue = false;
+	
 
 	static bool bRButtonState = false;
 	if (!bRButtonState && Application::IsMousePressed(1))
 	{
-		bRButtonState = true;
-		std::cout << "RBUTTON DOWN" << std::endl;
-
-		m_ghost02->pos.Set(posX, posY, 0); //IMPT
-		m_ghost02->active = true;
-		float sc = 3;
-		m_ghost02->scale.Set(sc, sc, sc);
+		
 	}
 	else if (bRButtonState && !Application::IsMousePressed(1))
 	{
-		bRButtonState = false;
-		std::cout << "RBUTTON UP" << std::endl;
-
-		//spawn large GO_BALL
-		GameObject *go = FetchGO();
-		go->active = true;
-		go->type = GameObject::GO_CUBE;
-
-		go->pos = m_ghost02->pos;
-		go->vel.Set(m_ghost02->pos.x - posX, m_ghost02->pos.y - posY, 0);
-		m_ghost02->active = false;
-		float sc = 3;
-		go->scale.Set(sc, sc, sc);
-		go->mass = sc * sc * sc;
-
-		// Randomize color of ball
-		go->Color.Set(Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1));
+		
 	}
 
 	if (Application::IsKeyPressed(VK_SPACE))
 	{
-		for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
-		{
-			GameObject *go = (GameObject *)*it;
-			//if (go->active && go->type == GameObject::GO_BALL)
-			if (go->active && go->type == GameObject::GO_CUBE)
-				go->active = false;
-
-			m_objectCount = 0;
-		}
+		highscore = DeleteCSV(file_path);
 	}
 
 	//Physics Simulation Section
@@ -453,83 +374,6 @@ void SceneHighScore::Update(double dt)
 				}
 			}
 		}
-	}
-}
-
-void SceneHighScore::CreateStuff()
-{
-	int w = Application::GetWindowWidth();
-	int h = Application::GetWindowHeight();
-	float w_temp = 133;
-	float h_temp = 100;
-
-	GameObject *wall = FetchGO();
-
-	wall->type = GameObject::GO_WALL;	// Left Wall
-	wall->active = true;
-	wall->dir.Set(1, 0, 0);
-	wall->pos.Set(wall->scale.x / 2, wall->scale.y, 0);
-	wall->scale.Set(2, h / 27, 1);
-	wall->Color.Set(0.486, 0.988, 0);
-
-	wall = FetchGO();
-	wall->type = GameObject::GO_WALL;	// Ground
-	wall->active = true;
-	wall->dir.Set(0, -1, 0);
-	wall->pos.Set(133 / 2, wall->scale.y / 2, 0);
-	wall->scale.Set(2, w, 1);
-	wall->Color.Set(0.486, 0.988, 0);
-
-	wall = FetchGO();
-	wall->type = GameObject::GO_WALL;	// Elevated Ground
-	wall->active = true;
-	wall->dir.Set(0, -1, 0);
-	wall->pos.Set(133 / 8, 100 / 9, 0);
-	wall->scale.Set(2, 100 / 3, 1);
-	wall->Color.Set(0.486, 0.988, 0);
-
-	wall = FetchGO();
-	wall->type = GameObject::GO_WALL;	// Slanted Ground
-	wall->active = true;
-	wall->dir.Set(-1, -1, 0);
-	wall->pos.Set(133 / 5 + 11.5, 100 / 9 - 5.3, 0);
-	wall->scale.Set(2, 100 / 6, 1);
-	wall->Color.Set(0.486, 0.988, 0);
-
-	GameObject* pillar = FetchGO();
-	pillar->type = GameObject::GO_PILLAR;	// Pillar for Elevated Ground
-	pillar->active = true;
-	pillar->pos.Set(133 / 8 + 16, 100 / 9, 0);
-	pillar->scale.Set(1.4, 1.4, 1.4);
-	pillar->Color.Set(0.486, 0.988, 0);
-
-	background = new GameObject(GameObject::GO_BACKGROUND);	// Background
-	background->active = true;
-	background->pos.Set(w_temp / 2, h_temp / 2, -5);
-	background->scale.Set(w_temp, h_temp, 1);
-	m_goList.push_back(background);
-	
-	platform = new GameObject(GameObject::GO_CANNON_PLATFORM);	// Platform for Cannon
-	platform->active = true;
-	platform->dir.Set(0, 1, 0);
-	platform->pos.Set(133 / 8, 100 / 6.8, 0);
-	platform->scale.Set(1, 3, 1);
-	m_goList.push_back(platform);
-
-	cannon = new GameObject(GameObject::GO_CANNON);	// Cannon
-	cannon->active = true;
-	cannon->pos = platform->pos;
-	cannon->scale.Set(1, 2.5, 1);
-	m_goList.push_back(cannon);
-
-	{
-		GameObject* pillar = FetchGO();
-		pillar->type = GameObject::GO_BLOCKS;	// Pillar for Elevated Ground
-		pillar->active = true;
-		pillar->pos.Set(133 / 2 + 16, 100 / 2 + 16, 0);
-		pillar->scale.Set(3, 3, 3);
-		pillar->Color.Set(1, 1, 1);
-		std::cout << "This is spawned!" << std::endl;
 	}
 }
 
@@ -599,7 +443,7 @@ void SceneHighScore::RenderGO(GameObject *go)
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_BACKGROUND], true, go->Color);
+		RenderMesh(meshList[GEO_HIGHSCOREMENU], true, go->Color);
 		modelStack.PopMatrix();
 		break;
 	}
@@ -638,64 +482,21 @@ void SceneHighScore::Render()
 			RenderGO(go);
 		}
 	}
-	if (m_ghost01->active)
-		RenderGO(m_ghost01);
-	if (m_ghost02->active)
-		RenderGO(m_ghost02);
 
 	//On screen text
-	float textsize = 3;
+	float textsize = 3.0f;
 	std::ostringstream ss;
-	for (int check_index = 0,sizer=0; check_index < highscore.size(); ++check_index)
+	ss << highscore[0];
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), textsize, 18, 43);
+	ss.str("");
+	for (int check_index = 1,sizer=0; check_index < highscore.size(); ++check_index)
 	{
 		ss << highscore[check_index];
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), textsize, 0, 57 - sizer);
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), textsize, 18, 40 - sizer);
 		ss.str("");
 		sizer+=3;
 	}
 
-
-
-	//if (Application::IsKeyPressed(VK_RETURN))
-	//{
-	//	//On screen text
-	//	std::ostringstream ss;
-	//	ss << "Object count: " << m_objectCount;
-	//	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 9);
-
-	//	ss.str(std::string());
-	//	ss.precision(5);
-	//	ss << "Initial momentum: " << initialMomentum;
-	//	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 15);
-
-	//	ss.str(std::string());
-	//	ss.precision(5);
-	//	ss << "Final momentum: " << finalMomentum;
-	//	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 12);
-
-	//	//Exercise 3: render initial and final kinetic energy
-	//	ss.str(std::string());
-	//	ss.precision(5);
-	//	ss << "Initial KE: " << initialKE;
-	//	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 21);
-
-	//	ss.str(std::string());
-	//	ss.precision(5);
-	//	ss << "Final KE: " << finalKE;
-	//	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 18);
-
-	//	ss.str(std::string());
-	//	ss.precision(3);
-	//	ss << "Speed: " << m_speed;
-	//	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 6);
-
-	//	ss.str(std::string());
-	//	ss.precision(5);
-	//	ss << "FPS: " << fps;
-	//	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 3);
-
-	//	RenderTextOnScreen(meshList[GEO_TEXT], "Collision", Color(0, 1, 0), 3, 0, 0);
-	//}
 }
 
 void SceneHighScore::Exit()
@@ -707,15 +508,5 @@ void SceneHighScore::Exit()
 		GameObject *go = m_goList.back();
 		delete go;
 		m_goList.pop_back();
-	}
-	if (m_ghost01)
-	{
-		delete m_ghost01;
-		m_ghost01 = NULL;
-	}
-	if (m_ghost02)
-	{
-		delete m_ghost02;
-		m_ghost02 = NULL;
 	}
 }

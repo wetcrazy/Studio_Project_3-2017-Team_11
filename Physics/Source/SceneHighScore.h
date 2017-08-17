@@ -36,9 +36,6 @@ protected:
 	//Physics
 	std::vector<GameObject *> m_goList;
 	
-	GameObject *m_ghost01;
-	GameObject *m_ghost02;
-
 	float m_speed;
 	float m_worldWidth;
 	float m_worldHeight;
@@ -52,16 +49,11 @@ protected:
 	float initialKE, finalKE;
 
 	//Cannon
-	GameObject *platform;
-	GameObject *cannon;
 	GameObject *background;
-	Vector3 aim;
-	float ft_shootTime;
-	float ft_elapsedTime;
-	bool b_shootIsTrue;
 
 	// HighScore Stuff
 	vector<HighScore> highscore;
+	const char *file_path;
 };
 
 #endif

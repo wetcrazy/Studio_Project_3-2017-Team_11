@@ -34,5 +34,22 @@ std::vector<HighScore> LoadCSV(const char *file_path)
 		getline(ip, temp->Data.score, '\n');
 		output.push_back(*temp);
 	}
+	ip.close();
+	return output;
+}
+
+std::vector<HighScore> DeleteCSV(const char *file_path)
+{
+	std::vector<HighScore> output;
+
+	// ReCreate file
+	std::ofstream ip;
+	ip.open(file_path);
+	ip << "RANK,NAME,SCORE";
+	ip.close();
+	std::cout << file_path << " File Deleted~" << std::endl;
+
+	// Load file
+	output = LoadCSV(file_path);
 	return output;
 }

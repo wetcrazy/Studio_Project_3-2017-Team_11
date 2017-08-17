@@ -67,6 +67,9 @@ public:
 		GEO_UPGRADEMENU,
 		GEO_GRADE_1,
 
+		// HighScore Menu
+		GEO_HIGHSCOREMENU,
+
 		NUM_GEOMETRY,
 	};
 	enum UPGRADES_MENU
