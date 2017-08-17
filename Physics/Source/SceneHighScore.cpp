@@ -310,10 +310,21 @@ void SceneHighScore::Update(double dt)
 	{
 		
 	}
+	if (Application::IsKeyPressed('Z'))
+	{
+		highscore = DeleteCSV(file_path);
+	}
 
 	if (Application::IsKeyPressed(VK_SPACE))
 	{
-		highscore = DeleteCSV(file_path);
+		//highscore = DeleteCSV(file_path);
+		HighScore temp;
+		temp.Data.rank = "4";
+		temp.Data.name = "GAYY";
+		temp.Data.score = "1234";
+		highscore.push_back(temp);
+		QuickSort(&highscore, 1, highscore.size() - 1);
+		WriteCSV(file_path, highscore);
 	}
 
 	//Physics Simulation Section

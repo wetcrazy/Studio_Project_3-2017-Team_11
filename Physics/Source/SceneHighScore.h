@@ -23,6 +23,14 @@ public:
 	virtual void Render();
 	virtual void Exit();
 
+	enum MENU
+	{
+		DELETE_DATA = 0,
+		EXIT,
+
+		NUM_MENU,
+	};
+
 	void RenderGO(GameObject *go);
 
 	GameObject* FetchGO();

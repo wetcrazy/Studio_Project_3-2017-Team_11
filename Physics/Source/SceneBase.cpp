@@ -130,7 +130,7 @@ void SceneBase::Init()
 
 	//Main Menu
 	meshList[GEO_MAINMENU] = MeshBuilder::GenerateQuad("mainmenu", Color(1, 1, 1), 1);
-	meshList[GEO_MAINMENU]->textureID = LoadTGA("Image//Menu/Main Menu/main_menu.tga");
+	meshList[GEO_MAINMENU]->textureID = LoadTGA("Image//Menu/main_menu.tga");
 
 	// Upgrades Menu
 	meshList[GEO_UPGRADEMENU] = MeshBuilder::GenerateQuad("mainmenu", Color(1, 1, 1));

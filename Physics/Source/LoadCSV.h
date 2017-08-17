@@ -18,6 +18,6 @@ std::vector<HighScore> DeleteCSV(const char *file_path);
 
 // Function to Write into .CSV
 // Returns vectore<HighScore>
-std::vector<HighScore> WriteCSV(const char *file_path);
+void WriteCSV(const char *file_path, std::vector<HighScore> input);
 
 #endif

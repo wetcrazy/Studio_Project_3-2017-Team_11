@@ -1,5 +1,6 @@
 #include <fstream>
 #include <iostream>
+#include <ostream>
 
 #include "LoadCSV.h"
 
@@ -9,9 +10,11 @@ using std::getline;
 // Returns vector<Score>
 std::vector<HighScore> LoadCSV(const char *file_path)
 {
+	// Tempoary Variables
 	std::vector<HighScore> output;
 	HighScore *temp;
 	
+	// Open file to read
 	std::ifstream ip(file_path);
 	if (!ip.good()) // If cannnot read, return ERROR
 	{
@@ -34,14 +37,15 @@ std::vector<HighScore> LoadCSV(const char *file_path)
 		getline(ip, temp->Data.score, '\n');
 		output.push_back(*temp);
 	}
-	ip.close();
-	return output;
+	ip.close(); // Close the file
+	return output; // Return vector<HighScore>
 }
 
 // Function to Delete .CSV
 // Returns vector<HighScore>
 std::vector<HighScore> DeleteCSV(const char *file_path)
 {
+	// Tempoary Variables
 	std::vector<HighScore> output;
 
 	// ReCreate file
@@ -53,16 +57,20 @@ std::vector<HighScore> DeleteCSV(const char *file_path)
 
 	// Load file
 	output = LoadCSV(file_path);
-	return output;
+	return output;// Return vector<HighScore>
 }
 
 // Function to Write into .CSV
 // Returns vectore<HighScore>
-std::vector<HighScore> WriteCSV(const char *file_path)
+void WriteCSV(const char *file_path, std::vector<HighScore> input)
 {
-	std::vector<HighScore> input;
-	std::vector<HighScore> output;
-
-	input = LoadCSV(file_path);
-	return output;
+	// Recreate file
+	std::ofstream ip;
+	ip.open(file_path);
+	for (int check_index = 0; check_index < input.size(); ++check_index)
+	{
+		ip << input[check_index].Data.rank << ',' << input[check_index].Data.name << ',' << input[check_index].Data.score << std::endl;
+	}
+	ip.close();
+	std::cout << file_path << " File OverWritten~" << std::endl;
 }
