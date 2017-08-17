@@ -124,13 +124,25 @@ void SceneBase::Init()
 	meshList[GEO_CANNON_PLATFORM] = MeshBuilder::GenerateQuad("cannon platform", Color(1, 1, 1), 5.f);
 	meshList[GEO_CANNON_PLATFORM]->textureID = LoadTGA("Image//cannon_platform.tga");
 
+	//Arrow for menus
+	meshList[GEO_ARROW] = MeshBuilder::GenerateQuad("arrow", Color(1, 1, 1), 1);
+	meshList[GEO_ARROW]->textureID = LoadTGA("Image//Menu/Arrow.tga");
+
+	//Main Menu
+	meshList[GEO_MAINMENU] = MeshBuilder::GenerateQuad("mainmenu", Color(1, 1, 1), 1);
+	meshList[GEO_MAINMENU]->textureID = LoadTGA("Image//Menu/Main Menu/main_menu.tga");
+
 	// Upgrades Menu
 	meshList[GEO_UPGRADEMENU] = MeshBuilder::GenerateQuad("mainmenu", Color(1, 1, 1));
-	meshList[GEO_UPGRADEMENU]->textureID = LoadTGA("Image//Menu/Upgrades.tga");
-	meshList[GEO_ARROW] = MeshBuilder::GenerateQuad("arrow", Color(1, 1, 1));
-	meshList[GEO_ARROW]->textureID = LoadTGA("Image//Menu/Arrow.tga");
+	meshList[GEO_UPGRADEMENU]->textureID = LoadTGA("Image//Menu/Upgrades/upgrades.tga");
 	meshList[GEO_GRADE_1] = MeshBuilder::GenerateQuad("grade1", Color(1, 1, 1));
-	meshList[GEO_GRADE_1]->textureID = LoadTGA("Image//Menu/Grade1.tga");
+	meshList[GEO_GRADE_1]->textureID = LoadTGA("Image//Menu/Upgrades/upgrades_g1.tga");
+	meshList[GEO_GRADE_2] = MeshBuilder::GenerateQuad("grade1", Color(1, 1, 1));
+	meshList[GEO_GRADE_2]->textureID = LoadTGA("Image//Menu/Upgrades/upgrades_g2.tga");
+	meshList[GEO_NEXTLEVEL] = MeshBuilder::GenerateQuad("grade1", Color(1, 1, 1));
+	meshList[GEO_NEXTLEVEL]->textureID = LoadTGA("Image//Menu/Upgrades/upgrades_next_level.tga");
+	meshList[GEO_NEXTPAGE] = MeshBuilder::GenerateQuad("grade1", Color(1, 1, 1));
+	meshList[GEO_NEXTPAGE]->textureID = LoadTGA("Image//Menu/Upgrades/upgrades_next_page.tga");
 
 	// HighScore Menu
 	meshList[GEO_HIGHSCOREMENU] = MeshBuilder::GenerateQuad("highscore", Color(1, 1, 1));
