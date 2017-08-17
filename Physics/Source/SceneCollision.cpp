@@ -496,6 +496,23 @@ void SceneCollision::Update(double dt)
 			{
 				go->pos += go->vel * static_cast<float>(dt);
 				go->vel += gravity * dt;
+
+				//side scrolling
+
+				//camera.position.y = go->pos.y;
+				//camera.position.z = go->pos.z;
+
+				//if (go->pos.x > m_worldWidth)
+				//{
+				//	camera.position.x = go->pos.x;
+				//	go->vel.x += go->vel.x;
+				//}
+				//else if (go->pos.y > m_worldHeight)
+				//{
+				//	camera.position.y = go->pos.y;
+				//	go->vel.y += go->vel.y;
+				//}
+
 				if (go->pos.x > m_worldWidth + go->scale.x || go->pos.x < -go->scale.x || go->pos.y > m_worldHeight + go->scale.y || go->pos.y < -go->scale.y)
 				{
 					go->active = false;
