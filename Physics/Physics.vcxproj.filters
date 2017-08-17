@@ -95,6 +95,9 @@
     <ClCompile Include="Source\QuickSort.cpp">
       <Filter>Classes/Functions</Filter>
     </ClCompile>
+    <ClCompile Include="Source\SceneMainMenu.cpp">
+      <Filter>Scene UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -162,6 +165,9 @@
     </ClInclude>
     <ClInclude Include="Source\QuickSort.h">
       <Filter>Classes/Functions</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SceneMainMenu.h">
+      <Filter>Scene UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
