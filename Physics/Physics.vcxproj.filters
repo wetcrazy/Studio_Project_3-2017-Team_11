@@ -33,7 +33,7 @@
     <Filter Include="Scene UI">
       <UniqueIdentifier>{2b1f645a-6035-4b6f-91d7-e4d04b5ce3da}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Classes">
+    <Filter Include="Classes/Functions">
       <UniqueIdentifier>{b03f6205-05c9-4917-a9b3-8925570cbed7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -90,7 +90,10 @@
       <Filter>Scene UI</Filter>
     </ClCompile>
     <ClCompile Include="Source\ClassHighScore.cpp">
-      <Filter>Classes</Filter>
+      <Filter>Classes/Functions</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\QuickSort.cpp">
+      <Filter>Classes/Functions</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -155,7 +158,10 @@
       <Filter>Scene UI</Filter>
     </ClInclude>
     <ClInclude Include="Source\ClassHighScore.h">
-      <Filter>Classes</Filter>
+      <Filter>Classes/Functions</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\QuickSort.h">
+      <Filter>Classes/Functions</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

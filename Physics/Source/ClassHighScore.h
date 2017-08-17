@@ -28,11 +28,6 @@ public:
 	// Struct Storage for Scores
 	Score Data;
 
-	// QuickSort Functions
-	void QuickSort(vector<HighScore> *list, int first_index, int last_index);
-	void Swap(vector<HighScore> *list, int first_index, int second_index);
-	int Partition(vector<HighScore> *list, int first_index, int last_index);
-
 	// Operator
 	friend ostream &operator<<(ostream &os, HighScore &input);
 };

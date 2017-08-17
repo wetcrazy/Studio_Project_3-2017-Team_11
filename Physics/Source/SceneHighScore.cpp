@@ -2,6 +2,7 @@
 #include "GL\glew.h"
 #include "Application.h"
 #include "LoadCSV.h"
+#include "QuickSort.h"
 #include <sstream>
 
 SceneHighScore::SceneHighScore()
@@ -36,6 +37,7 @@ void SceneHighScore::Init()
 
 	CreateStuff();
 	highscore = LoadCSV("CSV//highscore.csv");
+	QuickSort(&highscore, 1, highscore.size()-1);
 }
 
 GameObject* SceneHighScore::FetchGO()
@@ -644,12 +646,12 @@ void SceneHighScore::Render()
 	//On screen text
 	float textsize = 3;
 	std::ostringstream ss;
-	for (int check_index = 0,sizer=0; check_index < highscore.size() - 1; ++check_index)
+	for (int check_index = 0,sizer=0; check_index < highscore.size(); ++check_index)
 	{
 		ss << highscore[check_index];
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), textsize, 0, 30 - sizer);
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), textsize, 0, 57 - sizer);
 		ss.str("");
-		sizer += 3;
+		sizer+=3;
 	}
 
 
