@@ -38,6 +38,10 @@ void SceneCollision::Init()
 	b_upgradesMenu_IsOpen = false;
 	b_upgrades1 = false;
 
+	b_isBulletAlive = false;
+	ft_bulletAlive = 0;
+	m_objRestrict = 18;
+
 	CreateStuff();
 }
 
@@ -261,6 +265,7 @@ void SceneCollision::CollisionResponse(GameObject * go1, GameObject * go2)
 		go2->vel = u2 + ((2 * m2) / (m1 + m2)) * (u1N - u2N);
 		go1->active = false;
 		go2->active = false;
+		m_objectCount--;
 		break;
 	}
 	case GameObject::GO_PILLAR:
@@ -284,6 +289,7 @@ void SceneCollision::CollisionResponse(GameObject * go1, GameObject * go2)
 
 void SceneCollision::Update(double dt)
 {
+	std::cout << "Object Count : " << m_objectCount << std::endl;
 	SceneBase::Update(dt);
 	ft_elapsedTime += dt;
 
@@ -386,7 +392,13 @@ void SceneCollision::Update(double dt)
 		{
 		//spawn small GO_BALL
 		GameObject *go = FetchGO();
-		go->active = true;
+		if (m_objectCount < m_objRestrict)
+			go->active = true;
+		else
+		{
+			go->active = false;
+			m_objectCount--;
+		}
 		go->type = GameObject::GO_CUBE;
 		go->pos = platform->pos;
 		go->pos += aim.Normalized() * 0.5;
@@ -726,13 +738,13 @@ void SceneCollision::CreateStuff()
 		blocks->scale.Set(2, 14, 1);
 		blocks->Color.Set(0.8, 0.8, 0);
 
-		//blocks = FetchGO();
-		//blocks->type = GameObject::GO_BLOCKS;	// Horizontal
-		//blocks->active = true;
-		//blocks->dir.Set(0, 1, 0);
-		//blocks->pos.Set(133 / 2 + 21, blocks->scale.y + 16.5, 0);
-		//blocks->scale.Set(31.2, 2, 1);
-		//blocks->Color.Set(0.8, 0.8, 0);
+		blocks = FetchGO();
+		blocks->type = GameObject::GO_BLOCKS;	// Horizontal
+		blocks->active = true;
+		blocks->dir.Set(0, 1, 0);
+		blocks->pos.Set(133 / 2 + 21, blocks->scale.y + 16.5, 0);
+		blocks->scale.Set(2, 31.2, 1);
+		blocks->Color.Set(0.8, 0.8, 0);
 
 		std::cout << "This is spawned!" << std::endl;
 	}

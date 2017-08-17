@@ -71,6 +71,10 @@ protected:
 	float pressDelay = 0.f;
 	const float cooldownPressed = 0.2f;
 	bool b_upgrades1;
+
+	bool b_isBulletAlive;
+	float ft_bulletAlive;
+	int m_objRestrict;
 };
 
 #endif
