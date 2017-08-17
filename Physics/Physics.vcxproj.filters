@@ -98,6 +98,9 @@
     <ClCompile Include="Source\SceneMainMenu.cpp">
       <Filter>Scene UI</Filter>
     </ClCompile>
+    <ClCompile Include="Source\ClassUpgrade.cpp">
+      <Filter>Classes/Functions</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -168,6 +171,9 @@
     </ClInclude>
     <ClInclude Include="Source\SceneMainMenu.h">
       <Filter>Scene UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ClassUpgrade.h">
+      <Filter>Classes/Functions</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
