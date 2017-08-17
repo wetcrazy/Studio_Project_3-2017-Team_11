@@ -1,4 +1,5 @@
 #include "SceneHighScore.h"
+#include "SceneManager.h"
 #include "GL\glew.h"
 #include "Application.h"
 #include "LoadCSV.h"

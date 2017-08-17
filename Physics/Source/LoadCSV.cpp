@@ -38,6 +38,8 @@ std::vector<HighScore> LoadCSV(const char *file_path)
 	return output;
 }
 
+// Function to Delete .CSV
+// Returns vector<HighScore>
 std::vector<HighScore> DeleteCSV(const char *file_path)
 {
 	std::vector<HighScore> output;
@@ -51,5 +53,16 @@ std::vector<HighScore> DeleteCSV(const char *file_path)
 
 	// Load file
 	output = LoadCSV(file_path);
+	return output;
+}
+
+// Function to Write into .CSV
+// Returns vectore<HighScore>
+std::vector<HighScore> WriteCSV(const char *file_path)
+{
+	std::vector<HighScore> input;
+	std::vector<HighScore> output;
+
+	input = LoadCSV(file_path);
 	return output;
 }

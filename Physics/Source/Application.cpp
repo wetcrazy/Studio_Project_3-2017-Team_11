@@ -148,7 +148,7 @@ void Application::Run()
 	//delete scene;
 
 	SceneManager* scene = SceneManager::getInstance();
-	scene->changeScene(new SceneHighScore());
+	scene->changeScene(new SceneMainMenu());
 	scene->Update();
 }
 
