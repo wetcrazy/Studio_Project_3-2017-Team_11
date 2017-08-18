@@ -19,6 +19,7 @@ public:
 	virtual void Init();
 	virtual void Update(double dt);
 	virtual void CreateStuff();	//create game objects here
+	virtual void CreateLevel();
 	virtual void Render();
 	virtual void RenderUpgradesMenu(double dt);	//upgrades are located here
 	virtual void Exit();
@@ -35,7 +36,7 @@ protected:
 
 	//Physics
 	std::vector<GameObject *> m_goList;
-	
+
 	GameObject *m_ghost01;
 	GameObject *m_ghost02;
 
@@ -76,6 +77,8 @@ protected:
 	bool b_isBulletAlive;
 	float ft_bulletAlive;
 	int m_objRestrict;
+
+	int i_level;
 };
 
 #endif

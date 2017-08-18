@@ -3,6 +3,7 @@
 #include "Application.h"
 #include <sstream>
 #include "SceneManager.h"
+// #include "LoadTXT.h"
 
 SceneCollision::SceneCollision()
 {
@@ -43,6 +44,8 @@ void SceneCollision::Init()
 	ft_bulletAlive = 0;
 	m_objRestrict = 18;
 
+	//LoadTXT loadtxt;
+
 	CreateStuff();
 }
 
@@ -65,7 +68,7 @@ GameObject* SceneCollision::FetchGO()
 	}
 	for (unsigned i = 0; i < 40; ++i)
 	{
-		GameObject *go = new GameObject(GameObject::GO_CUBE);	
+		GameObject *go = new GameObject(GameObject::GO_CUBE);
 		m_goList.push_back(go);
 	}
 	GameObject *go = m_goList.back();
@@ -470,23 +473,6 @@ void SceneCollision::Update(double dt)
 			{
 				go->pos += go->vel * static_cast<float>(dt);
 				go->vel += gravity * dt;
-
-				//side scrolling
-
-				//camera.position.y = go->pos.y;
-				//camera.position.z = go->pos.z;
-
-				//if (go->pos.x > m_worldWidth)
-				//{
-				//	camera.position.x = go->pos.x;
-				//	go->vel.x += go->vel.x;
-				//}
-				//else if (go->pos.y > m_worldHeight)
-				//{
-				//	camera.position.y = go->pos.y;
-				//	go->vel.y += go->vel.y;
-				//}
-
 				if (go->pos.x > m_worldWidth + go->scale.x || go->pos.x < -go->scale.x || go->pos.y > m_worldHeight + go->scale.y || go->pos.y < -go->scale.y)
 				{
 					go->active = false;
@@ -506,7 +492,7 @@ void SceneCollision::Update(double dt)
 					continue;
 				//if (go->type != GameObject::GO_BALL && go2->type != GameObject::GO_BALL)
 				/*if (go->type != GameObject::GO_CUBE && go2->type != GameObject::GO_CUBE)
-					continue;*/
+				continue;*/
 
 				GameObject *goA, *goB;
 
@@ -534,12 +520,6 @@ void SceneCollision::Update(double dt)
 				}
 			}
 		}
-	}
-
-	// Opening Upgrades Menu
-	if (Application::IsKeyPressed('P'))
-	{
-		b_upgradesMenu_IsOpen = true;
 	}
 
 	// Opening Upgrades Menu
@@ -709,13 +689,15 @@ void SceneCollision::CreateStuff()
 		upgradesMenu->scale.Set(1, 1, 1);
 	}
 
+
 	background = new GameObject(GameObject::GO_BACKGROUND);	// Background
 	background->active = true;
 	background->pos.Set(w_temp / 2, h_temp / 2, -5);
 	background->scale.Set(w_temp, h_temp, 1);
 	m_goList.push_back(background);
-	
-	{	//Cannon
+
+	{
+		//Cannon
 		platform = new GameObject(GameObject::GO_CANNON_PLATFORM);	// Platform for Cannon
 		platform->active = true;
 		platform->dir.Set(0, 1, 0);
@@ -730,7 +712,7 @@ void SceneCollision::CreateStuff()
 		m_goList.push_back(cannon);
 	}
 
-	{	//Testing Structure
+	{ // Testing Structure
 		GameObject* blocks = FetchGO();
 		blocks->type = GameObject::GO_BLOCKS;	// Vertical
 		blocks->active = true;
@@ -781,6 +763,11 @@ void SceneCollision::CreateStuff()
 
 		std::cout << "This is spawned!" << std::endl;
 	}
+}
+
+void SceneCollision::CreateLevel()
+{
+
 }
 
 void SceneCollision::RenderUpgradesMenu(double dt)
