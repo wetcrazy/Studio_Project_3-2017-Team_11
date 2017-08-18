@@ -34,6 +34,11 @@ struct GameObject
 		//Main Menu
 		GO_MAINMENU,
 
+		//Upgrades Menu
+		GO_UPGRADESMENU,
+		GO_SPEED_UPGRADE_1,
+		GO_SPEED_UPGRADE_2,
+
 		//Highscore Menu
 		GO_HIGHSCOREMENU,
 		

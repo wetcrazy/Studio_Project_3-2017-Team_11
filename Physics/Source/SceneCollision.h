@@ -43,6 +43,7 @@ protected:
 	float m_worldWidth;
 	float m_worldHeight;
 	int m_objectCount;
+	int fortCount;
 
 	//Auditing
 	float m1, m2;

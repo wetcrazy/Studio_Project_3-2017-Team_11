@@ -32,7 +32,7 @@ void SceneHighScore::Init()
 
 	CreateStuff();
 	highscore = LoadCSV("CSV//highscore.csv");
-	QuickSort(&highscore, 1, highscore.size()-1);
+	QuickSort(&highscore, 1, highscore.size() - 1);
 }
 
 void SceneHighScore::CreateStuff()
@@ -311,7 +311,7 @@ void SceneHighScore::Update(double dt)
 
 	static bool bRButtonState = false;
 	if (!bRButtonState && Application::IsMousePressed(1))
-	{	
+	{
 	}
 	else if (bRButtonState && !Application::IsMousePressed(1))
 	{
@@ -593,12 +593,12 @@ void SceneHighScore::Render()
 	ss << highscore[0];
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), textsize, 18, 43);
 	ss.str("");
-	for (int check_index = 1,sizer=0; check_index < highscore.size(); ++check_index)
+	for (int check_index = 1, sizer = 0; check_index < highscore.size(); ++check_index)
 	{
 		ss << highscore[check_index];
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), textsize, 18, 40 - sizer);
 		ss.str("");
-		sizer+=3;
+		sizer += 3;
 	}
 
 }

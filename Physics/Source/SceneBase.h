@@ -63,6 +63,11 @@ public:
 		// Main Menu
 		GEO_MAINMENU,
 
+		// Upgrades Menu
+		GEO_UPGRADESMENU,
+		GEO_SPEED_UPGRADE_1,
+		GEO_SPEED_UPGRADE_2,
+
 		// HighScore Menu
 		GEO_HIGHSCOREMENU,
 

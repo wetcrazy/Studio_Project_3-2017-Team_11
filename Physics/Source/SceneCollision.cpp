@@ -2,7 +2,9 @@
 #include "GL\glew.h"
 #include "Application.h"
 #include <sstream>
+
 #include "SceneManager.h"
+#include "SceneUpgrade.h"
 // #include "LoadTXT.h"
 
 SceneCollision::SceneCollision()
@@ -23,6 +25,7 @@ void SceneCollision::Init()
 	Math::InitRNG();
 
 	m_objectCount = 0;
+	fortCount = 0;
 	initialKE = 0;
 	finalKE = 0;
 
@@ -265,6 +268,7 @@ void SceneCollision::CollisionResponse(GameObject * go1, GameObject * go2)
 		go1->active = false;
 		go2->active = false;
 		m_objectCount--;
+		fortCount--;
 		break;
 	}
 	case GameObject::GO_PILLAR:
@@ -313,21 +317,6 @@ void SceneCollision::Update(double dt)
 
 	int h_temp = 100;
 	int w_temp = 100 * Application::GetWindowWidth() / Application::GetWindowHeight();
-
-	//Background resizing according to window size
-	background->pos.Set(w_temp / 2, h_temp / 2, -5);
-	background->scale.Set(w_temp + 2, h_temp, 1);
-
-	//Position values (for upgrade menu)
-	float posXDownArrow = 0.7f;
-	float posXDownArrow_NextLevel = 1.1f;
-	float posXDownArrow_NextPage = 0.59f;
-	float posYDownArrow_Upgrade1 = 0.86f;
-	float posYDownArrow_Upgrade2 = 1.36f;
-	float posYDownArrow_NextPage_NextLevel = 3.7f;
-
-	//Scale values (for upgrade menu)
-	float scaleDown_Arrow = 20.f;
 
 	if (posY > cannon->pos.y)        // Cannon cannot move when cursor is below cannon	
 	{
@@ -506,6 +495,9 @@ void SceneCollision::Update(double dt)
 			}
 		}
 	}
+
+	if (fortCount == 0)
+		SceneManager::getInstance()->changeScene(new SceneUpgrade());
 }
 
 void SceneCollision::CreateStuff()
@@ -584,6 +576,7 @@ void SceneCollision::CreateStuff()
 		blocks->pos.Set(133 / 2 + 16, blocks->scale.y + 5, 0);
 		blocks->scale.Set(2, 8, 1);
 		blocks->Color.Set(0.8, 0.8, 0);
+		fortCount++;
 
 		blocks = FetchGO();
 		blocks->type = GameObject::GO_BLOCKS;	// Vertical
@@ -592,6 +585,7 @@ void SceneCollision::CreateStuff()
 		blocks->pos.Set(133 / 2 + 26, blocks->scale.y + 5, 0);
 		blocks->scale.Set(2, 8, 1);
 		blocks->Color.Set(0.8, 0.8, 0);
+		fortCount++;
 
 		blocks = FetchGO();
 		blocks->type = GameObject::GO_BLOCKS;	// Horizontal
@@ -600,6 +594,7 @@ void SceneCollision::CreateStuff()
 		blocks->pos.Set(133 / 2 + 21, blocks->scale.y + 7.5, 0);
 		blocks->scale.Set(2, 8, 1);
 		blocks->Color.Set(0.8, 0.8, 0);
+		fortCount++;
 		//
 		blocks = FetchGO();
 		blocks->type = GameObject::GO_BLOCKS;	// Vertical
@@ -608,6 +603,7 @@ void SceneCollision::CreateStuff()
 		blocks->pos.Set(133 / 2 + 6, blocks->scale.y + 8, 0);
 		blocks->scale.Set(2, 14, 1);
 		blocks->Color.Set(0.8, 0.8, 0);
+		fortCount++;
 
 		blocks = FetchGO();
 		blocks->type = GameObject::GO_BLOCKS;	// Vertical
@@ -616,6 +612,7 @@ void SceneCollision::CreateStuff()
 		blocks->pos.Set(133 / 2 + 36, blocks->scale.y + 8, 0);
 		blocks->scale.Set(2, 14, 1);
 		blocks->Color.Set(0.8, 0.8, 0);
+		fortCount++;
 
 		blocks = FetchGO();
 		blocks->type = GameObject::GO_BLOCKS;	// Horizontal
@@ -624,6 +621,7 @@ void SceneCollision::CreateStuff()
 		blocks->pos.Set(133 / 2 + 21, blocks->scale.y + 16.5, 0);
 		blocks->scale.Set(2, 31.2, 1);
 		blocks->Color.Set(0.8, 0.8, 0);
+		fortCount++;
 
 		std::cout << "This is spawned!" << std::endl;
 	}
@@ -721,13 +719,6 @@ void SceneCollision::RenderGO(GameObject *go)
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_BACKGROUND], true, go->Color);
-		modelStack.PopMatrix();
-		break;
-	case GameObject::GO_ARROW:
-		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_ARROW], true, go->Color);
 		modelStack.PopMatrix();
 		break;
 	}
