@@ -3,6 +3,7 @@
 #include <ostream>
 
 #include "LoadCSV.h"
+#include "ClassStorage.h"
 
 using std::getline;
 

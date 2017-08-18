@@ -1,10 +1,12 @@
 #ifndef SCENE_HIGH_SCORE_H
 #define SCENE_HIGH_SCORE_H
 
-#include "GameObject.h"
 #include <vector>
+
 #include "SceneBase.h"
-#include "ClassHighScore.h"
+#include "GameObject.h"
+
+class HighScore;
 
 class SceneHighScore : public SceneBase
 {
@@ -69,7 +71,7 @@ protected:
 	const float cooldownPressed = 0.5f;
 
 	// HighScore Stuff
-	vector<HighScore> highscore;
+	std::vector<HighScore> highscore;
 	const char *file_path;
 };
 

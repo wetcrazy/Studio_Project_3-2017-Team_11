@@ -1,11 +1,14 @@
 #ifndef QUICK_SORT_H
 #define QUICK_SORT_H
 
-#include "ClassHighScore.h"
+#include <vector>
+
+class HighScore;
+
 
 // QuickSort Functions
-void QuickSort(vector<HighScore> *list, int first_index, int last_index);
-void Swap(vector<HighScore> *list, int first_index, int second_index);
-int Partition(vector<HighScore> *list, int first_index, int last_index);
+void QuickSort(std::vector<HighScore> *list, int first_index, int last_index);
+void Swap(std::vector<HighScore> *list, int first_index, int second_index);
+int Partition(std::vector<HighScore> *list, int first_index, int last_index);
 
 #endif // !QUICK_SORT_H

@@ -1,12 +1,13 @@
+#include <sstream>
+
 #include "GL\glew.h"
 #include "Application.h"
 #include "LoadCSV.h"
 #include "QuickSort.h"
-#include <sstream>
-
 #include "SceneManager.h"
 #include "SceneHighScore.h"
 #include "SceneMainMenu.h"
+#include "ClassStorage.h"
 
 SceneHighScore::SceneHighScore()
 {

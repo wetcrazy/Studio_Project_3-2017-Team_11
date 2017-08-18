@@ -1,15 +1,38 @@
-#ifndef CLASS_UPGRADE_H
-#define CLASS_UPGRADE_H
-
-#include "Vector3.h"
+#ifndef CLASS_STORAGE_H
+#define CLASS_STORAGE_H
 
 #include <string>
 #include <vector>
 #include <ostream>
 
+#include "Vector3.h"
+
 using std::string;
 using std::vector;
 using std::ostream;
+
+class HighScore
+{
+protected:
+	// Struct Storage for Scores
+	struct Score
+	{
+		string rank;
+		string name;
+		string score;
+	}; 
+
+public:
+	// Constructor & Destructor
+	HighScore();
+	~HighScore();
+
+	// Struct Storage for Scores
+	Score Data;
+
+	// Operator
+	friend ostream &operator<<(ostream &os, HighScore &input);
+};
 
 class Upgrade
 {
@@ -33,6 +56,5 @@ private:
 	int max_shots; // Max number of shots
 	float speed; // Speed of shot
 };
-
 
 #endif
