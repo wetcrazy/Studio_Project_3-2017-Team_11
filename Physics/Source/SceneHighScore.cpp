@@ -310,27 +310,39 @@ void SceneHighScore::Update(double dt)
 
 	static bool bRButtonState = false;
 	if (!bRButtonState && Application::IsMousePressed(1))
-	{	}
+	{	
+	}
 	else if (bRButtonState && !Application::IsMousePressed(1))
 	{
 	}
-	if (Application::IsKeyPressed('Z'))
-	{
-		highscore = DeleteCSV(file_path);
-	}
 
-	if (Application::IsKeyPressed(VK_SPACE))
-	{
-		//highscore = DeleteCSV(file_path);
-		HighScore temp;
-		temp.Data.rank = "4";
-		temp.Data.name = "GAYY";
-		temp.Data.score = "1234";
-		highscore.push_back(temp);
-		QuickSort(&highscore, 1, highscore.size() - 1);
-		WriteCSV(file_path, highscore);
-	}
+	{	//Inserting and Deleting Data
 
+		//Prevent pressDelay from exceeding 0.5f
+		if (pressDelay > 0.5f)
+			pressDelay = 0.5f;
+
+		if (Application::IsKeyPressed('Z') && pressDelay >= cooldownPressed)
+		{
+			highscore = DeleteCSV(file_path);
+
+			pressDelay = 0.f;
+		}
+
+		if (Application::IsKeyPressed(VK_SPACE) && pressDelay >= cooldownPressed)
+		{
+			//highscore = DeleteCSV(file_path);
+			HighScore temp;
+			temp.Data.rank = "4";
+			temp.Data.name = "GAYY";
+			temp.Data.score = "1234";
+			highscore.push_back(temp);
+			QuickSort(&highscore, 1, highscore.size() - 1);
+			WriteCSV(file_path, highscore);
+
+			pressDelay = 0.f;
+		}
+	}
 	//Physics Simulation Section
 	dt *= m_speed;
 
@@ -422,8 +434,8 @@ void SceneHighScore::Update(double dt)
 
 		if (Application::IsKeyPressed(VK_RETURN) && pressDelay >= cooldownPressed)
 		{
-			/*if (selectOptions == DELETE_HIGHSCORE)
-			SceneManager::getInstance()->changeScene(new SceneCollision());*/
+			if (selectOptions == DELETE_HIGHSCORE)
+				highscore = DeleteCSV(file_path);
 
 			if (selectOptions == EXIT_HIGHSCORE)
 				SceneManager::getInstance()->changeScene(new SceneMainMenu());

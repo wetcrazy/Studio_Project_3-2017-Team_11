@@ -364,10 +364,7 @@ void SceneCollision::Update(double dt)
 			if (go->vel.Length() > 50) // 50 is distance
 			{
 				go->vel.Normalize();
-
-
 				go->vel *= 50;	// Default Speed of cannon shooting
-
 			}
 			if (go->vel.y < 0)
 				go->vel.y *= -1;
@@ -382,7 +379,6 @@ void SceneCollision::Update(double dt)
 
 			// Randomize color of ball
 			go->Color.Set(Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1));
-
 		}
 	}
 

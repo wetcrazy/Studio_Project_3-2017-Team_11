@@ -66,7 +66,7 @@ protected:
 	float pressDelay = 0.f;
 
 	//Cooldown for Button Pressed
-	const float cooldownPressed = 0.2f;
+	const float cooldownPressed = 0.5f;
 
 	// HighScore Stuff
 	vector<HighScore> highscore;
