@@ -58,19 +58,19 @@ ostream &operator<<(ostream &os, HighScore &input)
 			switch (temp.size())
 			{
 			case 1:
-				os << "    " << temp << ' ';
+				os << "    " << temp;
 				break;
 			case 2:
-				os << "   " << temp << ' ';
+				os << "   " << temp;
 				break;
 			case 3:
-				os << "  " << temp << ' ';
+				os << "  " << temp;
 				break;
 			case 4:
-				os << ' ' << temp << ' ';
+				os << ' ' << temp;
 				break;
 			case 5:
-				os << temp << ' ';
+				os << temp;
 			}
 		}		
 	}
