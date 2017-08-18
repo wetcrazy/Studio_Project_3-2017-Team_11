@@ -594,7 +594,8 @@ void SceneHighScore::Render()
 	ss << highscore[0];
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), textsize, 18, 43);
 	ss.str("");
-	if (highscore.size() > 11)
+	// HighScore Table (Prints out only 10)
+	if (highscore.size() > 11) // Force set print less than 11
 	{
 		for (int check_index = 1, sizer = 0; check_index < 11; ++check_index)
 		{
@@ -604,7 +605,7 @@ void SceneHighScore::Render()
 			sizer += 3;
 		}
 	}
-	else
+	else // Just print
 		for (int check_index = 1, sizer = 0; check_index < highscore.size(); ++check_index)
 		{
 			ss << highscore[check_index];
@@ -612,7 +613,7 @@ void SceneHighScore::Render()
 			ss.str("");
 			sizer += 3;
 		}
-
+	// ===================================
 }
 
 void SceneHighScore::Exit()
