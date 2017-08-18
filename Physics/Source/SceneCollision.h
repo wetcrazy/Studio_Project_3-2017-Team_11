@@ -20,7 +20,6 @@ public:
 	virtual void Update(double dt);
 	virtual void CreateStuff();	//create game objects here
 	virtual void Render();
-	virtual void RenderUpgradesMenu(double dt);	//upgrades are located here
 	virtual void Exit();
 
 	void RenderGO(GameObject *go);
@@ -61,17 +60,6 @@ protected:
 
 	//Background
 	GameObject *background;
-
-	//Upgrades Menu
-	GameObject *arrows = FetchGO();
-	GameObject *upgradesMenu = FetchGO();
-	GameObject *highlight_grade1 = FetchGO();
-	GameObject *highlight_grade2 = FetchGO();
-	bool b_upgradesMenu_IsOpen;
-	float pressDelay = 0.f;
-	const float cooldownPressed = 0.2f;
-	bool b_upgrades1;
-	bool b_upgrades2;
 
 	bool b_isBulletAlive;
 	float ft_bulletAlive;
