@@ -1,4 +1,5 @@
 #include "QuickSort.h"
+#include "ClassStorage.h"
 
 // QuickSort Functions
 void QuickSort(vector<HighScore> *list, int first_index, int last_index)

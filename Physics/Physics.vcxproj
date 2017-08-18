@@ -154,8 +154,7 @@
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp" />
     <ClCompile Include="Source\Camera.cpp" />
-    <ClCompile Include="Source\ClassHighScore.cpp" />
-    <ClCompile Include="Source\ClassUpgrade.cpp" />
+    <ClCompile Include="Source\ClassStorage.cpp" />
     <ClCompile Include="Source\GameObject.cpp" />
     <ClCompile Include="Source\LoadCSV.cpp" />
     <ClCompile Include="Source\LoadOBJ.cpp" />
@@ -177,8 +176,7 @@
   <ItemGroup>
     <ClInclude Include="Source\Application.h" />
     <ClInclude Include="Source\Camera.h" />
-    <ClInclude Include="Source\ClassHighScore.h" />
-    <ClInclude Include="Source\ClassUpgrade.h" />
+    <ClInclude Include="Source\ClassStorage.h" />
     <ClInclude Include="Source\GameObject.h" />
     <ClInclude Include="Source\Light.h" />
     <ClInclude Include="Source\LoadCSV.h" />
