@@ -209,6 +209,9 @@ void SceneUpgrade::Update(double dt)
 		speed_upgrade_1->active = true;
 		speed_upgrade_1->pos.Set(w_temp / 2, h_temp / 2, -5);
 		speed_upgrade_1->scale.Set(w_temp + 2, h_temp, 1);
+
+		//.txt
+		upgraded.WriteFile("Text//Speed_Upgrade.txt", "Speed", 1);
 	}
 	//If player has bought the second upgrade
 	if (b_speed_upgrade_2)
@@ -219,6 +222,9 @@ void SceneUpgrade::Update(double dt)
 		speed_upgrade_2->active = true;
 		speed_upgrade_2->pos.Set(w_temp / 2, h_temp / 2, -5);
 		speed_upgrade_2->scale.Set(w_temp + 2, h_temp, 1);
+
+		//.txt
+		upgraded.WriteFile("Text//Speed_Upgrade.txt", "Speed", 2);
 	}
 
 }

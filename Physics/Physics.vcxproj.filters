@@ -101,6 +101,9 @@
     <ClCompile Include="Source\SceneUpgrade.cpp">
       <Filter>Scene UI</Filter>
     </ClCompile>
+    <ClCompile Include="Source\LoadingUpgrades.cpp">
+      <Filter>Loading Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -174,6 +177,9 @@
     </ClInclude>
     <ClInclude Include="Source\SceneUpgrade.h">
       <Filter>Scene UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LoadingUpgrades.h">
+      <Filter>Loading Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

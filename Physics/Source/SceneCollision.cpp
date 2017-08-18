@@ -19,6 +19,9 @@ void SceneCollision::Init()
 {
 	SceneBase::Init();
 
+	//Upgrades
+	upgraded.ReadFile("Text//Speed_Upgrade.txt");
+
 	//Physics code here
 	m_speed = 1.f;
 
@@ -364,11 +367,24 @@ void SceneCollision::Update(double dt)
 			go->pos += aim.Normalized() * 0.5;
 			go->vel = aim;
 
-			if (go->vel.Length() > 50) // 50 is distance
+			if (go->vel.Length() > 10) // 10 is distance
 			{
+				int speed = 50;
+
+				if (upgraded.speed_upgrade == 1)
+				{
+					speed += 10;
+				}
+
+				else if (upgraded.speed_upgrade == 2)
+				{
+					speed += 20;
+				}
+
 				go->vel.Normalize();
-				go->vel *= 50;
+				go->vel *= speed;
 			}
+
 			if (go->vel.y < 0)
 				go->vel.y *= -1;
 			go->scale.Set(2, 2, 2);

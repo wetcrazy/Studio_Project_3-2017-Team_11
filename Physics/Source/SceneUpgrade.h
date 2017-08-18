@@ -4,6 +4,7 @@
 #include "GameObject.h"
 #include <vector>
 #include "SceneBase.h"
+#include "LoadingUpgrades.h"
 
 class SceneUpgrade : public SceneBase
 {
@@ -51,6 +52,9 @@ protected:
 	GameObject *speed_upgrade_2 = FetchGO();
 
 	bool b_speed_upgrade_1, b_speed_upgrade_2;
+
+	//.txt
+	LoadingUpgrades upgraded;
 
 	//Options
 	float pressDelay = 0.f;

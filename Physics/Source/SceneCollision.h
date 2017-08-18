@@ -4,6 +4,7 @@
 #include "GameObject.h"
 #include <vector>
 #include "SceneBase.h"
+#include "LoadingUpgrades.h"
 
 class SceneCollision : public SceneBase
 {
@@ -62,6 +63,9 @@ protected:
 
 	//Background
 	GameObject *background;
+
+	//Upgrades
+	LoadingUpgrades upgraded;
 
 	bool b_isBulletAlive;
 	float ft_bulletAlive;

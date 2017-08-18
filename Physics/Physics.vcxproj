@@ -157,6 +157,7 @@
     <ClCompile Include="Source\ClassStorage.cpp" />
     <ClCompile Include="Source\GameObject.cpp" />
     <ClCompile Include="Source\LoadCSV.cpp" />
+    <ClCompile Include="Source\LoadingUpgrades.cpp" />
     <ClCompile Include="Source\LoadOBJ.cpp" />
     <ClCompile Include="Source\LoadTGA.cpp" />
     <ClCompile Include="Source\main.cpp" />
@@ -181,6 +182,7 @@
     <ClInclude Include="Source\GameObject.h" />
     <ClInclude Include="Source\Light.h" />
     <ClInclude Include="Source\LoadCSV.h" />
+    <ClInclude Include="Source\LoadingUpgrades.h" />
     <ClInclude Include="Source\LoadOBJ.h" />
     <ClInclude Include="Source\LoadTGA.h" />
     <ClInclude Include="Source\Material.h" />
