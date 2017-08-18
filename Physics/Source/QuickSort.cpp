@@ -1,3 +1,5 @@
+#include <string>
+
 #include "QuickSort.h"
 #include "ClassStorage.h"
 
@@ -33,10 +35,18 @@ int Partition(vector<HighScore> *list, int first_index, int last_index)
 
 	for (int check_index = (first_index + 1); check_index <= last_index; ++check_index)// Sort By Score
 	{
-		if (atoi(list->at(check_index).Data.score.c_str()) > pivot_value)
+		if (atoi(list->at(check_index).Data.score.c_str()) > pivot_value) // Check bigger score than pivot
 		{
 			++small_index;
 			Swap(list, small_index, check_index);
+		}
+		else if (atoi(list->at(check_index).Data.score.c_str()) == pivot_value) // Check same score
+		{
+			if (list->at(check_index).Data.name < list->at(middle_index).Data.name) // Check smaller int string of name than pivot
+			{
+				++small_index;
+				Swap(list, small_index, check_index);
+			}		
 		}
 	}
 	Swap(list, first_index, small_index);

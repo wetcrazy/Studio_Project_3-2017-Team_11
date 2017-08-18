@@ -31,8 +31,9 @@ void SceneHighScore::Init()
 	file_path = "CSV//highscore.csv";
 
 	CreateStuff();
-	highscore = LoadCSV("CSV//highscore.csv");
+	highscore = LoadCSV(file_path);
 	QuickSort(&highscore, 1, highscore.size() - 1);
+	WriteCSV(file_path, highscore);
 }
 
 void SceneHighScore::CreateStuff()
@@ -593,13 +594,24 @@ void SceneHighScore::Render()
 	ss << highscore[0];
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), textsize, 18, 43);
 	ss.str("");
-	for (int check_index = 1, sizer = 0; check_index < highscore.size(); ++check_index)
+	if (highscore.size() > 11)
 	{
-		ss << highscore[check_index];
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), textsize, 18, 40 - sizer);
-		ss.str("");
-		sizer += 3;
+		for (int check_index = 1, sizer = 0; check_index < 11; ++check_index)
+		{
+			ss << highscore[check_index];
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), textsize, 18, 40 - sizer);
+			ss.str("");
+			sizer += 3;
+		}
 	}
+	else
+		for (int check_index = 1, sizer = 0; check_index < highscore.size(); ++check_index)
+		{
+			ss << highscore[check_index];
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), textsize, 18, 40 - sizer);
+			ss.str("");
+			sizer += 3;
+		}
 
 }
 

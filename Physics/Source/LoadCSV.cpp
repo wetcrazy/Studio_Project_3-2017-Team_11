@@ -68,9 +68,14 @@ void WriteCSV(const char *file_path, std::vector<HighScore> input)
 	// Recreate file
 	std::ofstream ip;
 	ip.open(file_path);
-	for (int check_index = 0; check_index < input.size(); ++check_index)
+	for (int check_index = 0; check_index < input.size(); ++check_index) // Write down each vector into file
 	{
-		ip << input[check_index].Data.rank << ',' << input[check_index].Data.name << ',' << input[check_index].Data.score << std::endl;
+		if (check_index == input.size() - 1) // Prevent addition of function endl at the end of the vector
+		{
+			ip << input[check_index].Data.rank << ',' << input[check_index].Data.name << ',' << input[check_index].Data.score;
+		}
+		else
+			ip << input[check_index].Data.rank << ',' << input[check_index].Data.name << ',' << input[check_index].Data.score << std::endl;
 	}
 	ip.close();
 	std::cout << file_path << " File OverWritten~" << std::endl;
