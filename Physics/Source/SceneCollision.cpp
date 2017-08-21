@@ -45,19 +45,16 @@ void SceneCollision::Init()
 	ft_bulletAlive = 0;
 
 	m_objRestrict = 1;
-	
 
 	//Scrolling
 	last_projectile = FetchGO();
+	last_projectile->active = false;
 	launched = 0;
-
 
 	//LoadTXT loadtxt;
 
-	i_CurrentLevel = GetCurrentLevel();
-
 	CreateStuff();
-	CreateLevel(i_CurrentLevel);
+	CreateLevel(1);
 }
 
 GameObject* SceneCollision::FetchGO()
@@ -305,10 +302,9 @@ void SceneCollision::CollisionResponse(GameObject * go1, GameObject * go2)
 
 void SceneCollision::Update(double dt)
 {
-	//std::cout << "Count : " << m_objectCount << " / " << m_objRestrict << std::endl;
+	std::cout << "Count : " << m_objectCount << " / " << m_objRestrict << std::endl;
 	SceneBase::Update(dt);
 	ft_elapsedTime += dt;
-	cout << i_CurrentLevel << endl;
 
 	if (Application::IsKeyPressed('9'))
 	{
@@ -336,6 +332,7 @@ void SceneCollision::Update(double dt)
 	background->pos.Set(w_temp / 2 + launched, h_temp / 2, -5);
 	background->scale.Set(w_temp + 2, h_temp, 1);
 
+	//Cannon follows cursor position
 	if (posY > cannon->pos.y)        // Cannon cannot move when cursor is below cannon	
 	{
 		if (!b_shootIsTrue)
@@ -349,40 +346,21 @@ void SceneCollision::Update(double dt)
 
 	//std::cout << platform->pos.y << std::endl;
 
-	if (!bLButtonState && Application::IsMousePressed(0))
+	if (!bLButtonState && Application::IsMousePressed(0) && !last_projectile->active && ft_elapsedTime > ft_shootTime)
 	{
 		bLButtonState = true;
-		std::cout << "LBUTTON DOWN" << std::endl;
-
-		m_ghost01->pos.Set(posX, posY, 0); //IMPT
-		m_ghost01->active = true;
-		m_ghost01->active = false;
-		float sc = 2;
-		m_ghost01->scale.Set(sc, sc, sc);
-	}
-
-	else if (bLButtonState && !Application::IsMousePressed(0) && !last_projectile->active && ft_elapsedTime > ft_shootTime)
-	{
-		bLButtonState = false;
 		std::cout << "LBUTTON UP" << std::endl;
 
 		if (posY > cannon->pos.y)
 		{
 			//spawn small GO_BALL
-			GameObject *go = FetchGO();
-			if (m_objectCount < m_objRestrict)
-				go->active = true;
-			else
-			{
-				go->active = false;
-				m_objectCount--;
-			}
-			go->type = GameObject::GO_CUBE;
-			go->pos = platform->pos;
-			go->pos += aim.Normalized() * 0.5;
-			go->vel = aim;
+			last_projectile->active = true;
+			last_projectile->type = GameObject::GO_CUBE;
+			last_projectile->pos = platform->pos;
+			last_projectile->pos += aim.Normalized() * 0.5;
+			last_projectile->vel = aim;
 
-			if (go->vel.Length() > 10) // 10 is distance
+			if (last_projectile->vel.Length() > 10) // 10 is distance
 			{
 				int speed = 35;
 
@@ -396,16 +374,15 @@ void SceneCollision::Update(double dt)
 					speed = 55;
 				}
 
-				go->vel.Normalize();
-				go->vel *= speed;
+				last_projectile->vel.Normalize();
+				last_projectile->vel *= speed;
 			}
 
-			if (go->vel.y < 0)
-				go->vel.y *= -1;
+			if (last_projectile->vel.y < 0)
+				last_projectile->vel.y *= -1;
 
 			m_ghost01->active = false;
-			go->scale.Set(2, 2, 2);
-			last_projectile = go;
+			last_projectile->scale.Set(2, 2, 2);
 
 			// Limit spawn rate of cannon balls AND prevents movement of cannon immediately after shooting
 			ft_shootTime = ft_elapsedTime + 0.25f;
@@ -414,8 +391,16 @@ void SceneCollision::Update(double dt)
 			b_shootIsTrue = true;
 
 			// Randomize color of ball
-			go->Color.Set(Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1));
+			last_projectile->Color.Set(Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1));
+
+			//Reset the camera position for scrolling
+			launched = 0;
 		}
+	}
+	else if (bLButtonState && !Application::IsMousePressed(0))
+	{
+		bLButtonState = false;
+		std::cout << "LBUTTON DOWN" << std::endl;
 	}
 
 	// Cannon ball has not been shot
@@ -467,22 +452,46 @@ void SceneCollision::Update(double dt)
 		}
 	}
 
+	if (Application::IsKeyPressed(VK_RIGHT))	//Right scrolling 
+	{
+		if (launched >= 0 && launched <= m_worldWidth * 1.5)
+		{
+			launched += 25 * dt;
+			launched += 25 * dt;
+		}
+	}
+
+	else if (Application::IsKeyPressed(VK_LEFT))	//Left scrolling 
+	{
+		if (launched >= 0 && launched <= m_worldWidth * 1.5)
+		{
+			launched -= 25 * dt;
+			launched -= 25 * dt;
+		}
+	}
+
 	//Physics Simulation Section
 	dt *= m_speed;
 
-	//Scrolling===================================================//
+
+
+	//Projectile Scrolling========================================//
 	camera.target.x = launched;
 	camera.position.x = launched;
 
-	if (last_projectile->pos.x > m_worldWidth / 2)
+	if (last_projectile->pos.x > m_worldWidth / 2)	//projectile scrolling
 		launched = last_projectile->pos.x - m_worldWidth / 2;
 
 	if (launched > m_worldWidth)	//make camera.position.x stop moving
 		launched = m_worldWidth;
 
-	if (!last_projectile->active)	//reset camera.position.x to initial position
+	if (!last_projectile->active && !Application::IsKeyPressed(VK_RIGHT))	//reset camera.position.x to initial position
 		launched = 0;
+
+	cout << launched << endl;
 	//End of Scrolling============================================//
+
+
 
 	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 	{
@@ -494,8 +503,9 @@ void SceneCollision::Update(double dt)
 			{
 				go->pos += go->vel * static_cast<float>(dt);
 				go->vel += gravity * dt;
-				if (go->pos.x > m_worldWidth + go->scale.x + 200|| go->pos.x < -go->scale.x || go->pos.y > m_worldHeight + go->scale.y || go->pos.y < -go->scale.y)
+				if (go->pos.x > m_worldWidth * 2 + go->scale.x || go->pos.x < -go->scale.x || go->pos.y > m_worldHeight + go->scale.y || go->pos.y < -go->scale.y)
 				{
+					go->pos.SetZero();
 					go->active = false;
 					--m_objectCount;
 				}
@@ -544,11 +554,7 @@ void SceneCollision::Update(double dt)
 	}
 
 	if (fortCount == 0)
-	{
 		SceneManager::getInstance()->changeScene(new SceneUpgrade());
-		i_CurrentLevel++;
-		SetCurrentLevel(i_CurrentLevel);
-	}
 }
 
 void SceneCollision::CreateStuff()
@@ -724,25 +730,6 @@ void SceneCollision::CreateLevel(int level)
 
 		//std::cout << createLevel.size() << std::endl;
 	}
-}
-
-void SceneCollision::SetCurrentLevel(int levelNo)
-{
-	ofstream myFile;
-	myFile.open("CurrentLevel.txt");
-	myFile << levelNo << endl;
-	myFile.close();
-}
-
-int SceneCollision::GetCurrentLevel()
-{
-	int level;
-	ifstream myFile;
-	myFile.open("CurrentLevel.txt");
-	myFile >> level;
-	myFile.close();
-
-	return level;
 }
 
 void SceneCollision::RenderGO(GameObject *go)
