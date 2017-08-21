@@ -22,6 +22,7 @@ public:
 	string tempString;
 
 	void ReadFile(string fileName);
+	void DeleteTextFile(string fileName);
 	void WriteFile(string fileName, string type, int number);
 };
 

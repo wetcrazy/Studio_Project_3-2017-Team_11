@@ -91,10 +91,10 @@ void SceneUpgrade::Update(double dt)
 	//Position values (for upgrade menu)
 	float posXDownArrow = 0.7f;
 	float posXDownArrow_NextLevel = 1.1f;
-	float posXDownArrow_NextPage = 0.59f;
-	float posYDownArrow_Upgrade1 = 0.86f;
-	float posYDownArrow_Upgrade2 = 1.36f;
-	float posYDownArrow_NextPage_NextLevel = 3.7f;
+	float posXDownArrow_NextPage = 0.57f;
+	float posYDownArrow_Upgrade1 = 0.82f;
+	float posYDownArrow_Upgrade2 = 1.33f;
+	float posYDownArrow_NextPage_NextLevel = 3.35f;
 
 	//Scale values (for upgrade menu)
 	float scaleDown_Arrow = 20.f;

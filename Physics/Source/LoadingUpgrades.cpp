@@ -19,10 +19,6 @@ void LoadingUpgrades::ReadFile(string fileName)
 		if (begin == string::npos)
 			continue;
 
-		// Skip commentary lines
-		else if (string("#").find(tempString[begin]) != string::npos)
-			continue;
-
 		// Found option line <setting name>=value
 		else if (string("<").find(tempString[begin]) != string::npos)
 		{
@@ -30,15 +26,24 @@ void LoadingUpgrades::ReadFile(string fileName)
 			{
 				if (tempString[i] == '=')
 				{
-					if (tempString.substr(0, i) == "<Speed>")
-						speed_upgrade = stoi(tempString.substr(i + 1));
-
+					//Speed upgrades
 					if (tempString.substr(0, i) == "<Speed>")
 						speed_upgrade = stoi(tempString.substr(i + 1));
 				}
 			}
 		}
 	}
+}
+
+void LoadingUpgrades::DeleteTextFile(string fileName)
+{
+	ofstream output;
+	output.open(fileName);
+
+	//Replace text with blank space
+	output << endl;
+
+	output.close();
 }
 
 void LoadingUpgrades::WriteFile(string fileName, string type, int number)

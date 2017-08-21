@@ -296,8 +296,8 @@ void SceneHighScore::Update(double dt)
 
 	//Position values (for arrows)
 	float posXArrow_Delete = 1.35f;
-	float posXArrow_Exit = 0.575f;
-	float posYArrow = 5.1f;
+	float posXArrow_Exit = 0.6f;
+	float posYArrow = 4.9f;
 
 	//Scale values (for upgrade menu)
 	float scaleDown_Arrow = 20.f;

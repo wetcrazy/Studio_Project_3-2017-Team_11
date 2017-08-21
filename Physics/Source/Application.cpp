@@ -11,13 +11,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "SceneKinematics.h"
-#include "SceneAsteroid.h"
-#include "SceneCollision.h"
-#include "SceneHighScore.h"
 #include "SceneManager.h"
 #include "SceneMainMenu.h"
-#include "SceneHighScore.h"
 
 GLFWwindow* m_window;
 const unsigned char FPS = 60; // FPS of this game
