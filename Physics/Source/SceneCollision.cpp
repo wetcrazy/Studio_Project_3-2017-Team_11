@@ -28,7 +28,7 @@ void SceneCollision::Init()
 	Math::InitRNG();
 
 	m_objectCount = 0;
-	fortCount = 6;
+	fortCount = 0;
 	initialKE = 0;
 	finalKE = 0;
 

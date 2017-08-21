@@ -28,6 +28,8 @@ void SceneUpgrade::Init()
 
 	Math::InitRNG();
 
+	upgraded.ReadFile("Text//Speed_Upgrade.txt");
+
 	b_speed_upgrade_1 = false;
 	b_speed_upgrade_2 = false;
 
@@ -145,10 +147,10 @@ void SceneUpgrade::Update(double dt)
 			else if (selectOptions == NEXTPAGE)
 				SceneManager::getInstance()->changeScene(new SceneCollision());
 
-			else if (selectOptions == SPEED_UPGRADE_1)
+			else if (selectOptions == SPEED_UPGRADE_1 && !b_speed_upgrade_1 && !b_speed_upgrade_2)
 				b_speed_upgrade_1 = true;
 
-			else if (selectOptions == SPEED_UPGRADE_2)
+			else if (selectOptions == SPEED_UPGRADE_2 && b_speed_upgrade_1 && !b_speed_upgrade_2)
 				b_speed_upgrade_2 = true;
 
 			pressDelay = 0.f;
@@ -200,12 +202,11 @@ void SceneUpgrade::Update(double dt)
 		break;
 	}
 
-	//If player has bought the first upgrade
+	//Buying first upgrade
 	if (b_speed_upgrade_1)
 	{
 		//Render in upgrade1
 		upgradesMenu->active = false;
-		speed_upgrade_2->active = false;
 		speed_upgrade_1->active = true;
 		speed_upgrade_1->pos.Set(w_temp / 2, h_temp / 2, -5);
 		speed_upgrade_1->scale.Set(w_temp + 2, h_temp, 1);
@@ -213,11 +214,10 @@ void SceneUpgrade::Update(double dt)
 		//.txt
 		upgraded.WriteFile("Text//Speed_Upgrade.txt", "Speed", 1);
 	}
-	//If player has bought the second upgrade
+	//Buying second upgrade
 	if (b_speed_upgrade_2)
 	{
 		//Render in upgrade2
-		upgradesMenu->active = false;
 		speed_upgrade_1->active = false;
 		speed_upgrade_2->active = true;
 		speed_upgrade_2->pos.Set(w_temp / 2, h_temp / 2, -5);
@@ -227,6 +227,27 @@ void SceneUpgrade::Update(double dt)
 		upgraded.WriteFile("Text//Speed_Upgrade.txt", "Speed", 2);
 	}
 
+	//Bought first upgrade
+	if (upgraded.speed_upgrade == 1)
+	{
+		//Render in upgrade1
+		upgradesMenu->active = false;
+		speed_upgrade_2->active = false;
+		speed_upgrade_1->active = true;
+		speed_upgrade_1->pos.Set(w_temp / 2, h_temp / 2, -5);
+		speed_upgrade_1->scale.Set(w_temp + 2, h_temp, 1);
+	}
+
+	//Bought second upgrade
+	if (upgraded.speed_upgrade == 2)
+	{
+		//Render in upgrade2
+		upgradesMenu->active = false;
+		speed_upgrade_1->active = false;
+		speed_upgrade_2->active = true;
+		speed_upgrade_2->pos.Set(w_temp / 2, h_temp / 2, -5);
+		speed_upgrade_2->scale.Set(w_temp + 2, h_temp, 1);
+	}
 }
 
 void SceneUpgrade::RenderGO(GameObject *go)
