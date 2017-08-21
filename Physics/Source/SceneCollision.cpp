@@ -53,8 +53,10 @@ void SceneCollision::Init()
 
 	//LoadTXT loadtxt;
 
+	i_CurrentLevel = GetCurrentLevel();
+
 	CreateStuff();
-	CreateLevel(1);
+	CreateLevel(i_CurrentLevel);
 }
 
 GameObject* SceneCollision::FetchGO()
@@ -730,6 +732,25 @@ void SceneCollision::CreateLevel(int level)
 
 		//std::cout << createLevel.size() << std::endl;
 	}
+}
+
+void SceneCollision::SetCurrentLevel(int levelNo)
+{
+	ofstream myFile;
+	myFile.open("CurrentLevel.txt");
+	myFile << levelNo << endl;
+	myFile.close();
+}
+
+int SceneCollision::GetCurrentLevel()
+{
+	int level;
+	ifstream myFile;
+	myFile.open("CurrentLevel.txt");
+	myFile >> level;
+	myFile.close();
+
+	return level;
 }
 
 void SceneCollision::RenderGO(GameObject *go)
