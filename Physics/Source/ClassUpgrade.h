@@ -1,15 +1,16 @@
 #ifndef CLASS_UPGRADE_H
 #define CLASS_UPGRADE_H
 
-#include "Vector3.h"
-
-#include <string>
-#include <vector>
-#include <ostream>
-
-using std::string;
-using std::vector;
-using std::ostream;
+//#include "Vector3.h"
+//
+//#include <string>
+//#include <vector>
+//#include <ostream>
+//
+//using std::string;
+//using std::vector;
+//using std::ostream;
+#include "ClassStorage.h"
 
 class Upgrade
 {
@@ -33,6 +34,5 @@ private:
 	int max_shots; // Max number of shots
 	float speed; // Speed of shot
 };
-
 
 #endif

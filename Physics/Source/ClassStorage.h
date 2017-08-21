@@ -45,10 +45,12 @@ public:
 	void set_Gravity(Vector3 input);
 	void set_MaxShots(int input);
 	void set_Speed(float input);
+	void set_SpeedMultiplyer(float input);
 	// Getter
 	Vector3 get_Gravity();
 	int get_MaxShots();
 	float get_Speed();
+	float get_SpeedMultiplyer(float input);
 
 private:
 	// Variables

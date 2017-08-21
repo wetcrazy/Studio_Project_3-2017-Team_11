@@ -1,13 +1,14 @@
 #ifndef CLASS_HIGH_SCORE_H
 #define CLASS_HIGH_SCORE_H
 
-#include <string>
-#include <vector>
-#include <ostream>
-
-using std::string;
-using std::vector;
-using std::ostream;
+//#include <string>
+//#include <vector>
+//#include <ostream>
+//
+//using std::string;
+//using std::vector;
+//using std::ostream;
+#include "ClassStorage.h"
 
 class HighScore
 {
@@ -18,7 +19,7 @@ protected:
 		string rank;
 		string name;
 		string score;
-	}; 
+	};
 
 public:
 	// Constructor & Destructor
