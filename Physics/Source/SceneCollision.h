@@ -65,6 +65,10 @@ protected:
 	//Background
 	GameObject *background;
 
+	//Scrolling
+	GameObject *last_projectile;
+	float launched;
+
 	//Upgrades
 	LoadingUpgrades upgraded;
 

@@ -45,6 +45,11 @@ void SceneCollision::Init()
 	ft_bulletAlive = 0;
 	m_objRestrict = 18;
 
+	//Scrolling
+	last_projectile = FetchGO();
+	launched = 0;
+
+
 	//LoadTXT loadtxt;
 
 	CreateStuff();
@@ -322,11 +327,15 @@ void SceneCollision::Update(double dt)
 	int h_temp = 100;
 	int w_temp = 100 * Application::GetWindowWidth() / Application::GetWindowHeight();
 
+	//Background resizing
+	background->pos.Set(w_temp / 2 + launched, h_temp / 2, -5);
+	background->scale.Set(w_temp + 2, h_temp, 1);
+
 	if (posY > cannon->pos.y)        // Cannon cannot move when cursor is below cannon	
 	{
 		if (!b_shootIsTrue)
 		{
-			aim.Set(posX, posY, 0);
+			aim.Set(posX + launched, posY, 0);
 			aim.Set(aim.x - platform->pos.x, aim.y - platform->pos.y, 0);
 			cannon->dir = aim.Cross(Vector3(0, 0, 1));
 			cannon->dir.Normalize();
@@ -347,7 +356,7 @@ void SceneCollision::Update(double dt)
 		m_ghost01->scale.Set(sc, sc, sc);
 	}
 
-	else if (bLButtonState && !Application::IsMousePressed(0) && ft_elapsedTime > ft_shootTime)
+	else if (bLButtonState && !Application::IsMousePressed(0) && !last_projectile->active && ft_elapsedTime > ft_shootTime)
 	{
 		bLButtonState = false;
 		std::cout << "LBUTTON UP" << std::endl;
@@ -388,8 +397,10 @@ void SceneCollision::Update(double dt)
 
 			if (go->vel.y < 0)
 				go->vel.y *= -1;
-			go->scale.Set(2, 2, 2);
+
 			m_ghost01->active = false;
+			go->scale.Set(2, 2, 2);
+			last_projectile = go;
 
 			// Limit spawn rate of cannon balls AND prevents movement of cannon immediately after shooting
 			ft_shootTime = ft_elapsedTime + 0.25f;
@@ -454,6 +465,20 @@ void SceneCollision::Update(double dt)
 	//Physics Simulation Section
 	dt *= m_speed;
 
+	//Scrolling===================================================//
+	camera.target.x = launched;
+	camera.position.x = launched;
+
+	if (last_projectile->pos.x > m_worldWidth / 2)
+		launched = last_projectile->pos.x - m_worldWidth / 2;
+
+	if (launched > m_worldWidth)	//make camera.position.x stop moving
+		launched = m_worldWidth;
+
+	if (!last_projectile->active)	//reset camera.position.x to initial position
+		launched = 0;
+	//End of Scrolling============================================//
+
 	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 	{
 		GameObject *go = (GameObject *)*it;
@@ -464,7 +489,7 @@ void SceneCollision::Update(double dt)
 			{
 				go->pos += go->vel * static_cast<float>(dt);
 				go->vel += gravity * dt;
-				if (go->pos.x > m_worldWidth + go->scale.x || go->pos.x < -go->scale.x || go->pos.y > m_worldHeight + go->scale.y || go->pos.y < -go->scale.y)
+				if (go->pos.x > m_worldWidth + go->scale.x + 200|| go->pos.x < -go->scale.x || go->pos.y > m_worldHeight + go->scale.y || go->pos.y < -go->scale.y)
 				{
 					go->active = false;
 					--m_objectCount;
@@ -574,7 +599,7 @@ void SceneCollision::CreateStuff()
 		platform = new GameObject(GameObject::GO_CANNON_PLATFORM);	// Platform for Cannon
 		platform->active = true;
 		platform->dir.Set(0, 1, 0);
-		platform->pos.Set(133 / 8, 100 / 6.8, 0);
+		platform->pos.Set(133 / 8, 100 / 6.9, 0);
 		platform->scale.Set(1, 3, 1);
 		m_goList.push_back(platform);
 
