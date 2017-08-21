@@ -45,6 +45,7 @@ void SceneCollision::Init()
 	ft_bulletAlive = 0;
 
 	m_objRestrict = 1;
+	
 
 	//Scrolling
 	last_projectile = FetchGO();
@@ -53,8 +54,10 @@ void SceneCollision::Init()
 
 	//LoadTXT loadtxt;
 
+	i_CurrentLevel = GetCurrentLevel();
+
 	CreateStuff();
-	CreateLevel(1);
+	CreateLevel(i_CurrentLevel);
 }
 
 GameObject* SceneCollision::FetchGO()
@@ -302,9 +305,10 @@ void SceneCollision::CollisionResponse(GameObject * go1, GameObject * go2)
 
 void SceneCollision::Update(double dt)
 {
-	std::cout << "Count : " << m_objectCount << " / " << m_objRestrict << std::endl;
+	//std::cout << "Count : " << m_objectCount << " / " << m_objRestrict << std::endl;
 	SceneBase::Update(dt);
 	ft_elapsedTime += dt;
+	cout << i_CurrentLevel << endl;
 
 	if (Application::IsKeyPressed('9'))
 	{
@@ -540,7 +544,11 @@ void SceneCollision::Update(double dt)
 	}
 
 	if (fortCount == 0)
+	{
 		SceneManager::getInstance()->changeScene(new SceneUpgrade());
+		i_CurrentLevel++;
+		SetCurrentLevel(i_CurrentLevel);
+	}
 }
 
 void SceneCollision::CreateStuff()
@@ -716,6 +724,25 @@ void SceneCollision::CreateLevel(int level)
 
 		//std::cout << createLevel.size() << std::endl;
 	}
+}
+
+void SceneCollision::SetCurrentLevel(int levelNo)
+{
+	ofstream myFile;
+	myFile.open("CurrentLevel.txt");
+	myFile << levelNo << endl;
+	myFile.close();
+}
+
+int SceneCollision::GetCurrentLevel()
+{
+	int level;
+	ifstream myFile;
+	myFile.open("CurrentLevel.txt");
+	myFile >> level;
+	myFile.close();
+
+	return level;
 }
 
 void SceneCollision::RenderGO(GameObject *go)

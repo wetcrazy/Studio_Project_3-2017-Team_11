@@ -33,6 +33,10 @@ public:
 	float CheckCollision2(GameObject *go1, GameObject *go2);
 	void CollisionResponse(GameObject *go1, GameObject *go2);
 
+	//Getting and Setting current levels
+	void SetCurrentLevel(int levelNo);
+	int GetCurrentLevel();
+
 protected:
 
 	//Physics
@@ -77,6 +81,9 @@ protected:
 	int m_objRestrict;
 
 	int i_level;
+
+	//CurrentLevel.txt
+	int i_CurrentLevel;
 
 	LoadTXT loadText;
 };
