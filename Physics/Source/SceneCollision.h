@@ -5,6 +5,7 @@
 #include <vector>
 #include "SceneBase.h"
 #include "LoadingUpgrades.h"
+#include "LoadTXT.h"
 
 class SceneCollision : public SceneBase
 {
@@ -20,7 +21,7 @@ public:
 	virtual void Init();
 	virtual void Update(double dt);
 	virtual void CreateStuff();	//create game objects here
-	virtual void CreateLevel();
+	virtual void CreateLevel(int i_level);
 	virtual void Render();
 	virtual void Exit();
 
@@ -72,6 +73,8 @@ protected:
 	int m_objRestrict;
 
 	int i_level;
+
+	LoadTXT loadText;
 };
 
 #endif

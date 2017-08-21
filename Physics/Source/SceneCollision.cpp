@@ -28,7 +28,7 @@ void SceneCollision::Init()
 	Math::InitRNG();
 
 	m_objectCount = 0;
-	fortCount = 0;
+	fortCount = 6;
 	initialKE = 0;
 	finalKE = 0;
 
@@ -48,6 +48,7 @@ void SceneCollision::Init()
 	//LoadTXT loadtxt;
 
 	CreateStuff();
+	CreateLevel(1);
 }
 
 GameObject* SceneCollision::FetchGO()
@@ -295,7 +296,7 @@ void SceneCollision::CollisionResponse(GameObject * go1, GameObject * go2)
 
 void SceneCollision::Update(double dt)
 {
-	std::cout << "Object Count : " << m_objectCount << std::endl;
+	//std::cout << "Object Count : " << m_objectCount << std::endl;
 	SceneBase::Update(dt);
 	ft_elapsedTime += dt;
 
@@ -369,16 +370,16 @@ void SceneCollision::Update(double dt)
 
 			if (go->vel.Length() > 10) // 10 is distance
 			{
-				int speed = 50;
+				int speed = 35;
 
 				if (upgraded.speed_upgrade == 1)
 				{
-					speed += 10;
+					speed = 45;
 				}
 
 				else if (upgraded.speed_upgrade == 2)
 				{
-					speed += 20;
+					speed = 55;
 				}
 
 				go->vel.Normalize();
@@ -584,68 +585,103 @@ void SceneCollision::CreateStuff()
 		m_goList.push_back(cannon);
 	}
 
-	{ // Testing Structure
-		GameObject* blocks = FetchGO();
-		blocks->type = GameObject::GO_BLOCKS;	// Vertical
-		blocks->active = true;
-		blocks->dir.Set(1, 0, 0);
-		blocks->pos.Set(133 / 2 + 16, blocks->scale.y + 5, 0);
-		blocks->scale.Set(2, 8, 1);
-		blocks->Color.Set(0.8, 0.8, 0);
-		fortCount++;
+	//{ // Testing Structure
+	//	GameObject* blocks = FetchGO();
+	//	blocks->type = GameObject::GO_BLOCKS;	// Vertical
+	//	blocks->active = true;
+	//	blocks->dir.Set(1, 0, 0);
+	//	blocks->pos.Set(133 / 2 + 16, blocks->scale.y + 5, 0);
+	//	blocks->scale.Set(2, 8, 1);
+	//	blocks->Color.Set(0.8, 0.8, 0);
+	//	fortCount++;
 
-		blocks = FetchGO();
-		blocks->type = GameObject::GO_BLOCKS;	// Vertical
-		blocks->active = true;
-		blocks->dir.Set(1, 0, 0);
-		blocks->pos.Set(133 / 2 + 26, blocks->scale.y + 5, 0);
-		blocks->scale.Set(2, 8, 1);
-		blocks->Color.Set(0.8, 0.8, 0);
-		fortCount++;
+	//	blocks = FetchGO();
+	//	blocks->type = GameObject::GO_BLOCKS;	// Vertical
+	//	blocks->active = true;
+	//	blocks->dir.Set(1, 0, 0);
+	//	blocks->pos.Set(133 / 2 + 26, blocks->scale.y + 5, 0);
+	//	blocks->scale.Set(2, 8, 1);
+	//	blocks->Color.Set(0.8, 0.8, 0);
+	//	fortCount++;
 
-		blocks = FetchGO();
-		blocks->type = GameObject::GO_BLOCKS;	// Horizontal
-		blocks->active = true;
-		blocks->dir.Set(0, 1, 0);
-		blocks->pos.Set(133 / 2 + 21, blocks->scale.y + 7.5, 0);
-		blocks->scale.Set(2, 8, 1);
-		blocks->Color.Set(0.8, 0.8, 0);
-		fortCount++;
-		//
-		blocks = FetchGO();
-		blocks->type = GameObject::GO_BLOCKS;	// Vertical
-		blocks->active = true;
-		blocks->dir.Set(1, 0, 0);
-		blocks->pos.Set(133 / 2 + 6, blocks->scale.y + 8, 0);
-		blocks->scale.Set(2, 14, 1);
-		blocks->Color.Set(0.8, 0.8, 0);
-		fortCount++;
+	//	blocks = FetchGO();
+	//	blocks->type = GameObject::GO_BLOCKS;	// Horizontal
+	//	blocks->active = true;
+	//	blocks->dir.Set(0, 1, 0);
+	//	blocks->pos.Set(133 / 2 + 21, blocks->scale.y + 7.5, 0);
+	//	blocks->scale.Set(2, 8, 1);
+	//	blocks->Color.Set(0.8, 0.8, 0);
+	//	fortCount++;
+	//	//
+	//	blocks = FetchGO();
+	//	blocks->type = GameObject::GO_BLOCKS;	// Vertical
+	//	blocks->active = true;
+	//	blocks->dir.Set(1, 0, 0);
+	//	blocks->pos.Set(133 / 2 + 6, blocks->scale.y + 8, 0);
+	//	blocks->scale.Set(2, 14, 1);
+	//	blocks->Color.Set(0.8, 0.8, 0);
+	//	fortCount++;
 
-		blocks = FetchGO();
-		blocks->type = GameObject::GO_BLOCKS;	// Vertical
-		blocks->active = true;
-		blocks->dir.Set(1, 0, 0);
-		blocks->pos.Set(133 / 2 + 36, blocks->scale.y + 8, 0);
-		blocks->scale.Set(2, 14, 1);
-		blocks->Color.Set(0.8, 0.8, 0);
-		fortCount++;
+	//	blocks = FetchGO();
+	//	blocks->type = GameObject::GO_BLOCKS;	// Vertical
+	//	blocks->active = true;
+	//	blocks->dir.Set(1, 0, 0);
+	//	blocks->pos.Set(133 / 2 + 36, blocks->scale.y + 8, 0);
+	//	blocks->scale.Set(2, 14, 1);
+	//	blocks->Color.Set(0.8, 0.8, 0);
+	//	fortCount++;
 
-		blocks = FetchGO();
-		blocks->type = GameObject::GO_BLOCKS;	// Horizontal
-		blocks->active = true;
-		blocks->dir.Set(0, 1, 0);
-		blocks->pos.Set(133 / 2 + 21, blocks->scale.y + 16.5, 0);
-		blocks->scale.Set(2, 31.2, 1);
-		blocks->Color.Set(0.8, 0.8, 0);
-		fortCount++;
+	//	blocks = FetchGO();
+	//	blocks->type = GameObject::GO_BLOCKS;	// Horizontal
+	//	blocks->active = true;
+	//	blocks->dir.Set(0, 1, 0);
+	//	blocks->pos.Set(133 / 2 + 21, blocks->scale.y + 16.5, 0);
+	//	blocks->scale.Set(2, 31.2, 1);
+	//	blocks->Color.Set(0.8, 0.8, 0);
+	//	fortCount++;
 
-		std::cout << "This is spawned!" << std::endl;
-	}
+	//	std::cout << "This is spawned!" << std::endl;
+	//}
 }
 
-void SceneCollision::CreateLevel()
+void SceneCollision::CreateLevel(int level)
 {
+	std::vector<LevelCreate> createLevel;
+	createLevel = loadText.LoadTextFile();
+	for (unsigned int i = 0; i < createLevel.size(); i++)
+	{
+		/*std::cout <<
+		createLevel[i].get_level() << ", " <<
+		createLevel[i].get_type() << ", " <<
+		createLevel[i].get_active() << ", " <<
+		createLevel[i].get_dirx() << ", " <<
+		createLevel[i].get_diry() << ", " <<
+		createLevel[i].get_dirz() << ", " <<
+		createLevel[i].get_posx() << ", " <<
+		createLevel[i].get_posy() << ", " <<
+		createLevel[i].get_posz() << ", " <<
+		createLevel[i].get_scax() << ", " <<
+		createLevel[i].get_scay() << ", " <<
+		createLevel[i].get_scaz() << ", " <<
+		createLevel[i].get_colr() << ", " <<
+		createLevel[i].get_colg() << ", " <<
+		createLevel[i].get_colb() << std::endl;*/
 
+		if (createLevel[i].get_level() == level)
+		{
+			GameObject* go = FetchGO();
+			if (createLevel[i].get_type() == "GO_BLOCKS")
+				go->type = GameObject::GO_BLOCKS;
+			if (createLevel[i].get_active() == 1)
+				go->active = true;
+			go->dir.Set(createLevel[i].get_dirx(), createLevel[i].get_diry(), createLevel[i].get_dirz());
+			go->pos.Set(createLevel[i].get_posx(), createLevel[i].get_posy(), createLevel[i].get_posz());
+			go->scale.Set(createLevel[i].get_scax(), createLevel[i].get_scay(), createLevel[i].get_scaz());
+			go->Color.Set(createLevel[i].get_colr(), createLevel[i].get_colg(), createLevel[i].get_colb());
+		}
+
+		//std::cout << createLevel.size() << std::endl;
+	}
 }
 
 void SceneCollision::RenderGO(GameObject *go)
