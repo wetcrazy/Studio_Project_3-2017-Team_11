@@ -43,7 +43,8 @@ void SceneCollision::Init()
 
 	b_isBulletAlive = false;
 	ft_bulletAlive = 0;
-	m_objRestrict = 18;
+
+	m_objRestrict = 1;
 
 	//Scrolling
 	last_projectile = FetchGO();
@@ -301,7 +302,7 @@ void SceneCollision::CollisionResponse(GameObject * go1, GameObject * go2)
 
 void SceneCollision::Update(double dt)
 {
-	//std::cout << "Object Count : " << m_objectCount << std::endl;
+	std::cout << "Count : " << m_objectCount << " / " << m_objRestrict << std::endl;
 	SceneBase::Update(dt);
 	ft_elapsedTime += dt;
 
@@ -556,6 +557,7 @@ void SceneCollision::CreateStuff()
 	wall->dir.Set(1, 0, 0);
 	wall->pos.Set(wall->scale.x / 2, wall->scale.y, 0);
 	wall->scale.Set(2, h / 27, 1);
+	m_objRestrict++;
 
 	wall = FetchGO();
 	wall->type = GameObject::GO_GROUND;	// Ground
@@ -563,6 +565,7 @@ void SceneCollision::CreateStuff()
 	wall->dir.Set(0, -1, 0);
 	wall->pos.Set(133 / 2, wall->scale.y / 2, 0);
 	wall->scale.Set(2, w, 1);
+	m_objRestrict++;
 
 	wall = FetchGO();
 	wall->type = GameObject::GO_PLATFORM;	// Elevated Ground
@@ -570,6 +573,7 @@ void SceneCollision::CreateStuff()
 	wall->dir.Set(0, -1, 0);
 	wall->pos.Set(133 / 8, 100 / 9, 0);
 	wall->scale.Set(2, 100 / 3, 1);
+	m_objRestrict++;
 
 	wall = FetchGO();
 	wall->type = GameObject::GO_PLATFORM;	// Slanted Ground
@@ -577,6 +581,7 @@ void SceneCollision::CreateStuff()
 	wall->dir.Set(-1, -1, 0);
 	wall->pos.Set(133 / 5 + 11.5, 100 / 9 - 5.3, 0);
 	wall->scale.Set(2, 100 / 6, 1);
+	m_objRestrict++;
 
 	for (unsigned i = 0; i < 6; i++)
 	{
@@ -586,6 +591,7 @@ void SceneCollision::CreateStuff()
 		wall->dir.Set(0, -1, 0);
 		wall->pos.Set(133 / 8 + (1 * i), 100 / 9 - (2 * i), 0);
 		wall->scale.Set(2, 100 / 3 + (1.5 * i), 1);
+		m_objRestrict++;
 	}
 
 	background = new GameObject(GameObject::GO_BACKGROUND);	// Background
@@ -593,6 +599,7 @@ void SceneCollision::CreateStuff()
 	background->pos.Set(w_temp / 2, h_temp / 2, -5);
 	background->scale.Set(w_temp, h_temp, 1);
 	m_goList.push_back(background);
+	m_objRestrict++;
 
 	{
 		//Cannon
@@ -703,6 +710,8 @@ void SceneCollision::CreateLevel(int level)
 			go->pos.Set(createLevel[i].get_posx(), createLevel[i].get_posy(), createLevel[i].get_posz());
 			go->scale.Set(createLevel[i].get_scax(), createLevel[i].get_scay(), createLevel[i].get_scaz());
 			go->Color.Set(createLevel[i].get_colr(), createLevel[i].get_colg(), createLevel[i].get_colb());
+			fortCount++;
+			m_objRestrict++;
 		}
 
 		//std::cout << createLevel.size() << std::endl;
