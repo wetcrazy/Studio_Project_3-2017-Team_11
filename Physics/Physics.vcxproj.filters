@@ -36,6 +36,9 @@
     <Filter Include="Classes/Functions">
       <UniqueIdentifier>{b03f6205-05c9-4917-a9b3-8925570cbed7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Classes/Functions\Races">
+      <UniqueIdentifier>{afd54cda-575e-45f1-a02b-953d94daebdb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp">
@@ -109,6 +112,18 @@
     </ClCompile>
     <ClCompile Include="Source\LoadTXT.cpp">
       <Filter>Loading Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ClassRace.cpp">
+      <Filter>Classes/Functions</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\RaceCircle.cpp">
+      <Filter>Classes/Functions\Races</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\RaceSquare.cpp">
+      <Filter>Classes/Functions\Races</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\RaceTriangle.cpp">
+      <Filter>Classes/Functions\Races</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -192,6 +207,18 @@
     </ClInclude>
     <ClInclude Include="Source\LoadTXT.h">
       <Filter>Loading Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ClassRace.h">
+      <Filter>Classes/Functions</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\RaceCircle.h">
+      <Filter>Classes/Functions\Races</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\RaceSquare.h">
+      <Filter>Classes/Functions\Races</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\RaceTriangle.h">
+      <Filter>Classes/Functions\Races</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

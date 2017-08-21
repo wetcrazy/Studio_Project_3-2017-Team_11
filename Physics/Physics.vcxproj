@@ -154,6 +154,7 @@
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp" />
     <ClCompile Include="Source\Camera.cpp" />
+    <ClCompile Include="Source\ClassRace.cpp" />
     <ClCompile Include="Source\ClassStorage.cpp" />
     <ClCompile Include="Source\GameObject.cpp" />
     <ClCompile Include="Source\LevelCreate.cpp" />
@@ -166,6 +167,9 @@
     <ClCompile Include="Source\Mesh.cpp" />
     <ClCompile Include="Source\MeshBuilder.cpp" />
     <ClCompile Include="Source\QuickSort.cpp" />
+    <ClCompile Include="Source\RaceCircle.cpp" />
+    <ClCompile Include="Source\RaceSquare.cpp" />
+    <ClCompile Include="Source\RaceTriangle.cpp" />
     <ClCompile Include="Source\SceneAsteroid.cpp" />
     <ClCompile Include="Source\SceneBase.cpp" />
     <ClCompile Include="Source\SceneCollision.cpp" />
@@ -180,6 +184,7 @@
   <ItemGroup>
     <ClInclude Include="Source\Application.h" />
     <ClInclude Include="Source\Camera.h" />
+    <ClInclude Include="Source\ClassRace.h" />
     <ClInclude Include="Source\ClassStorage.h" />
     <ClInclude Include="Source\GameObject.h" />
     <ClInclude Include="Source\LevelCreate.h" />
@@ -193,6 +198,9 @@
     <ClInclude Include="Source\Mesh.h" />
     <ClInclude Include="Source\MeshBuilder.h" />
     <ClInclude Include="Source\QuickSort.h" />
+    <ClInclude Include="Source\RaceCircle.h" />
+    <ClInclude Include="Source\RaceSquare.h" />
+    <ClInclude Include="Source\RaceTriangle.h" />
     <ClInclude Include="Source\Scene.h" />
     <ClInclude Include="Source\SceneAsteroid.h" />
     <ClInclude Include="Source\SceneBase.h" />
