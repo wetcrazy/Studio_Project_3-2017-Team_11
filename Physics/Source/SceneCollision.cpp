@@ -326,6 +326,7 @@ void SceneCollision::Update(double dt)
 	{
 		SceneManager::getInstance()->changeScene(new SceneMainMenu());
 		SetCurrentLevel(1);
+		SetScore(0);
 	}
 
 	//Mouse Section
