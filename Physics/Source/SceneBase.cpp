@@ -115,13 +115,24 @@ void SceneBase::Init()
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 	meshList[GEO_TEXT]->material.kAmbient.Set(1, 0, 0);
 
-	meshList[GEO_BACKGROUND] = MeshBuilder::GenerateSpriteAnimation("sprite background", 1, 3, 1.0f);
-	meshList[GEO_BACKGROUND]->textureID = LoadTGA("Image//sprite_background.tga");
-	SpriteAnimation* sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_BACKGROUND]);
+	meshList[GEO_MOUNTAIN] = MeshBuilder::GenerateQuad("static mountain", Color(1, 1, 1), 1.f);
+	meshList[GEO_MOUNTAIN]->textureID = LoadTGA("Image//mountain.tga");
+
+	meshList[GEO_BACKGROUND_FIRE] = MeshBuilder::GenerateSpriteAnimation("sprite background fire", 1, 9, 1.0f);
+	meshList[GEO_BACKGROUND_FIRE]->textureID = LoadTGA("Image//background_fire_sprite.tga");
+	SpriteAnimation* sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_BACKGROUND_FIRE]);
 	if (sa)
 	{
 		sa->m_anim = new Animation();
-		sa->m_anim->Set(0, 2, 0, 0.75f, true);
+		sa->m_anim->Set(0, 8, 0, 1.75f, true);
+	}
+	meshList[GEO_FIRE] = MeshBuilder::GenerateSpriteAnimation("sprite foreground fire", 1, 9, 1.0f);
+	meshList[GEO_FIRE]->textureID = LoadTGA("Image//fire_sprite.tga");
+	SpriteAnimation* sa1 = dynamic_cast<SpriteAnimation*>(meshList[GEO_FIRE]);
+	if (sa1)
+	{
+		sa1->m_anim = new Animation();
+		sa1->m_anim->Set(0, 8, 0, 1.5f, true);
 	}
 
 	meshList[GEO_GROUND] = MeshBuilder::GenerateQuad("ground", Color(1, 1, 1), 1.f);

@@ -75,7 +75,9 @@ protected:
 	bool b_shootIsTrue;
 
 	//Background
-	GameObject *background;
+	GameObject *mountain;
+	GameObject *background_fire;
+	GameObject *fire;
 
 	//Scrolling
 	GameObject *last_projectile;
