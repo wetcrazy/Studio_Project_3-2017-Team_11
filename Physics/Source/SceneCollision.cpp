@@ -359,7 +359,9 @@ void SceneCollision::Update(double dt)
 		{
 			SceneManager::getInstance()->changeScene(new SceneMainMenu());
 			SetCurrentLevel(1);
+			SetTempScore(0);
 			SetScore(0);
+			upgraded.ResetFile("Text//Speed_Upgrade.txt", "");
 		}
 
 		//Mouse Section

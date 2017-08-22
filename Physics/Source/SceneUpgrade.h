@@ -44,6 +44,10 @@ protected:
 
 	GameObject* FetchGO();
 
+	//Getter and Setter
+	void SetCurrentLevel(int levelNo);
+	void SetScore(int score);
+	void SetTempScore(int score);
 
 	//UpgradesMenu
 	GameObject *arrows = FetchGO();
