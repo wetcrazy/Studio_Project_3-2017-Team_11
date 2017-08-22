@@ -397,28 +397,6 @@ void SceneCollision::Update(double dt)
 		upgraded.ResetFile("Text//Speed_Upgrade.txt", "");
 	}
 
-	//Mouse Section
-	static bool bLButtonState = false;
-
-	double x, y;
-	Application::GetCursorPos(&x, &y);
-	int w = Application::GetWindowWidth();
-	int h = Application::GetWindowHeight();
-	float posX = static_cast<float>(x) / w * m_worldWidth;
-	float posY = (h - static_cast<float>(y)) / h * m_worldHeight;
-
-	int h_temp = 100;
-	int w_temp = 100 * Application::GetWindowWidth() / Application::GetWindowHeight();
-
-	//Background resizing
-	mountain->pos.Set(w_temp / 2 + launched, h_temp / 2, -5);
-	mountain->scale.Set(w_temp + 2, h_temp, 1);
-	background_fire->pos.Set(w_temp / 2 + launched, h_temp / 2, -7);
-	background_fire->scale.Set(w_temp + 2, h_temp, 1);
-	fire->pos.Set(w_temp / 2 + launched, h_temp / 2, -2);
-	fire->scale.Set(w_temp + 2, h_temp, 1);
-
-
 	//Cannon follows cursor position
 	if (posY > cannon->pos.y)        // Cannon cannot move when cursor is below cannon	
 	{
@@ -477,38 +455,13 @@ void SceneCollision::Update(double dt)
 			// Cannon ball has been shot
 			b_shootIsTrue = true;
 
-				if (upgraded.speed_upgrade == 1)
-				{
-					speed = 45;
-				}
-
-				else if (upgraded.speed_upgrade == 2)
-				{
-					speed = 55;
-				}
-
-				last_projectile->vel.Normalize();
-				last_projectile->vel *= speed;
-			}
-
-			if (last_projectile->vel.y < 0)
-				last_projectile->vel.y *= -1;
-
-			m_ghost01->active = false;
-			last_projectile->scale.Set(2, 2, 2);
-
-			// Limit spawn rate of cannon balls AND prevents movement of cannon immediately after shooting
-			ft_shootTime = ft_elapsedTime + 0.25f;
-
-			// Cannon ball has been shot
-			b_shootIsTrue = true;
-
 			// Randomize color of ball
 			last_projectile->Color.Set(Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1));
 
 			//Reset the camera position for scrolling
 			launched = 0;
 		}
+	}
 
 	else if (bLButtonState && !Application::IsMousePressed(0))
 	{
