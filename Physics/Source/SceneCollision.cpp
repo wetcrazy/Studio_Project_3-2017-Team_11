@@ -105,6 +105,16 @@ bool SceneCollision::CheckCollision(GameObject *go1, GameObject *go2, float dt)
 		return vel.Dot(dis) < 0 &&
 			dis.LengthSquared() < (r1 + r2) * (r1 + r2);
 	}
+	case GameObject::GO_HEXA:
+	{
+		Vector3 dis = go1->pos - go2->pos;
+		Vector3 vel = go1->vel - go2->vel;
+		float r1 = go1->scale.x;
+		float r2 = go2->scale.x;
+
+		return vel.Dot(dis) < 0 &&
+			dis.LengthSquared() < (r1 + r2) * (r1 + r2);
+	}
 	case GameObject::GO_WALL:
 	{
 		Vector3 w0 = go2->pos;
@@ -161,7 +171,7 @@ bool SceneCollision::CheckCollision(GameObject *go1, GameObject *go2, float dt)
 
 		if (vel.Dot(dis) < 0 && dis.LengthSquared() < (r1 + r2) * (r1 + r3))
 		{
-			std::cout << "This is being collided with!" << std::endl;
+			//std::cout << "This is being collided with!" << std::endl;
 			return true;
 		}
 		return false;
@@ -233,6 +243,20 @@ void SceneCollision::CollisionResponse(GameObject * go1, GameObject * go2)
 
 		break;
 	}
+	case GameObject::GO_HEXA:
+	{
+		Vector3 u1 = go1->vel;
+		Vector3 u2 = go2->vel;
+		Vector3 N = (go2->pos - go1->pos).Normalize();
+		Vector3 u1N = u1.Dot(N) * N;
+		Vector3 u2N = u2.Dot(N) * N;
+		go1->vel = u1 + ((2 * m2) / (m1 + m2))* (u2N - u1N);
+		go2->vel = u2 + ((2 * m2) / (m1 + m2)) * (u1N - u2N);
+		go1->vel *= 0.85;
+		go2->vel *= 0.85;
+
+		break;
+	}
 	case GameObject::GO_CUBE:
 	{
 		float mag = go1->vel.Length();
@@ -245,7 +269,7 @@ void SceneCollision::CollisionResponse(GameObject * go1, GameObject * go2)
 	case GameObject::GO_WALL:
 	{
 		float mag = go1->vel.Length();
-		std::cout << mag << std::endl;
+		//std::cout << mag << std::endl;
 		Vector3 vel = go1->vel;
 		Vector3 N = go2->dir;
 		go1->vel = vel - (2.f * vel.Dot(N)) * N;
@@ -255,7 +279,7 @@ void SceneCollision::CollisionResponse(GameObject * go1, GameObject * go2)
 	case GameObject::GO_GROUND:
 	{
 		float mag = go1->vel.Length();
-		std::cout << mag << std::endl;
+		//std::cout << mag << std::endl;
 		Vector3 vel = go1->vel;
 		Vector3 N = go2->dir;
 		go1->vel = vel - (2.f * vel.Dot(N)) * N;
@@ -309,7 +333,7 @@ void SceneCollision::CollisionResponse(GameObject * go1, GameObject * go2)
 
 void SceneCollision::Update(double dt)
 {
-	std::cout << "Count : " << m_objectCount << " / " << m_objRestrict << std::endl;
+	//std::cout << "Count : " << m_objectCount << " / " << m_objRestrict << std::endl;
 	SceneBase::Update(dt);
 	ft_elapsedTime += dt;
 
@@ -511,7 +535,7 @@ void SceneCollision::Update(double dt)
 		if (!last_projectile->active && !Application::IsKeyPressed(VK_RIGHT))	//reset camera.position.x to initial position
 			launched = 0;
 
-		cout << launched << endl;
+		//cout << launched << endl;
 		//End of Scrolling============================================//
 
 
@@ -594,6 +618,14 @@ void SceneCollision::CreateStuff()
 
 	float w_temp = 133;
 	float h_temp = 100;
+
+	GameObject *hexagon = FetchGO();
+	hexagon->type = GameObject::GO_HEXA;	// Left Wall
+	hexagon->active = true;
+	hexagon->dir.Set(1, 0, 0);
+	hexagon->pos.Set(w_temp / 2, h_temp / 2, 0);
+	hexagon->scale.Set(2, 2, 1);
+	m_objRestrict++;
 
 	GameObject *wall = FetchGO();
 	wall->type = GameObject::GO_PLATFORM;	// Left Wall
@@ -832,6 +864,13 @@ void SceneCollision::RenderGO(GameObject *go)
 		RenderMesh(meshList[GEO_BALL], true, go->Color);
 		modelStack.PopMatrix();
 		break;
+	case GameObject::GO_HEXA:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_HEXA], true, go->Color);
+		modelStack.PopMatrix();
+		break;
 	case GameObject::GO_CUBE:
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
@@ -982,10 +1021,10 @@ void SceneCollision::Render()
 	//	ss << "Speed: " << m_speed;
 	//	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 6);
 
-	//	ss.str(std::string());
-	//	ss.precision(5);
-	//	ss << "FPS: " << fps;
-	//	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 3);
+		ss.str(std::string());
+		ss.precision(5);
+		ss << "FPS: " << fps;
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 0);
 
 	//	RenderTextOnScreen(meshList[GEO_TEXT], "Collision", Color(0, 1, 0), 3, 0, 0);
 	//}

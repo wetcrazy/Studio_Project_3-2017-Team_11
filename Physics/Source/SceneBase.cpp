@@ -105,6 +105,7 @@ void SceneBase::Init()
 	}
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("reference", 1000, 1000, 1000);
 	meshList[GEO_BALL] = MeshBuilder::GenerateSphere("ball", Color(1, 1, 1), 10, 10, 1.f);
+	meshList[GEO_HEXA] = MeshBuilder::GenerateHexa("hexa", Color(1, 1, 1), 3, 2, 1.f);
 	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(1, 1, 1), 1.f);
 	meshList[GEO_SHIP] = MeshBuilder::GenerateQuad("ship", Color(1, 1, 1), 5.f);
 	meshList[GEO_SHIP]->textureID = LoadTGA("Image//ship.tga");
