@@ -12,6 +12,7 @@
 #include "Mesh.h"
 
 #include "SceneManager.h"
+#include "SceneMainMenu.h"
 #include "SceneCollision.h"
 
 SceneUpgrade::SceneUpgrade()
@@ -28,7 +29,6 @@ void SceneUpgrade::Init()
 
 	Math::InitRNG();
 
-	upgraded.ReadFile("Text//Speed_Upgrade.txt");
 
 	b_speed_upgrade_1 = false;
 	b_speed_upgrade_2 = false;
@@ -84,6 +84,8 @@ void SceneUpgrade::Update(double dt)
 {
 	SceneBase::Update(dt);
 
+	upgraded.ReadFile("Text//Speed_Upgrade.txt");
+
 	pressDelay += (float)dt;
 	int h_temp = 100;
 	int w_temp = 100 * Application::GetWindowWidth() / Application::GetWindowHeight();
@@ -98,6 +100,17 @@ void SceneUpgrade::Update(double dt)
 
 	//Scale values (for upgrade menu)
 	float scaleDown_Arrow = 20.f;
+
+	//Press R to reset
+	if (Application::IsKeyPressed('R'))
+	{
+		SceneManager::getInstance()->changeScene(new SceneMainMenu());
+		SetCurrentLevel(1);
+		SetTempScore(0);
+		SetScore(0);
+		upgraded.ResetFile("Text//Speed_Upgrade.txt", "");
+		upgraded.ReadFile("Text//Speed_Upgrade.txt");
+	}
 
 	//UP, DOWN and ENTER controls
 	{
@@ -147,10 +160,10 @@ void SceneUpgrade::Update(double dt)
 			else if (selectOptions == NEXTPAGE)
 				SceneManager::getInstance()->changeScene(new SceneCollision());
 
-			else if (selectOptions == SPEED_UPGRADE_1 && !b_speed_upgrade_1 && !b_speed_upgrade_2)
+			else if (selectOptions == SPEED_UPGRADE_1 && upgraded.speed_upgrade != 1 && upgraded.speed_upgrade != 2)
 				b_speed_upgrade_1 = true;
 
-			else if (selectOptions == SPEED_UPGRADE_2 && b_speed_upgrade_1 && !b_speed_upgrade_2)
+			else if (selectOptions == SPEED_UPGRADE_2 && upgraded.speed_upgrade == 1 && upgraded.speed_upgrade != 2)
 				b_speed_upgrade_2 = true;
 
 			pressDelay = 0.f;
@@ -248,6 +261,30 @@ void SceneUpgrade::Update(double dt)
 		speed_upgrade_2->pos.Set(w_temp / 2, h_temp / 2, -5);
 		speed_upgrade_2->scale.Set(w_temp + 2, h_temp, 1);
 	}
+}
+
+void SceneUpgrade::SetCurrentLevel(int levelNo)
+{
+	ofstream myFile;
+	myFile.open("Text//CurrentLevel.txt");
+	myFile << levelNo << endl;
+	myFile.close();
+}
+
+void SceneUpgrade::SetScore(int score)
+{
+	ofstream myFile;
+	myFile.open("Text//Score.txt");
+	myFile << score << endl;
+	myFile.close();
+}
+
+void SceneUpgrade::SetTempScore(int tempScore)
+{
+	ofstream myFile;
+	myFile.open("Text//TempScore.txt");
+	myFile << tempScore << endl;
+	myFile.close();
 }
 
 void SceneUpgrade::RenderGO(GameObject *go)

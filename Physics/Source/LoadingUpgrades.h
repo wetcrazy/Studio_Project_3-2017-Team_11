@@ -24,6 +24,7 @@ public:
 	void ReadFile(string fileName);
 	void DeleteTextFile(string fileName);
 	void WriteFile(string fileName, string type, int number);
+	void ResetFile(string fileName, string reset);
 };
 
 #endif

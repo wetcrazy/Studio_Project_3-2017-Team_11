@@ -58,3 +58,11 @@ void LoadingUpgrades::WriteFile(string fileName, string type, int number)
 
 	output.close();
 }
+
+void LoadingUpgrades::ResetFile(string fileName, string reset)
+{
+	ofstream output;
+	output.open(fileName);
+	output << reset << endl;
+	output.close();
+}
