@@ -37,6 +37,14 @@ public:
 	void SetCurrentLevel(int levelNo);
 	int GetCurrentLevel();
 
+	//Getting and Setting of score
+	void SetScore(int score);
+	int GetScore();
+
+	//Getting and Setting of temporary score
+	void SetTempScore(int score);
+	int GetTempScore();
+
 protected:
 
 	//Physics
@@ -84,6 +92,9 @@ protected:
 
 	//CurrentLevel.txt
 	int i_CurrentLevel;
+
+	//TempScore.txt
+	int i_tempScore;
 
 	LoadTXT loadText;
 };

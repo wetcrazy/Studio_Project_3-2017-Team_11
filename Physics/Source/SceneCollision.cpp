@@ -4,6 +4,7 @@
 #include <sstream>
 
 #include "SceneManager.h"
+#include "SceneMainMenu.h"
 #include "SceneUpgrade.h"
 
 #include "SpriteAnimation.h"
@@ -56,6 +57,7 @@ void SceneCollision::Init()
 	//LoadTXT loadtxt;
 
 	i_CurrentLevel = GetCurrentLevel();
+	i_tempScore = GetScore();
 
 	CreateStuff();
 	CreateLevel(i_CurrentLevel);
@@ -283,6 +285,7 @@ void SceneCollision::CollisionResponse(GameObject * go1, GameObject * go2)
 		go2->active = false;
 		m_objectCount--;
 		fortCount--;
+		i_tempScore++;
 		break;
 	}
 	case GameObject::GO_PILLAR:
@@ -310,6 +313,8 @@ void SceneCollision::Update(double dt)
 	SceneBase::Update(dt);
 	ft_elapsedTime += dt;
 
+	SetTempScore(i_tempScore);
+
 	if (Application::IsKeyPressed('9'))
 	{
 		m_speed = Math::Max(0.f, m_speed - 0.1f);
@@ -325,6 +330,12 @@ void SceneCollision::Update(double dt)
 	{
 		sa->Update(dt);
 		sa->m_anim->animActive = true;
+		
+	if (Application::IsKeyPressed('R'))
+	{
+		SceneManager::getInstance()->changeScene(new SceneMainMenu());
+		SetCurrentLevel(1);
+		SetScore(0);
 	}
 
 	//Mouse Section
@@ -566,7 +577,13 @@ void SceneCollision::Update(double dt)
 	}
 
 	if (fortCount == 0)
+	{
 		SceneManager::getInstance()->changeScene(new SceneUpgrade());
+		SetTempScore(i_tempScore);
+		SetScore(i_tempScore);
+		i_CurrentLevel++;
+		SetCurrentLevel(i_CurrentLevel);
+	}
 }
 
 void SceneCollision::CreateStuff()
@@ -763,6 +780,44 @@ int SceneCollision::GetCurrentLevel()
 	return level;
 }
 
+void SceneCollision::SetScore(int score)
+{
+	ofstream myFile;
+	myFile.open("Score.txt");
+	myFile << score << endl;
+	myFile.close();
+}
+
+int SceneCollision::GetScore()
+{
+	int score;
+	ifstream myFile;
+	myFile.open("Score.txt");
+	myFile >> score;
+	myFile.close();
+
+	return score;
+}
+
+void SceneCollision::SetTempScore(int tempScore)
+{
+	ofstream myFile;
+	myFile.open("TempScore.txt");
+	myFile << tempScore << endl;
+	myFile.close();
+}
+
+int SceneCollision::GetTempScore()
+{
+	int tempScore;
+	ifstream myFile;
+	myFile.open("TempScore.txt");
+	myFile >> tempScore;
+	myFile.close();
+
+	return tempScore;
+}
+
 void SceneCollision::RenderGO(GameObject *go)
 {
 	float angle;
@@ -896,7 +951,7 @@ void SceneCollision::Render()
 	//if (Application::IsKeyPressed(VK_RETURN))
 	//{
 	//	//On screen text
-	//	std::ostringstream ss;
+	std::ostringstream ss;
 	//	ss << "Object count: " << m_objectCount;
 	//	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 9);
 
@@ -933,6 +988,11 @@ void SceneCollision::Render()
 
 	//	RenderTextOnScreen(meshList[GEO_TEXT], "Collision", Color(0, 1, 0), 3, 0, 0);
 	//}
+
+	ss.str(std::string());
+	ss.precision(5);
+	ss << "TempScore: " << i_tempScore;
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 3);
 }
 
 void SceneCollision::Exit()
