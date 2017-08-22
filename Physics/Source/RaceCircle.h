@@ -8,6 +8,9 @@ class Circle :public Race
 public:
 	Circle();
 	~Circle();
+	
+	// Abilites
+	void Abilites();
 };
 
 #endif

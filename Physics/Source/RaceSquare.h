@@ -3,11 +3,21 @@
  // color ,scale ,pos , target, direction, velocity
 #include "ClassRace.h"
 
-class Square :public Race
+class Square : public Race
 {
 public:
 	Square();
 	~Square();
+
+	// Ablities 
+	void Abilites();
+
+	// Getter
+	bool Get_Piercing();
+	// Setters
+	void Set_Piercing(bool is_Piercing);
+private:
+	bool is_Piercing;
 };
 
 #endif
