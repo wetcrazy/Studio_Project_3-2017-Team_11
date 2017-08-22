@@ -125,6 +125,9 @@
     <ClCompile Include="Source\RaceTriangle.cpp">
       <Filter>Classes/Functions\Races</Filter>
     </ClCompile>
+    <ClCompile Include="Source\SpriteAnimation.cpp">
+      <Filter>Classes/Functions</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -219,6 +222,9 @@
     </ClInclude>
     <ClInclude Include="Source\RaceTriangle.h">
       <Filter>Classes/Functions\Races</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SpriteAnimation.h">
+      <Filter>Classes/Functions</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

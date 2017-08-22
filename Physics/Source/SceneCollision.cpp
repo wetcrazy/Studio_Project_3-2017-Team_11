@@ -5,6 +5,8 @@
 
 #include "SceneManager.h"
 #include "SceneUpgrade.h"
+
+#include "SpriteAnimation.h"
 // #include "LoadTXT.h"
 
 SceneCollision::SceneCollision()
@@ -315,6 +317,14 @@ void SceneCollision::Update(double dt)
 	if (Application::IsKeyPressed('0'))
 	{
 		m_speed += 0.1f;
+	}
+
+	//Update Sprite Animation
+	SpriteAnimation* sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_BACKGROUND]);
+	if (sa)
+	{
+		sa->Update(dt);
+		sa->m_anim->animActive = true;
 	}
 
 	//Mouse Section

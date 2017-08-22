@@ -8,6 +8,8 @@
 #include "LoadTGA.h"
 #include <sstream>
 
+#include "SpriteAnimation.h"
+
 SceneBase::SceneBase()
 {
 }
@@ -112,8 +114,15 @@ void SceneBase::Init()
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 	meshList[GEO_TEXT]->material.kAmbient.Set(1, 0, 0);
 
-	meshList[GEO_BACKGROUND] = MeshBuilder::GenerateQuad("fire background", Color(1, 1, 1), 1.f);
-	meshList[GEO_BACKGROUND]->textureID = LoadTGA("Image//fire_background.tga");
+	meshList[GEO_BACKGROUND] = MeshBuilder::GenerateSpriteAnimation("sprite background", 1, 3, 1.0f);
+	meshList[GEO_BACKGROUND]->textureID = LoadTGA("Image//sprite_background.tga");
+	SpriteAnimation* sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_BACKGROUND]);
+	if (sa)
+	{
+		sa->m_anim = new Animation();
+		sa->m_anim->Set(0, 2, 0, 0.75f, true);
+	}
+
 	meshList[GEO_GROUND] = MeshBuilder::GenerateQuad("ground", Color(1, 1, 1), 1.f);
 	meshList[GEO_GROUND]->textureID = LoadTGA("Image//ground.tga");
 	meshList[GEO_PLATFORM] = MeshBuilder::GenerateQuad("platform", Color(1, 1, 1), 1.f);
