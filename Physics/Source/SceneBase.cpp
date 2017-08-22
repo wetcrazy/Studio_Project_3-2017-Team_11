@@ -126,13 +126,13 @@ void SceneBase::Init()
 		sa->m_anim = new Animation();
 		sa->m_anim->Set(0, 8, 0, 1.75f, true);
 	}
-	meshList[GEO_FIRE] = MeshBuilder::GenerateSpriteAnimation("sprite foreground fire", 1, 9, 1.0f);
+	meshList[GEO_FIRE] = MeshBuilder::GenerateSpriteAnimation("sprite foreground fire", 1, 12, 1.0f);
 	meshList[GEO_FIRE]->textureID = LoadTGA("Image//fire_sprite.tga");
 	SpriteAnimation* sa1 = dynamic_cast<SpriteAnimation*>(meshList[GEO_FIRE]);
 	if (sa1)
 	{
 		sa1->m_anim = new Animation();
-		sa1->m_anim->Set(0, 8, 0, 1.5f, true);
+		sa1->m_anim->Set(0, 11, 0, 2.75f, true);
 	}
 
 	meshList[GEO_GROUND] = MeshBuilder::GenerateQuad("ground", Color(1, 1, 1), 1.f);
