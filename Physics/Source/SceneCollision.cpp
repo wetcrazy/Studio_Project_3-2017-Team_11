@@ -400,7 +400,7 @@ void SceneCollision::Update(double dt)
 	//Cannon follows cursor position
 	if (posY > cannon->pos.y)        // Cannon cannot move when cursor is below cannon	
 	{
-		if (!b_shootIsTrue)
+		if (!b_shootIsTrue && !last_projectile->active)
 		{
 			aim.Set(posX + launched, posY, 0);
 			aim.Set(aim.x - platform->pos.x, aim.y - platform->pos.y, 0);
