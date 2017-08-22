@@ -330,259 +330,260 @@ void SceneCollision::Update(double dt)
 	{
 		sa->Update(dt);
 		sa->m_anim->animActive = true;
-		
-	if (Application::IsKeyPressed('R'))
-	{
-		SceneManager::getInstance()->changeScene(new SceneMainMenu());
-		SetCurrentLevel(1);
-		SetScore(0);
-	}
 
-	//Mouse Section
-	static bool bLButtonState = false;
-
-	double x, y;
-	Application::GetCursorPos(&x, &y);
-	int w = Application::GetWindowWidth();
-	int h = Application::GetWindowHeight();
-	float posX = static_cast<float>(x) / w * m_worldWidth;
-	float posY = (h - static_cast<float>(y)) / h * m_worldHeight;
-
-	int h_temp = 100;
-	int w_temp = 100 * Application::GetWindowWidth() / Application::GetWindowHeight();
-
-	//Background resizing
-	background->pos.Set(w_temp / 2 + launched, h_temp / 2, -5);
-	background->scale.Set(w_temp + 2, h_temp, 1);
-
-	//Cannon follows cursor position
-	if (posY > cannon->pos.y)        // Cannon cannot move when cursor is below cannon	
-	{
-		if (!b_shootIsTrue)
+		if (Application::IsKeyPressed('R'))
 		{
-			aim.Set(posX + launched, posY, 0);
-			aim.Set(aim.x - platform->pos.x, aim.y - platform->pos.y, 0);
-			cannon->dir = aim.Cross(Vector3(0, 0, 1));
-			cannon->dir.Normalize();
+			SceneManager::getInstance()->changeScene(new SceneMainMenu());
+			SetCurrentLevel(1);
+			SetScore(0);
 		}
-	}
 
-	//std::cout << platform->pos.y << std::endl;
+		//Mouse Section
+		static bool bLButtonState = false;
 
-	if (!bLButtonState && Application::IsMousePressed(0) && !last_projectile->active && ft_elapsedTime > ft_shootTime)
-	{
-		bLButtonState = true;
-		std::cout << "LBUTTON UP" << std::endl;
+		double x, y;
+		Application::GetCursorPos(&x, &y);
+		int w = Application::GetWindowWidth();
+		int h = Application::GetWindowHeight();
+		float posX = static_cast<float>(x) / w * m_worldWidth;
+		float posY = (h - static_cast<float>(y)) / h * m_worldHeight;
 
-		if (posY > cannon->pos.y)
+		int h_temp = 100;
+		int w_temp = 100 * Application::GetWindowWidth() / Application::GetWindowHeight();
+
+		//Background resizing
+		background->pos.Set(w_temp / 2 + launched, h_temp / 2, -5);
+		background->scale.Set(w_temp + 2, h_temp, 1);
+
+		//Cannon follows cursor position
+		if (posY > cannon->pos.y)        // Cannon cannot move when cursor is below cannon	
 		{
-			//spawn small GO_BALL
-			last_projectile->active = true;
-			last_projectile->type = GameObject::GO_CUBE;
-			last_projectile->pos = platform->pos;
-			last_projectile->pos += aim.Normalized() * 0.5;
-			last_projectile->vel = aim;
-
-			if (last_projectile->vel.Length() > 10) // 10 is distance
+			if (!b_shootIsTrue)
 			{
-				int speed = 35;
-
-				if (upgraded.speed_upgrade == 1)
-				{
-					speed = 45;
-				}
-
-				else if (upgraded.speed_upgrade == 2)
-				{
-					speed = 55;
-				}
-
-				last_projectile->vel.Normalize();
-				last_projectile->vel *= speed;
+				aim.Set(posX + launched, posY, 0);
+				aim.Set(aim.x - platform->pos.x, aim.y - platform->pos.y, 0);
+				cannon->dir = aim.Cross(Vector3(0, 0, 1));
+				cannon->dir.Normalize();
 			}
+		}
 
-			if (last_projectile->vel.y < 0)
-				last_projectile->vel.y *= -1;
+		//std::cout << platform->pos.y << std::endl;
 
-			m_ghost01->active = false;
-			last_projectile->scale.Set(2, 2, 2);
+		if (!bLButtonState && Application::IsMousePressed(0) && !last_projectile->active && ft_elapsedTime > ft_shootTime)
+		{
+			bLButtonState = true;
+			std::cout << "LBUTTON UP" << std::endl;
 
-			// Limit spawn rate of cannon balls AND prevents movement of cannon immediately after shooting
-			ft_shootTime = ft_elapsedTime + 0.25f;
+			if (posY > cannon->pos.y)
+			{
+				//spawn small GO_BALL
+				last_projectile->active = true;
+				last_projectile->type = GameObject::GO_CUBE;
+				last_projectile->pos = platform->pos;
+				last_projectile->pos += aim.Normalized() * 0.5;
+				last_projectile->vel = aim;
 
-			// Cannon ball has been shot
-			b_shootIsTrue = true;
+				if (last_projectile->vel.Length() > 10) // 10 is distance
+				{
+					int speed = 35;
+
+					if (upgraded.speed_upgrade == 1)
+					{
+						speed = 45;
+					}
+
+					else if (upgraded.speed_upgrade == 2)
+					{
+						speed = 55;
+					}
+
+					last_projectile->vel.Normalize();
+					last_projectile->vel *= speed;
+				}
+
+				if (last_projectile->vel.y < 0)
+					last_projectile->vel.y *= -1;
+
+				m_ghost01->active = false;
+				last_projectile->scale.Set(2, 2, 2);
+
+				// Limit spawn rate of cannon balls AND prevents movement of cannon immediately after shooting
+				ft_shootTime = ft_elapsedTime + 0.25f;
+
+				// Cannon ball has been shot
+				b_shootIsTrue = true;
+
+				// Randomize color of ball
+				last_projectile->Color.Set(Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1));
+
+				//Reset the camera position for scrolling
+				launched = 0;
+			}
+		}
+		else if (bLButtonState && !Application::IsMousePressed(0))
+		{
+			bLButtonState = false;
+			std::cout << "LBUTTON DOWN" << std::endl;
+		}
+
+		// Cannon ball has not been shot
+		else if (ft_elapsedTime > ft_shootTime)
+			b_shootIsTrue = false;
+
+		static bool bRButtonState = false;
+		if (!bRButtonState && Application::IsMousePressed(1))
+		{
+			bRButtonState = true;
+			std::cout << "RBUTTON DOWN" << std::endl;
+
+			m_ghost02->pos.Set(posX, posY, 0); //IMPT
+			m_ghost02->active = true;
+			float sc = 3;
+			m_ghost02->scale.Set(sc, sc, sc);
+		}
+		else if (bRButtonState && !Application::IsMousePressed(1))
+		{
+			bRButtonState = false;
+			std::cout << "RBUTTON UP" << std::endl;
+
+			//spawn large GO_BALL
+			GameObject *go = FetchGO();
+			go->active = true;
+			go->type = GameObject::GO_CUBE;
+
+			go->pos = m_ghost02->pos;
+			go->vel.Set(m_ghost02->pos.x - posX, m_ghost02->pos.y - posY, 0);
+			m_ghost02->active = false;
+			float sc = 3;
+			go->scale.Set(sc, sc, sc);
+			go->mass = sc * sc * sc;
 
 			// Randomize color of ball
-			last_projectile->Color.Set(Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1));
-
-			//Reset the camera position for scrolling
-			launched = 0;
+			go->Color.Set(Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1));
 		}
-	}
-	else if (bLButtonState && !Application::IsMousePressed(0))
-	{
-		bLButtonState = false;
-		std::cout << "LBUTTON DOWN" << std::endl;
-	}
 
-	// Cannon ball has not been shot
-	else if (ft_elapsedTime > ft_shootTime)
-		b_shootIsTrue = false;
+		if (Application::IsKeyPressed(VK_SPACE))
+		{
+			for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+			{
+				GameObject *go = (GameObject *)*it;
+				//if (go->active && go->type == GameObject::GO_BALL)
+				if (go->active && go->type == GameObject::GO_CUBE)
+					go->active = false;
 
-	static bool bRButtonState = false;
-	if (!bRButtonState && Application::IsMousePressed(1))
-	{
-		bRButtonState = true;
-		std::cout << "RBUTTON DOWN" << std::endl;
+				m_objectCount = 0;
+			}
+		}
 
-		m_ghost02->pos.Set(posX, posY, 0); //IMPT
-		m_ghost02->active = true;
-		float sc = 3;
-		m_ghost02->scale.Set(sc, sc, sc);
-	}
-	else if (bRButtonState && !Application::IsMousePressed(1))
-	{
-		bRButtonState = false;
-		std::cout << "RBUTTON UP" << std::endl;
+		if (Application::IsKeyPressed(VK_RIGHT))	//Right scrolling 
+		{
+			if (launched >= 0 && launched <= m_worldWidth * 1.5)
+			{
+				launched += 25 * dt;
+				launched += 25 * dt;
+			}
+		}
 
-		//spawn large GO_BALL
-		GameObject *go = FetchGO();
-		go->active = true;
-		go->type = GameObject::GO_CUBE;
+		else if (Application::IsKeyPressed(VK_LEFT))	//Left scrolling 
+		{
+			if (launched >= 0 && launched <= m_worldWidth * 1.5)
+			{
+				launched -= 25 * dt;
+				launched -= 25 * dt;
+			}
+		}
 
-		go->pos = m_ghost02->pos;
-		go->vel.Set(m_ghost02->pos.x - posX, m_ghost02->pos.y - posY, 0);
-		m_ghost02->active = false;
-		float sc = 3;
-		go->scale.Set(sc, sc, sc);
-		go->mass = sc * sc * sc;
+		//Physics Simulation Section
+		dt *= m_speed;
 
-		// Randomize color of ball
-		go->Color.Set(Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1));
-	}
 
-	if (Application::IsKeyPressed(VK_SPACE))
-	{
+
+		//Projectile Scrolling========================================//
+		camera.target.x = launched;
+		camera.position.x = launched;
+
+		if (last_projectile->pos.x > m_worldWidth / 2)	//projectile scrolling
+			launched = last_projectile->pos.x - m_worldWidth / 2;
+
+		if (launched > m_worldWidth)	//make camera.position.x stop moving
+			launched = m_worldWidth;
+
+		if (!last_projectile->active && !Application::IsKeyPressed(VK_RIGHT))	//reset camera.position.x to initial position
+			launched = 0;
+
+		cout << launched << endl;
+		//End of Scrolling============================================//
+
+
+
 		for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 		{
 			GameObject *go = (GameObject *)*it;
-			//if (go->active && go->type == GameObject::GO_BALL)
-			if (go->active && go->type == GameObject::GO_CUBE)
-				go->active = false;
-
-			m_objectCount = 0;
-		}
-	}
-
-	if (Application::IsKeyPressed(VK_RIGHT))	//Right scrolling 
-	{
-		if (launched >= 0 && launched <= m_worldWidth * 1.5)
-		{
-			launched += 25 * dt;
-			launched += 25 * dt;
-		}
-	}
-
-	else if (Application::IsKeyPressed(VK_LEFT))	//Left scrolling 
-	{
-		if (launched >= 0 && launched <= m_worldWidth * 1.5)
-		{
-			launched -= 25 * dt;
-			launched -= 25 * dt;
-		}
-	}
-
-	//Physics Simulation Section
-	dt *= m_speed;
-
-
-
-	//Projectile Scrolling========================================//
-	camera.target.x = launched;
-	camera.position.x = launched;
-
-	if (last_projectile->pos.x > m_worldWidth / 2)	//projectile scrolling
-		launched = last_projectile->pos.x - m_worldWidth / 2;
-
-	if (launched > m_worldWidth)	//make camera.position.x stop moving
-		launched = m_worldWidth;
-
-	if (!last_projectile->active && !Application::IsKeyPressed(VK_RIGHT))	//reset camera.position.x to initial position
-		launched = 0;
-
-	cout << launched << endl;
-	//End of Scrolling============================================//
-
-
-
-	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
-	{
-		GameObject *go = (GameObject *)*it;
-		if (go->active)
-		{
-			//if (go->type == GameObject::GO_BALL)
-			if (go->type == GameObject::GO_CUBE)
+			if (go->active)
 			{
-				go->pos += go->vel * static_cast<float>(dt);
-				go->vel += gravity * dt;
-				if (go->pos.x > m_worldWidth * 2 + go->scale.x || go->pos.x < -go->scale.x || go->pos.y > m_worldHeight + go->scale.y || go->pos.y < -go->scale.y)
-				{
-					go->pos.SetZero();
-					go->active = false;
-					--m_objectCount;
-				}
-			}
-			if (go->type == GameObject::GO_BLOCKS)
-			{
-				go->pos += go->vel * static_cast<float>(dt);
-				if (!go->vel.IsZero())
-					go->vel += (Vector3(0, 0, 0) - go->vel) * dt;
-			}
-			for (std::vector<GameObject *>::iterator it2 = it + 1; it2 != m_goList.end(); ++it2)
-			{
-				GameObject *go2 = static_cast<GameObject *>(*it2);
-				if (!go2->active)
-					continue;
-				//if (go->type != GameObject::GO_BALL && go2->type != GameObject::GO_BALL)
-				/*if (go->type != GameObject::GO_CUBE && go2->type != GameObject::GO_CUBE)
-				continue;*/
-
-				GameObject *goA, *goB;
-
-				//if(go->type == GameObject::GO_BALL)
+				//if (go->type == GameObject::GO_BALL)
 				if (go->type == GameObject::GO_CUBE)
 				{
-					goA = go;
-					goB = go2;
+					go->pos += go->vel * static_cast<float>(dt);
+					go->vel += gravity * dt;
+					if (go->pos.x > m_worldWidth * 2 + go->scale.x || go->pos.x < -go->scale.x || go->pos.y > m_worldHeight + go->scale.y || go->pos.y < -go->scale.y)
+					{
+						go->pos.SetZero();
+						go->active = false;
+						--m_objectCount;
+					}
 				}
-				else
+				if (go->type == GameObject::GO_BLOCKS)
 				{
-					goA = go2;
-					goB = go;
+					go->pos += go->vel * static_cast<float>(dt);
+					if (!go->vel.IsZero())
+						go->vel += (Vector3(0, 0, 0) - go->vel) * dt;
 				}
-				if (CheckCollision(goA, goB, dt))
+				for (std::vector<GameObject *>::iterator it2 = it + 1; it2 != m_goList.end(); ++it2)
 				{
-					m1 = goA->mass;
-					m2 = goB->mass;
-					u1 = goA->vel;
-					u2 = goB->vel;
-					CollisionResponse(goA, goB);
-					//v1 = goA->vel;
-					//v2 = goB->vel;
-					break;
+					GameObject *go2 = static_cast<GameObject *>(*it2);
+					if (!go2->active)
+						continue;
+					//if (go->type != GameObject::GO_BALL && go2->type != GameObject::GO_BALL)
+					/*if (go->type != GameObject::GO_CUBE && go2->type != GameObject::GO_CUBE)
+					continue;*/
+
+					GameObject *goA, *goB;
+
+					//if(go->type == GameObject::GO_BALL)
+					if (go->type == GameObject::GO_CUBE)
+					{
+						goA = go;
+						goB = go2;
+					}
+					else
+					{
+						goA = go2;
+						goB = go;
+					}
+					if (CheckCollision(goA, goB, dt))
+					{
+						m1 = goA->mass;
+						m2 = goB->mass;
+						u1 = goA->vel;
+						u2 = goB->vel;
+						CollisionResponse(goA, goB);
+						//v1 = goA->vel;
+						//v2 = goB->vel;
+						break;
+					}
 				}
 			}
 		}
-	}
 
-	if (fortCount == 0)
-	{
-		SceneManager::getInstance()->changeScene(new SceneUpgrade());
-		SetTempScore(i_tempScore);
-		SetScore(i_tempScore);
-		i_CurrentLevel++;
-		SetCurrentLevel(i_CurrentLevel);
+		if (fortCount == 0)
+		{
+			SceneManager::getInstance()->changeScene(new SceneUpgrade());
+			SetTempScore(i_tempScore);
+			SetScore(i_tempScore);
+			i_CurrentLevel++;
+			SetCurrentLevel(i_CurrentLevel);
+		}
 	}
 }
 
