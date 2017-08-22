@@ -266,7 +266,7 @@ void SceneUpgrade::Update(double dt)
 void SceneUpgrade::SetCurrentLevel(int levelNo)
 {
 	ofstream myFile;
-	myFile.open("CurrentLevel.txt");
+	myFile.open("Text//CurrentLevel.txt");
 	myFile << levelNo << endl;
 	myFile.close();
 }
@@ -274,7 +274,7 @@ void SceneUpgrade::SetCurrentLevel(int levelNo)
 void SceneUpgrade::SetScore(int score)
 {
 	ofstream myFile;
-	myFile.open("Score.txt");
+	myFile.open("Text//Score.txt");
 	myFile << score << endl;
 	myFile.close();
 }
@@ -282,7 +282,7 @@ void SceneUpgrade::SetScore(int score)
 void SceneUpgrade::SetTempScore(int tempScore)
 {
 	ofstream myFile;
-	myFile.open("TempScore.txt");
+	myFile.open("Text//TempScore.txt");
 	myFile << tempScore << endl;
 	myFile.close();
 }
