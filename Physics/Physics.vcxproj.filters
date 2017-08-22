@@ -122,11 +122,11 @@
     <ClCompile Include="Source\RaceSquare.cpp">
       <Filter>Classes/Functions\Races</Filter>
     </ClCompile>
-    <ClCompile Include="Source\RaceTriangle.cpp">
+    <ClCompile Include="Source\RaceHexagon.cpp">
       <Filter>Classes/Functions\Races</Filter>
     </ClCompile>
     <ClCompile Include="Source\SpriteAnimation.cpp">
-      <Filter>Classes/Functions</Filter>
+      <Filter>Playground Scenes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -220,11 +220,11 @@
     <ClInclude Include="Source\RaceSquare.h">
       <Filter>Classes/Functions\Races</Filter>
     </ClInclude>
-    <ClInclude Include="Source\RaceTriangle.h">
+    <ClInclude Include="Source\RaceHexagon.h">
       <Filter>Classes/Functions\Races</Filter>
     </ClInclude>
     <ClInclude Include="Source\SpriteAnimation.h">
-      <Filter>Classes/Functions</Filter>
+      <Filter>Playground Scenes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

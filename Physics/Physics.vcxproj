@@ -169,7 +169,7 @@
     <ClCompile Include="Source\QuickSort.cpp" />
     <ClCompile Include="Source\RaceCircle.cpp" />
     <ClCompile Include="Source\RaceSquare.cpp" />
-    <ClCompile Include="Source\RaceTriangle.cpp" />
+    <ClCompile Include="Source\RaceHexagon.cpp" />
     <ClCompile Include="Source\SceneAsteroid.cpp" />
     <ClCompile Include="Source\SceneBase.cpp" />
     <ClCompile Include="Source\SceneCollision.cpp" />
@@ -179,6 +179,7 @@
     <ClCompile Include="Source\SceneManager.cpp" />
     <ClCompile Include="Source\SceneUpgrade.cpp" />
     <ClCompile Include="Source\shader.cpp" />
+    <ClCompile Include="Source\SpriteAnimation.cpp" />
     <ClCompile Include="Source\Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -200,7 +201,7 @@
     <ClInclude Include="Source\QuickSort.h" />
     <ClInclude Include="Source\RaceCircle.h" />
     <ClInclude Include="Source\RaceSquare.h" />
-    <ClInclude Include="Source\RaceTriangle.h" />
+    <ClInclude Include="Source\RaceHexagon.h" />
     <ClInclude Include="Source\Scene.h" />
     <ClInclude Include="Source\SceneAsteroid.h" />
     <ClInclude Include="Source\SceneBase.h" />
@@ -211,6 +212,7 @@
     <ClInclude Include="Source\SceneManager.h" />
     <ClInclude Include="Source\SceneUpgrade.h" />
     <ClInclude Include="Source\shader.hpp" />
+    <ClInclude Include="Source\SpriteAnimation.h" />
     <ClInclude Include="Source\Utility.h" />
     <ClInclude Include="Source\Vertex.h" />
   </ItemGroup>
