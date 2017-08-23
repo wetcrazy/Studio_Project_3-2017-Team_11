@@ -47,8 +47,6 @@ void SceneCollision::Init()
 	b_isBulletAlive = false;
 	ft_bulletAlive = 0;
 
-	m_objRestrict = 1;
-
 	//Scrolling
 	last_projectile = FetchGO();
 	last_projectile->active = false;
@@ -415,7 +413,8 @@ void SceneCollision::Update(double dt)
 		{
 			//spawn small GO_BALL
 			last_projectile->active = true;
-			last_projectile->type = GameObject::GO_CUBE;
+			//last_projectile->type = GameObject::GO_CUBE;
+			last_projectile->type = GameObject::GO_HEXA;
 			last_projectile->pos = platform->pos;
 			last_projectile->pos += aim.Normalized() * 0.5;
 			last_projectile->vel = aim;
@@ -559,7 +558,8 @@ void SceneCollision::Update(double dt)
 		if (go->active)
 		{
 			//if (go->type == GameObject::GO_BALL)
-			if (go->type == GameObject::GO_CUBE)
+			//if (go->type == GameObject::GO_CUBE)
+			if (go->type == GameObject::GO_HEXA)
 			{
 				go->pos += go->vel * static_cast<float>(dt);
 				go->vel += gravity * dt;
@@ -588,7 +588,8 @@ void SceneCollision::Update(double dt)
 				GameObject *goA, *goB;
 
 				//if(go->type == GameObject::GO_BALL)
-				if (go->type == GameObject::GO_CUBE)
+				//if (go->type == GameObject::GO_CUBE)
+				if (go->type == GameObject::GO_HEXA)
 				{
 					goA = go;
 					goB = go2;
@@ -637,7 +638,6 @@ void SceneCollision::CreateStuff()
 	hexagon->dir.Set(1, 0, 0);
 	hexagon->pos.Set(w_temp / 2, h_temp / 2, 0);
 	hexagon->scale.Set(2, 2, 1);
-	m_objRestrict++;
 
 	GameObject *wall = FetchGO();
 	wall->type = GameObject::GO_PLATFORM;	// Left Wall
@@ -645,7 +645,6 @@ void SceneCollision::CreateStuff()
 	wall->dir.Set(1, 0, 0);
 	wall->pos.Set(wall->scale.x / 2, wall->scale.y, 0);
 	wall->scale.Set(2, h / 27, 1);
-	m_objRestrict++;
 
 	wall = FetchGO();
 	wall->type = GameObject::GO_GROUND;	// Ground
@@ -653,7 +652,6 @@ void SceneCollision::CreateStuff()
 	wall->dir.Set(0, -1, 0);
 	wall->pos.Set(133 / 2, wall->scale.y / 2, 0);
 	wall->scale.Set(2, w, 1);
-	m_objRestrict++;
 
 	wall = FetchGO();
 	wall->type = GameObject::GO_PLATFORM;	// Elevated Ground
@@ -661,7 +659,6 @@ void SceneCollision::CreateStuff()
 	wall->dir.Set(0, -1, 0);
 	wall->pos.Set(133 / 8, 100 / 9, 0);
 	wall->scale.Set(2, 100 / 3, 1);
-	m_objRestrict++;
 
 	wall = FetchGO();
 	wall->type = GameObject::GO_PLATFORM;	// Slanted Ground
@@ -669,7 +666,6 @@ void SceneCollision::CreateStuff()
 	wall->dir.Set(-1, -1, 0);
 	wall->pos.Set(133 / 5 + 11.5, 100 / 9 - 5.3, 0);
 	wall->scale.Set(2, 100 / 6, 1);
-	m_objRestrict++;
 
 	for (unsigned i = 0; i < 6; i++)
 	{
@@ -679,7 +675,6 @@ void SceneCollision::CreateStuff()
 		wall->dir.Set(0, -1, 0);
 		wall->pos.Set(133 / 8 + (1 * i), 100 / 9 - (2 * i), 0);
 		wall->scale.Set(2, 100 / 3 + (1.5 * i), 1);
-		m_objRestrict++;
 	}
 
 	background_fire = new GameObject(GameObject::GO_BACKGROUND_FIRE);	// Background Fire
@@ -687,21 +682,18 @@ void SceneCollision::CreateStuff()
 	background_fire->pos.Set(w_temp / 2, h_temp / 2, -7);
 	background_fire->scale.Set(w_temp, h_temp, 1);
 	m_goList.push_back(background_fire);
-	m_objRestrict++;
 
 	mountain = new GameObject(GameObject::GO_MOUNTAIN);		// Background Mountain
 	mountain->active = true;
 	mountain->pos.Set(w_temp / 2, h_temp / 2, -5);
 	mountain->scale.Set(w_temp, h_temp, 1);
 	m_goList.push_back(mountain);
-	m_objRestrict++;
 
 	foreground_fire = new GameObject(GameObject::GO_FOREGROUND_FIRE);		// Foreground Fire
 	foreground_fire->active = true;
 	foreground_fire->pos.Set(w_temp / 2, h_temp / 2, -3);
 	foreground_fire->scale.Set(w_temp, h_temp, 1);
 	m_goList.push_back(foreground_fire);
-	m_objRestrict++;
 		
 	{
 		//Cannon
@@ -813,7 +805,6 @@ void SceneCollision::CreateLevel(int level)
 			go->scale.Set(createLevel[i].get_scax(), createLevel[i].get_scay(), createLevel[i].get_scaz());
 			go->Color.Set(createLevel[i].get_colr(), createLevel[i].get_colg(), createLevel[i].get_colb());
 			fortCount++;
-			m_objRestrict++;
 		}
 
 		//std::cout << createLevel.size() << std::endl;

@@ -88,7 +88,6 @@ protected:
 
 	bool b_isBulletAlive;
 	float ft_bulletAlive;
-	int m_objRestrict;
 
 	int i_level;
 
