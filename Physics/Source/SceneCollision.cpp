@@ -696,7 +696,7 @@ void SceneCollision::CreateStuff()
 	m_goList.push_back(mountain);
 	m_objRestrict++;
 
-	foreground_fire = new GameObject(GameObject::GO_MOUNTAIN);		// Foreground Fire
+	foreground_fire = new GameObject(GameObject::GO_FOREGROUND_FIRE);		// Foreground Fire
 	foreground_fire->active = true;
 	foreground_fire->pos.Set(w_temp / 2, h_temp / 2, -3);
 	foreground_fire->scale.Set(w_temp, h_temp, 1);
