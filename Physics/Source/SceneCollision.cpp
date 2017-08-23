@@ -428,6 +428,9 @@ void SceneCollision::Update(double dt)
 			last_projectile->pos += aim.Normalized() * 0.5;
 			last_projectile->vel = aim;
 
+			// Maths to caulate speed multiplyer
+			float speed_multiplyer = (1.5 * (scaleX_position_powerbar / powerrange->scale.x));
+			std::cout << speed_multiplyer << std::endl; // Debug info for speed_multiplyer
 			if (last_projectile->vel.Length() > 10) // 10 is distance
 			{
 				int speed = 35;
@@ -443,7 +446,7 @@ void SceneCollision::Update(double dt)
 				}
 
 				last_projectile->vel.Normalize();
-				last_projectile->vel *= speed;
+				last_projectile->vel *= speed * speed_multiplyer;
 			}
 
 			if (last_projectile->vel.y < 0)
@@ -497,7 +500,7 @@ void SceneCollision::Update(double dt)
 			is_movement_powerbar = false;
 		}
 	}
-
+	// std::cout << scaleX_position_powerbar << std::endl; // Debug info for power bar position.x
 	static bool bRButtonState = false;
 	if (!bRButtonState && Application::IsMousePressed(1))
 	{
