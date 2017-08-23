@@ -39,11 +39,6 @@ void SceneCollision::Init()
 	m_ghost02 = new GameObject(GameObject::GO_CUBE);
 	gravity.Set(0.0f, -9.8f, 0.0f);
 
-	// Cannon stuff
-	ft_shootTime = 0.f;
-	ft_elapsedTime = 0.f;
-	b_shootIsTrue = false;
-
 	b_isBulletAlive = false;
 	ft_bulletAlive = 0;
 
@@ -338,7 +333,6 @@ void SceneCollision::Update(double dt)
 {
 	//std::cout << "Count : " << m_objectCount << " / " << m_objRestrict << std::endl;
 	SceneBase::Update(dt);
-	ft_elapsedTime += dt;
 
 	SetTempScore(i_tempScore);
 
@@ -398,7 +392,7 @@ void SceneCollision::Update(double dt)
 	//Cannon follows cursor position
 	if (posY > cannon->pos.y)        // Cannon cannot move when cursor is below cannon	
 	{
-		if (!b_shootIsTrue && !last_projectile->active)
+		if (!last_projectile->active)
 		{
 			aim.Set(posX + launched, posY, 0);
 			aim.Set(aim.x - platform->pos.x, aim.y - platform->pos.y, 0);
@@ -409,7 +403,7 @@ void SceneCollision::Update(double dt)
 
 	//std::cout << platform->pos.y << std::endl;
 
-	if (!bLButtonState && Application::IsMousePressed(0) && !last_projectile->active && ft_elapsedTime > ft_shootTime)
+	if (!bLButtonState && Application::IsMousePressed(0) && !last_projectile->active)
 	{
 		bLButtonState = true;
 		std::cout << "LBUTTON UP" << std::endl;
@@ -448,12 +442,6 @@ void SceneCollision::Update(double dt)
 			m_ghost01->active = false;
 			last_projectile->scale.Set(2, 2, 2);
 
-			// Limit spawn rate of cannon balls AND prevents movement of cannon immediately after shooting
-			ft_shootTime = ft_elapsedTime + 0.25f;
-
-			// Cannon ball has been shot
-			b_shootIsTrue = true;
-
 			// Randomize color of ball
 			last_projectile->Color.Set(Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1));
 
@@ -466,10 +454,6 @@ void SceneCollision::Update(double dt)
 		bLButtonState = false;
 		std::cout << "LBUTTON DOWN" << std::endl;
 	}
-
-	// Cannon ball has not been shot
-	else if (ft_elapsedTime > ft_shootTime)
-		b_shootIsTrue = false;
 
 	static bool bRButtonState = false;
 	if (!bRButtonState && Application::IsMousePressed(1))

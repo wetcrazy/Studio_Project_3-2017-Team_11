@@ -70,9 +70,6 @@ protected:
 	GameObject *platform;
 	GameObject *cannon;
 	Vector3 aim;
-	float ft_shootTime;
-	float ft_elapsedTime;
-	bool b_shootIsTrue;
 
 	//Background
 	GameObject *mountain;
