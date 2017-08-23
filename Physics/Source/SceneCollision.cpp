@@ -350,7 +350,7 @@ void SceneCollision::Update(double dt)
 
 	//Update Sprite Animation
 	SpriteAnimation* sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_BACKGROUND_FIRE]);
-	SpriteAnimation* sa1 = dynamic_cast<SpriteAnimation*>(meshList[GEO_FIRE]);
+	SpriteAnimation* sa1 = dynamic_cast<SpriteAnimation*>(meshList[GEO_FOREGROUND_FIRE]);
 	if (sa && sa1)
 	{
 		sa->Update(dt);
@@ -364,7 +364,9 @@ void SceneCollision::Update(double dt)
 	{
 		SceneManager::getInstance()->changeScene(new SceneMainMenu());
 		SetCurrentLevel(1);
+		SetTempScore(0);
 		SetScore(0);
+		upgraded.ResetFile("Text//Speed_Upgrade.txt", "");
 	}
 
 	//Mouse Section
@@ -380,22 +382,15 @@ void SceneCollision::Update(double dt)
 	int h_temp = 100;
 	int w_temp = 100 * Application::GetWindowWidth() / Application::GetWindowHeight();
 
-	//Background resizing
+	//Mountain resizing
 	mountain->pos.Set(w_temp / 2 + launched, h_temp / 2, -5);
 	mountain->scale.Set(w_temp + 2, h_temp, 1);
+	//Background Fire resizing
 	background_fire->pos.Set(w_temp / 2 + launched, h_temp / 2, -7);
 	background_fire->scale.Set(w_temp + 2, h_temp, 1);
-	fire->pos.Set(w_temp / 2 + launched, h_temp / 2, -2);
-	fire->scale.Set(w_temp + 2, h_temp, 1);
-
-	if (Application::IsKeyPressed('R'))
-	{
-		SceneManager::getInstance()->changeScene(new SceneMainMenu());
-		SetCurrentLevel(1);
-		SetTempScore(0);
-		SetScore(0);
-		upgraded.ResetFile("Text//Speed_Upgrade.txt", "");
-	}
+	//Foreground Fire resizing
+	foreground_fire->pos.Set(w_temp / 2 + launched, h_temp / 2, -3);
+	foreground_fire->scale.Set(w_temp + 2, h_temp, 1);
 
 	//Cannon follows cursor position
 	if (posY > cannon->pos.y)        // Cannon cannot move when cursor is below cannon	
@@ -462,7 +457,6 @@ void SceneCollision::Update(double dt)
 			launched = 0;
 		}
 	}
-
 	else if (bLButtonState && !Application::IsMousePressed(0))
 	{
 		bLButtonState = false;
@@ -584,12 +578,6 @@ void SceneCollision::Update(double dt)
 			}
 			for (std::vector<GameObject *>::iterator it2 = it + 1; it2 != m_goList.end(); ++it2)
 			{
-				go->pos += go->vel * static_cast<float>(dt);
-				if (!go->vel.IsZero())
-					go->vel += (Vector3(0, 0, 0) - go->vel) * dt;
-			}
-			for (std::vector<GameObject *>::iterator it2 = it + 1; it2 != m_goList.end(); ++it2)
-			{
 				GameObject *go2 = static_cast<GameObject *>(*it2);
 				if (!go2->active)
 					continue;
@@ -694,27 +682,27 @@ void SceneCollision::CreateStuff()
 		m_objRestrict++;
 	}
 
-	background_fire = new GameObject(GameObject::GO_BACKGROUND_FIRE);	// Background Background Fire
+	background_fire = new GameObject(GameObject::GO_BACKGROUND_FIRE);	// Background Fire
 	background_fire->active = true;
 	background_fire->pos.Set(w_temp / 2, h_temp / 2, -7);
 	background_fire->scale.Set(w_temp, h_temp, 1);
 	m_goList.push_back(background_fire);
 	m_objRestrict++;
 
-	mountain = new GameObject(GameObject::GO_MOUNTAIN);	// Background Mountain
+	mountain = new GameObject(GameObject::GO_MOUNTAIN);		// Background Mountain
 	mountain->active = true;
 	mountain->pos.Set(w_temp / 2, h_temp / 2, -5);
 	mountain->scale.Set(w_temp, h_temp, 1);
 	m_goList.push_back(mountain);
 	m_objRestrict++;
 
-	fire = new GameObject(GameObject::GO_FIRE);	// Background Foreground Fire
-	fire->active = true;
-	fire->pos.Set(w_temp / 2, h_temp / 2, -3);
-	fire->scale.Set(w_temp, h_temp, 1);
-	m_goList.push_back(fire);
+	foreground_fire = new GameObject(GameObject::GO_MOUNTAIN);		// Foreground Fire
+	foreground_fire->active = true;
+	foreground_fire->pos.Set(w_temp / 2, h_temp / 2, -3);
+	foreground_fire->scale.Set(w_temp, h_temp, 1);
+	m_goList.push_back(foreground_fire);
 	m_objRestrict++;
-
+		
 	{
 		//Cannon
 		platform = new GameObject(GameObject::GO_CANNON_PLATFORM);	// Platform for Cannon
@@ -992,11 +980,11 @@ void SceneCollision::RenderGO(GameObject *go)
 		RenderMesh(meshList[GEO_BACKGROUND_FIRE], true, go->Color);
 		modelStack.PopMatrix();
 		break;
-	case GameObject::GO_FIRE:
+	case GameObject::GO_FOREGROUND_FIRE:
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_FIRE], true, go->Color);
+		RenderMesh(meshList[GEO_FOREGROUND_FIRE], true, go->Color);
 		modelStack.PopMatrix();
 		break;
 	}
@@ -1073,10 +1061,10 @@ void SceneCollision::Render()
 	//	ss << "Speed: " << m_speed;
 	//	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 6);
 
-		ss.str(std::string());
-		ss.precision(5);
-		ss << "FPS: " << fps;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 0);
+	ss.str(std::string());
+	ss.precision(5);
+	ss << "FPS: " << fps;
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 0);
 
 	//	RenderTextOnScreen(meshList[GEO_TEXT], "Collision", Color(0, 1, 0), 3, 0, 0);
 	//}

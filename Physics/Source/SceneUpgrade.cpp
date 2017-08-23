@@ -87,6 +87,7 @@ void SceneUpgrade::Update(double dt)
 	upgraded.ReadFile("Text//Speed_Upgrade.txt");
 
 	pressDelay += (float)dt;
+
 	int h_temp = 100;
 	int w_temp = 100 * Application::GetWindowWidth() / Application::GetWindowHeight();
 

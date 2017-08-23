@@ -77,7 +77,7 @@ protected:
 	//Background
 	GameObject *mountain;
 	GameObject *background_fire;
-	GameObject *fire;
+	GameObject *foreground_fire;
 
 	//Scrolling
 	GameObject *last_projectile;

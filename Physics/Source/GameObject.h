@@ -22,9 +22,10 @@ struct GameObject
 		GO_ENEMY_BULLET,
 		GO_POWERUP,
 
+		//Background
 		GO_MOUNTAIN,
 		GO_BACKGROUND_FIRE,
-		GO_FIRE,
+		GO_FOREGROUND_FIRE,
 
 		GO_GROUND,
 		GO_PLATFORM,
@@ -45,7 +46,7 @@ struct GameObject
 
 		//Highscore Menu
 		GO_HIGHSCOREMENU,
-		
+
 		GO_TOTAL, //must be last
 	};
 	GAMEOBJECT_TYPE type;

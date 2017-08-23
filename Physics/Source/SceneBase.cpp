@@ -25,10 +25,10 @@ void SceneBase::Init()
 	// Enable depth test
 	glEnable(GL_DEPTH_TEST);
 	// Accept fragment if it closer to the camera than the former one
-	glDepthFunc(GL_LESS); 
-	
+	glDepthFunc(GL_LESS);
+
 	glEnable(GL_CULL_FACE);
-	
+
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	glEnable(GL_BLEND);
@@ -37,8 +37,8 @@ void SceneBase::Init()
 	glGenVertexArrays(1, &m_vertexArrayID);
 	glBindVertexArray(m_vertexArrayID);
 
-	m_programID = LoadShaders( "Shader//comg.vertexshader", "Shader//comg.fragmentshader" );
-	
+	m_programID = LoadShaders("Shader//comg.vertexshader", "Shader//comg.fragmentshader");
+
 	// Get a handle for our uniform
 	m_parameters[U_MVP] = glGetUniformLocation(m_programID, "MVP");
 	//m_parameters[U_MODEL] = glGetUniformLocation(m_programID, "M");
@@ -68,7 +68,7 @@ void SceneBase::Init()
 	// Get a handle for our "textColor" uniform
 	m_parameters[U_TEXT_ENABLED] = glGetUniformLocation(m_programID, "textEnabled");
 	m_parameters[U_TEXT_COLOR] = glGetUniformLocation(m_programID, "textColor");
-	
+
 	// Use our shader
 	glUseProgram(m_programID);
 
@@ -83,7 +83,7 @@ void SceneBase::Init()
 	lights[0].cosInner = cos(Math::DegreeToRadian(30));
 	lights[0].exponent = 3.f;
 	lights[0].spotDirection.Set(0.f, 1.f, 0.f);
-	
+
 	glUniform1i(m_parameters[U_NUMLIGHTS], 0);
 	glUniform1i(m_parameters[U_TEXT_ENABLED], 0);
 
@@ -99,7 +99,7 @@ void SceneBase::Init()
 
 	camera.Init(Vector3(0, 0, 1), Vector3(0, 0, 0), Vector3(0, 1, 0));
 
-	for(int i = 0; i < NUM_GEOMETRY; ++i)
+	for (int i = 0; i < NUM_GEOMETRY; ++i)
 	{
 		meshList[i] = NULL;
 	}
@@ -115,20 +115,26 @@ void SceneBase::Init()
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 	meshList[GEO_TEXT]->material.kAmbient.Set(1, 0, 0);
 
+	//Mountain Background
 	meshList[GEO_MOUNTAIN] = MeshBuilder::GenerateQuad("static mountain", Color(1, 1, 1), 1.f);
-	meshList[GEO_MOUNTAIN]->textureID = LoadTGA("Image//mountain.tga");
+	meshList[GEO_MOUNTAIN]->textureID = LoadTGA("Image//Background/mountain.tga");
 
+	//Background Fire
 	meshList[GEO_BACKGROUND_FIRE] = MeshBuilder::GenerateSpriteAnimation("sprite background fire", 1, 9, 1.0f);
-	meshList[GEO_BACKGROUND_FIRE]->textureID = LoadTGA("Image//background_fire_sprite.tga");
+	meshList[GEO_BACKGROUND_FIRE]->textureID = LoadTGA("Image//Background/background_fire_sprite.tga");
+	//Sprite Animation for Background Fire
 	SpriteAnimation* sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_BACKGROUND_FIRE]);
 	if (sa)
 	{
 		sa->m_anim = new Animation();
 		sa->m_anim->Set(0, 8, 0, 1.75f, true);
 	}
-	meshList[GEO_FIRE] = MeshBuilder::GenerateSpriteAnimation("sprite foreground fire", 1, 12, 1.0f);
-	meshList[GEO_FIRE]->textureID = LoadTGA("Image//fire_sprite.tga");
-	SpriteAnimation* sa1 = dynamic_cast<SpriteAnimation*>(meshList[GEO_FIRE]);
+
+	//Foreground Fire
+	meshList[GEO_FOREGROUND_FIRE] = MeshBuilder::GenerateSpriteAnimation("sprite foreground fire", 1, 12, 1.0f);
+	meshList[GEO_FOREGROUND_FIRE]->textureID = LoadTGA("Image//Background/fire_sprite.tga");
+	//Sprite Animation for Foreground Fire
+	SpriteAnimation* sa1 = dynamic_cast<SpriteAnimation*>(meshList[GEO_FOREGROUND_FIRE]);
 	if (sa1)
 	{
 		sa1->m_anim = new Animation();
@@ -171,23 +177,23 @@ void SceneBase::Init()
 void SceneBase::Update(double dt)
 {
 	//Keyboard Section
-	if(Application::IsKeyPressed('1'))
+	if (Application::IsKeyPressed('1'))
 		glEnable(GL_CULL_FACE);
-	if(Application::IsKeyPressed('2'))
+	if (Application::IsKeyPressed('2'))
 		glDisable(GL_CULL_FACE);
-	if(Application::IsKeyPressed('3'))
+	if (Application::IsKeyPressed('3'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	if(Application::IsKeyPressed('4'))
+	if (Application::IsKeyPressed('4'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	
+
 	fps = (float)(1.f / dt);
 }
 
 void SceneBase::RenderText(Mesh* mesh, std::string text, Color color)
 {
-	if(!mesh || mesh->textureID <= 0)
+	if (!mesh || mesh->textureID <= 0)
 		return;
-	
+
 	glDisable(GL_DEPTH_TEST);
 	glUniform1i(m_parameters[U_TEXT_ENABLED], 1);
 	glUniform3fv(m_parameters[U_TEXT_COLOR], 1, &color.r);
@@ -196,13 +202,13 @@ void SceneBase::RenderText(Mesh* mesh, std::string text, Color color)
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, mesh->textureID);
 	glUniform1i(m_parameters[U_COLOR_TEXTURE], 0);
-	for(unsigned i = 0; i < text.length(); ++i)
+	for (unsigned i = 0; i < text.length(); ++i)
 	{
 		Mtx44 characterSpacing;
 		characterSpacing.SetToTranslation(i * 1.0f, 0, 0); //1.0f is the spacing of each character, you may change this value
 		Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top() * characterSpacing;
 		glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
-	
+
 		mesh->Render((unsigned)text[i] * 6, 6);
 	}
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -212,7 +218,7 @@ void SceneBase::RenderText(Mesh* mesh, std::string text, Color color)
 
 void SceneBase::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
 {
-	if(!mesh || mesh->textureID <= 0)
+	if (!mesh || mesh->textureID <= 0)
 		return;
 
 	glDisable(GL_DEPTH_TEST);
@@ -233,7 +239,7 @@ void SceneBase::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, fl
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, mesh->textureID);
 	glUniform1i(m_parameters[U_COLOR_TEXTURE], 0);
-	for(unsigned i = 0; i < text.length(); ++i)
+	for (unsigned i = 0; i < text.length(); ++i)
 	{
 		Mtx44 characterSpacing;
 		characterSpacing.SetToTranslation(i * 1.0f + 0.5f, 0.5f, 0); //1.0f is the spacing of each character, you may change this value
@@ -376,9 +382,9 @@ void SceneBase::Render()
 void SceneBase::Exit()
 {
 	// Cleanup VBO
-	for(int i = 0; i < NUM_GEOMETRY; ++i)
+	for (int i = 0; i < NUM_GEOMETRY; ++i)
 	{
-		if(meshList[i])
+		if (meshList[i])
 			delete meshList[i];
 	}
 	glDeleteProgram(m_programID);
