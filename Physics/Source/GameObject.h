@@ -47,6 +47,10 @@ struct GameObject
 		//Highscore Menu
 		GO_HIGHSCOREMENU,
 
+		// Power Bar
+		GO_POWERBAR,
+		GO_POWERRANGE,
+
 		GO_TOTAL, //must be last
 	};
 	GAMEOBJECT_TYPE type;

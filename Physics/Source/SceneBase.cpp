@@ -171,6 +171,10 @@ void SceneBase::Init()
 	meshList[GEO_HIGHSCOREMENU] = MeshBuilder::GenerateQuad("highscore", Color(1, 1, 1));
 	meshList[GEO_HIGHSCOREMENU]->textureID = LoadTGA("Image//Menu/HighScore Menu//highscore.tga");
 
+	// Power Bar
+	meshList[GEO_POWERRANGE] = MeshBuilder::GenerateQuad("POWERBAR", Color(1, 0, 1), 1);
+	meshList[GEO_POWERBAR] = MeshBuilder::GenerateQuad("POWERBAR", Color(1, 1, 1), 1);
+
 	bLightEnabled = true;
 }
 

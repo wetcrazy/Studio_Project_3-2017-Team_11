@@ -80,6 +80,13 @@ protected:
 	GameObject *last_projectile;
 	float launched;
 
+	// Power Bar
+	GameObject *powerbar;
+	GameObject *powerrange;
+	size_t NumMode_tiggered_powerbar;
+	bool is_movement_powerbar;
+	float scaleX_position_powerbar;
+
 	//Upgrades
 	LoadingUpgrades upgraded;
 

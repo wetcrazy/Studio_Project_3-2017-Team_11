@@ -76,6 +76,10 @@ public:
 		// HighScore Menu
 		GEO_HIGHSCOREMENU,
 
+		// Power Bar
+		GEO_POWERBAR,
+		GEO_POWERRANGE,
+
 		NUM_GEOMETRY,
 	};
 	enum UPGRADES_MENU

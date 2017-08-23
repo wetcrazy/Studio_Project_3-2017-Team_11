@@ -47,6 +47,12 @@ void SceneCollision::Init()
 	last_projectile->active = false;
 	launched = 0;
 
+	// Power Bar
+	GameObject *powerbar;
+	NumMode_tiggered_powerbar = 1;
+	scaleX_position_powerbar = 0;
+	is_movement_powerbar = true;
+
 	//LoadTXT loadtxt;
 
 	i_CurrentLevel = GetCurrentLevel();
@@ -308,6 +314,7 @@ void SceneCollision::CollisionResponse(GameObject * go1, GameObject * go2)
 		m_objectCount--;
 		fortCount--;
 		i_tempScore++;
+		NumMode_tiggered_powerbar = 1;
 		break;
 	}
 	case GameObject::GO_PILLAR:
@@ -392,7 +399,8 @@ void SceneCollision::Update(double dt)
 	//Cannon follows cursor position
 	if (posY > cannon->pos.y)        // Cannon cannot move when cursor is below cannon	
 	{
-		if (!last_projectile->active)
+		//if (!last_projectile->active)
+		if (NumMode_tiggered_powerbar == 1)
 		{
 			aim.Set(posX + launched, posY, 0);
 			aim.Set(aim.x - platform->pos.x, aim.y - platform->pos.y, 0);
@@ -403,7 +411,9 @@ void SceneCollision::Update(double dt)
 
 	//std::cout << platform->pos.y << std::endl;
 
-	if (!bLButtonState && Application::IsMousePressed(0) && !last_projectile->active)
+	//if (!bLButtonState && Application::IsMousePressed(0) && !last_projectile->active)
+	powerbar->pos.x = scaleX_position_powerbar;
+	if (!last_projectile->active && NumMode_tiggered_powerbar == 3)
 	{
 		bLButtonState = true;
 		std::cout << "LBUTTON UP" << std::endl;
@@ -449,10 +459,43 @@ void SceneCollision::Update(double dt)
 			launched = 0;
 		}
 	}
+	else if (!bLButtonState && Application::IsMousePressed(0) && NumMode_tiggered_powerbar == 1)
+	{
+		bLButtonState = true;
+		std::cout << "LBUTTON UP" << std::endl;
+
+		NumMode_tiggered_powerbar = 2;
+	}
+	else if (!bLButtonState && Application::IsMousePressed(0) && NumMode_tiggered_powerbar == 2)
+	{
+		bLButtonState = true;
+		std::cout << "LBUTTON UP" << std::endl;
+
+		NumMode_tiggered_powerbar = 3;
+	}
 	else if (bLButtonState && !Application::IsMousePressed(0))
 	{
 		bLButtonState = false;
 		std::cout << "LBUTTON DOWN" << std::endl;
+	}
+	if (NumMode_tiggered_powerbar == 2)
+	{
+		if (!is_movement_powerbar)
+		{
+			scaleX_position_powerbar -= 0.5f;
+		}
+		else if (is_movement_powerbar)
+		{
+			scaleX_position_powerbar += 0.5f;
+		}
+		if (scaleX_position_powerbar <= 0)
+		{
+			is_movement_powerbar = true;
+		}
+		else if (scaleX_position_powerbar >= powerrange->scale.x)
+		{
+			is_movement_powerbar = false;
+		}
 	}
 
 	static bool bRButtonState = false;
@@ -553,6 +596,7 @@ void SceneCollision::Update(double dt)
 					go->pos.SetZero();
 					go->active = false;
 					--m_objectCount;
+					NumMode_tiggered_powerbar = 1;
 				}
 			}
 			if (go->type == GameObject::GO_BLOCKS)
@@ -694,6 +738,20 @@ void SceneCollision::CreateStuff()
 		cannon->pos = platform->pos;
 		cannon->scale.Set(1, 2.5, 1);
 		m_goList.push_back(cannon);
+	}
+	// Power bar
+	{
+		powerbar = new GameObject(GameObject::GO_POWERBAR); // power bar
+		powerbar->active = true;
+		powerbar->pos.Set(scaleX_position_powerbar, h_temp - 2.5, 1);
+		powerbar->scale.Set(2, 5, 1);
+		m_goList.push_back(powerbar);
+
+		powerrange = new GameObject(GameObject::GO_POWERRANGE); // power range
+		powerrange->active = true;
+		powerrange->pos.Set(25, h_temp - 2.5, 0);
+		powerrange->scale.Set(50, 5, 1);
+		m_goList.push_back(powerrange);
 	}
 
 	//{ // Testing Structure
@@ -961,6 +1019,20 @@ void SceneCollision::RenderGO(GameObject *go)
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_FOREGROUND_FIRE], true, go->Color);
+		modelStack.PopMatrix();
+		break;
+	case GameObject::GO_POWERBAR:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_POWERBAR], true, go->Color);
+		modelStack.PopMatrix();
+		break;
+	case GameObject::GO_POWERRANGE:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_POWERRANGE], true, go->Color);
 		modelStack.PopMatrix();
 		break;
 	}
