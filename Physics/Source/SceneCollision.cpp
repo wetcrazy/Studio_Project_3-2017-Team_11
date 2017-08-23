@@ -519,20 +519,18 @@ void SceneCollision::Update(double dt)
 	//Physics Simulation Section
 	dt *= m_speed;
 
-
-
 	//Projectile Scrolling========================================//
 	camera.target.x = launched;
 	camera.position.x = launched;
 
-	if (last_projectile->pos.x > m_worldWidth / 2)	//projectile scrolling
-		launched = last_projectile->pos.x - m_worldWidth / 2;
+	if (last_projectile->pos.x > w_temp / 2)	//projectile scrolling
+		launched = last_projectile->pos.x - w_temp / 2;
 
-	if (launched > m_worldWidth)	//make camera.position.x stop moving
-		launched = m_worldWidth;
+	if (launched > w_temp)	//make camera.position.x stop moving
+		launched = w_temp;
 
-	if (!last_projectile->active && !Application::IsKeyPressed(VK_RIGHT))	//reset camera.position.x to initial position
-		launched = 0;
+	//if (!last_projectile->active && !Application::IsKeyPressed(VK_RIGHT))	//reset camera.position.x to initial position
+	//	launched = 0;
 
 	//cout << launched << endl;
 	//End of Scrolling============================================//
