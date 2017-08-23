@@ -160,19 +160,24 @@ bool SceneCollision::CheckCollision(GameObject *go1, GameObject *go2, float dt)
 	}
 	case GameObject::GO_BLOCKS:
 	{
-		Vector3 dis = go1->pos - go2->pos;
-		Vector3 vel = go1->vel - go2->vel;
-		float r1 = go1->scale.x * 0.9f; // raw inputs
-		float r2 = go2->scale.x * 0.9f; // raw inputs
+		Vector3 w0 = go2->pos;
+		Vector3 b1 = go1->pos;
 
-		float r3 = go2->scale.y * 0.5f; // raw inputs
+		float r = go1->scale.x;
+		float h = go2->scale.x;
+		float l = go2->scale.y;
 
-		if (vel.Dot(dis) < 0 && dis.LengthSquared() < (r1 + r2) * (r1 + r3))
-		{
-			//std::cout << "This is being collided with!" << std::endl;
-			return true;
-		}
-		return false;
+		Vector3 N = go2->dir;
+		Vector3 NP = go2->dir.Cross(Vector3(0, 0, 1));
+
+		Vector3 relativePos = b1 - w0;
+		if (relativePos.Dot(N) > 0)
+			N = -N;
+
+		return (go1->vel.Dot(N) > 0 && 
+			((abs((w0 - b1).Dot(N)) < r + h * 0.5f && abs((w0 - b1).Dot(NP)) < r + l * 0.5f)
+				||
+			(abs((w0 - b1).Dot(N)) < r + h * 0.5f && abs((w0 - b1).Dot(NP)) < r + l * 0.5f)));
 	}
 	case GameObject::GO_PILLAR:
 	{
