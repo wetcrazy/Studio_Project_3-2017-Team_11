@@ -504,8 +504,7 @@ void SceneCollision::Update(double dt)
 	{
 		if (launched >= 0 && launched <= m_worldWidth * 1.5)
 		{
-			launched += 25 * dt;
-			launched += 25 * dt;
+			launched += 60 * dt;
 		}
 	}
 
@@ -513,8 +512,7 @@ void SceneCollision::Update(double dt)
 	{
 		if (launched >= 0 && launched <= m_worldWidth * 1.5)
 		{
-			launched -= 25 * dt;
-			launched -= 25 * dt;
+			launched -= 60 * dt;
 		}
 	}
 
