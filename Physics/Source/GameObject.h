@@ -50,6 +50,7 @@ struct GameObject
 		// Power Bar
 		GO_POWERBAR,
 		GO_POWERRANGE,
+		GO_GUIDEMARKER,
 
 		GO_TOTAL, //must be last
 	};

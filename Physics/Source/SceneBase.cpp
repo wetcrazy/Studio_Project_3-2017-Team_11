@@ -174,6 +174,7 @@ void SceneBase::Init()
 	// Power Bar
 	meshList[GEO_POWERRANGE] = MeshBuilder::GenerateQuad("POWERBAR", Color(1, 0, 1), 1);
 	meshList[GEO_POWERBAR] = MeshBuilder::GenerateQuad("POWERBAR", Color(1, 1, 1), 1);
+	meshList[GEO_GUIDEMARKER] = MeshBuilder::GenerateQuad("POWERBAR", Color(1, 1, 1), 1);
 
 	bLightEnabled = true;
 }

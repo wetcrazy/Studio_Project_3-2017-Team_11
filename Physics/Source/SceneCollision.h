@@ -82,9 +82,10 @@ protected:
 	// Power Bar
 	GameObject *powerbar;
 	GameObject *powerrange;
+	GameObject *guidemarker;
 	size_t NumMode_tiggered_powerbar;
 	bool is_movement_powerbar;
-	float scaleX_position_powerbar;
+	float original_position_powerbar;
 
 	//Upgrades
 	LoadingUpgrades upgraded;

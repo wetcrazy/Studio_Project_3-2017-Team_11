@@ -79,6 +79,7 @@ public:
 		// Power Bar
 		GEO_POWERBAR,
 		GEO_POWERRANGE,
+		GEO_GUIDEMARKER,
 
 		NUM_GEOMETRY,
 	};

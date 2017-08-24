@@ -55,9 +55,8 @@ void SceneCollision::Init()
 	launched = 0;
 
 	// Power Bar
-	GameObject *powerbar;
 	NumMode_tiggered_powerbar = 1;
-	scaleX_position_powerbar = 0;
+	original_position_powerbar = 0;
 	is_movement_powerbar = true;
 
 	//LoadTXT loadtxt;
@@ -420,13 +419,19 @@ void SceneCollision::Update(double dt)
 			aim.Set(aim.x - platform->pos.x, aim.y - platform->pos.y, 0);
 			cannon->dir = aim.Cross(Vector3(0, 0, 1));
 			cannon->dir.Normalize();
+			powerbar->pos.x = original_position_powerbar; // Reset pos of powerbar
+
+			guidemarker->scale.y = 1;
+			guidemarker->dir = cannon->dir;
 		}
 	}
 
 	//std::cout << platform->pos.y << std::endl;
 
 	//if (!bLButtonState && Application::IsMousePressed(0) && !last_projectile->active)
-	powerbar->pos.x = scaleX_position_powerbar;
+	// powerbar->pos.x = original_position_powerbar; // Update the pos of power bars (do not need this cause i updating the pos of power bar directly)
+
+	// Logic for the aim -> hold -> fire
 	if (!last_projectile->active && NumMode_tiggered_powerbar == 3)
 	{
 		bLButtonState = true;
@@ -448,7 +453,7 @@ void SceneCollision::Update(double dt)
 			last_projectile->vel = aim;
 
 			// Maths to caulate speed multiplyer
-			float speed_multiplyer = (1.5 * (scaleX_position_powerbar / powerrange->scale.x));
+			float speed_multiplyer = (1.5 * (powerbar->pos.x / powerrange->scale.x));
 			std::cout << speed_multiplyer << std::endl; // Debug info for speed_multiplyer
 			if (last_projectile->vel.Length() > 10) // 10 is distance
 			{
@@ -494,33 +499,37 @@ void SceneCollision::Update(double dt)
 		bLButtonState = true;
 		std::cout << "LBUTTON UP" << std::endl;
 
-		NumMode_tiggered_powerbar = 3;
+		//NumMode_tiggered_powerbar = 3;
 	}
 	else if (bLButtonState && !Application::IsMousePressed(0))
 	{
 		bLButtonState = false;
 		std::cout << "LBUTTON DOWN" << std::endl;
+		NumMode_tiggered_powerbar = 3;
+		guidemarker->pos += aim.Normalized();
 	}
 	if (NumMode_tiggered_powerbar == 2)
 	{
 		if (!is_movement_powerbar)
 		{
-			scaleX_position_powerbar -= 0.5f;
+			powerbar->pos.x -= 0.5f;
+			guidemarker->scale.y -= 0.25f;
 		}
 		else if (is_movement_powerbar)
 		{
-			scaleX_position_powerbar += 0.5f;
+			powerbar->pos.x += 0.5f;
+			guidemarker->scale.y += 0.25f;
 		}
-		if (scaleX_position_powerbar <= 0)
+		if (powerbar->pos.x <= 0)
 		{
 			is_movement_powerbar = true;
 		}
-		else if (scaleX_position_powerbar >= powerrange->scale.x)
+		else if (powerbar->pos.x >= powerrange->scale.x)
 		{
 			is_movement_powerbar = false;
 		}
 	}
-	// std::cout << scaleX_position_powerbar << std::endl; // Debug info for power bar position.x
+	// std::cout << original_position_powerbar << std::endl; // Debug info for power bar position.x
 	static bool bRButtonState = false;
 	if (!bRButtonState && Application::IsMousePressed(1))
 	{
@@ -762,7 +771,7 @@ void SceneCollision::CreateStuff()
 	{
 		powerbar = new GameObject(GameObject::GO_POWERBAR); // power bar
 		powerbar->active = true;
-		powerbar->pos.Set(scaleX_position_powerbar, h_temp - 2.5, 1);
+		powerbar->pos.Set(original_position_powerbar, h_temp - 2.5, 1);
 		powerbar->scale.Set(2, 5, 1);
 		m_goList.push_back(powerbar);
 
@@ -771,6 +780,13 @@ void SceneCollision::CreateStuff()
 		powerrange->pos.Set(25, h_temp - 2.5, 0);
 		powerrange->scale.Set(50, 5, 1);
 		m_goList.push_back(powerrange);
+
+		guidemarker = new GameObject(GameObject::GO_GUIDEMARKER); // power range
+		guidemarker->active = true;
+		guidemarker->pos = platform->pos;
+		guidemarker->pos.z = 10.0f;
+		guidemarker->scale.Set(1, 1, 1);
+		m_goList.push_back(guidemarker);
 	}
 
 	//{ // Testing Structure
@@ -1007,6 +1023,14 @@ void SceneCollision::RenderGO(GameObject *go)
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_POWERRANGE], true, go->Color);
+		modelStack.PopMatrix();
+		break;
+	case GameObject::GO_GUIDEMARKER:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Rotate(Math::RadianToDegree(atan2(go->dir.y, go->dir.x)), 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_GUIDEMARKER], true, go->Color);
 		modelStack.PopMatrix();
 		break;
 	}
