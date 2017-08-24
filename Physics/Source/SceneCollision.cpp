@@ -35,8 +35,15 @@ void SceneCollision::Init()
 	initialKE = 0;
 	finalKE = 0;
 
-	m_ghost01 = new GameObject(GameObject::GO_BALL);
-	m_ghost02 = new GameObject(GameObject::GO_CUBE);
+	i_projectileType = 3;
+
+	if (i_projectileType == 1)
+		m_ghost = new GameObject(GameObject::GO_BALL);
+	else if (i_projectileType == 2)
+		m_ghost = new GameObject(GameObject::GO_CUBE);
+	else if (i_projectileType == 3)
+		m_ghost = new GameObject(GameObject::GO_HEXA);
+
 	gravity.Set(0.0f, -9.8f, 0.0f);
 
 	b_isBulletAlive = false;
@@ -74,6 +81,7 @@ GameObject* SceneCollision::FetchGO()
 			return go;
 		}
 	}
+
 	for (unsigned i = 0; i < 40; ++i)
 	{
 		GameObject *go = new GameObject(GameObject::GO_BALL);
@@ -84,6 +92,12 @@ GameObject* SceneCollision::FetchGO()
 		GameObject *go = new GameObject(GameObject::GO_CUBE);
 		m_goList.push_back(go);
 	}
+	for (unsigned i = 0; i < 40; ++i)
+	{
+		GameObject *go = new GameObject(GameObject::GO_HEXA);
+		m_goList.push_back(go);
+	}
+
 	GameObject *go = m_goList.back();
 	go->active = true;
 	++m_objectCount;
@@ -420,10 +434,15 @@ void SceneCollision::Update(double dt)
 
 		if (posY > cannon->pos.y)
 		{
-			//spawn small GO_BALL
 			last_projectile->active = true;
-			//last_projectile->type = GameObject::GO_CUBE;
-			last_projectile->type = GameObject::GO_HEXA;
+			//
+			if (i_projectileType == 1)
+				last_projectile->type = GameObject::GO_BALL;
+			else if (i_projectileType == 2)
+				last_projectile->type = GameObject::GO_CUBE;
+			else if (i_projectileType == 3)
+				last_projectile->type = GameObject::GO_HEXA;
+			//
 			last_projectile->pos = platform->pos;
 			last_projectile->pos += aim.Normalized() * 0.5;
 			last_projectile->vel = aim;
@@ -452,7 +471,8 @@ void SceneCollision::Update(double dt)
 			if (last_projectile->vel.y < 0)
 				last_projectile->vel.y *= -1;
 
-			m_ghost01->active = false;
+			m_ghost->active = false;
+
 			last_projectile->scale.Set(2, 2, 2);
 
 			// Randomize color of ball
@@ -507,10 +527,10 @@ void SceneCollision::Update(double dt)
 		bRButtonState = true;
 		std::cout << "RBUTTON DOWN" << std::endl;
 
-		m_ghost02->pos.Set(posX, posY, 0); //IMPT
-		m_ghost02->active = true;
+		m_ghost->pos.Set(posX, posY, 0); //IMPT
+		m_ghost->active = true;
 		float sc = 3;
-		m_ghost02->scale.Set(sc, sc, sc);
+		m_ghost->scale.Set(sc, sc, sc);
 	}
 	else if (bRButtonState && !Application::IsMousePressed(1))
 	{
@@ -520,11 +540,17 @@ void SceneCollision::Update(double dt)
 		//spawn large GO_BALL
 		GameObject *go = FetchGO();
 		go->active = true;
-		go->type = GameObject::GO_CUBE;
 
-		go->pos = m_ghost02->pos;
-		go->vel.Set(m_ghost02->pos.x - posX, m_ghost02->pos.y - posY, 0);
-		m_ghost02->active = false;
+		if (i_projectileType == 1)
+			go->type = GameObject::GO_CUBE;
+		else if (i_projectileType == 2)
+			go->type = GameObject::GO_HEXA;
+		else if (i_projectileType == 3)
+			go->type = GameObject::GO_BALL;
+
+		go->pos = m_ghost->pos;
+		go->vel.Set(m_ghost->pos.x - posX, m_ghost->pos.y - posY, 0);
+		m_ghost->active = false;
 		float sc = 3;
 		go->scale.Set(sc, sc, sc);
 		go->mass = sc * sc * sc;
@@ -538,11 +564,11 @@ void SceneCollision::Update(double dt)
 		for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 		{
 			GameObject *go = (GameObject *)*it;
-			//if (go->active && go->type == GameObject::GO_BALL)
-			if (go->active && go->type == GameObject::GO_CUBE)
+			if (go->active && go->type == GameObject::GO_HEXA)
+			{
 				go->active = false;
-
-			m_objectCount = 0;
+				m_objectCount = 0;
+			}
 		}
 	}
 
@@ -575,9 +601,6 @@ void SceneCollision::Update(double dt)
 	if (launched > w_temp)	//make camera.position.x stop moving
 		launched = w_temp;
 
-	//if (!last_projectile->active && !Application::IsKeyPressed(VK_RIGHT))	//reset camera.position.x to initial position
-	//	launched = 0;
-
 	//cout << launched << endl;
 	//End of Scrolling============================================//
 
@@ -588,9 +611,7 @@ void SceneCollision::Update(double dt)
 		GameObject *go = (GameObject *)*it;
 		if (go->active)
 		{
-			//if (go->type == GameObject::GO_BALL)
-			//if (go->type == GameObject::GO_CUBE)
-			if (go->type == GameObject::GO_HEXA)
+			if ((go->type == GameObject::GO_BALL) || (go->type == GameObject::GO_CUBE) || (go->type == GameObject::GO_HEXA))
 			{
 				go->pos += go->vel * static_cast<float>(dt);
 				go->vel += gravity * dt;
@@ -613,15 +634,10 @@ void SceneCollision::Update(double dt)
 				GameObject *go2 = static_cast<GameObject *>(*it2);
 				if (!go2->active)
 					continue;
-				//if (go->type != GameObject::GO_BALL && go2->type != GameObject::GO_BALL)
-				/*if (go->type != GameObject::GO_CUBE && go2->type != GameObject::GO_CUBE)
-				continue;*/
 
 				GameObject *goA, *goB;
 
-				//if(go->type == GameObject::GO_BALL)
-				//if (go->type == GameObject::GO_CUBE)
-				if (go->type == GameObject::GO_HEXA)
+				if ((go->type == GameObject::GO_BALL) || (go->type == GameObject::GO_CUBE) || (go->type == GameObject::GO_HEXA))
 				{
 					goA = go;
 					goB = go2;
@@ -764,51 +780,6 @@ void SceneCollision::CreateStuff()
 	//	blocks->dir.Set(1, 0, 0);
 	//	blocks->pos.Set(133 / 2 + 16, blocks->scale.y + 5, 0);
 	//	blocks->scale.Set(2, 8, 1);
-	//	blocks->Color.Set(0.8, 0.8, 0);
-	//	fortCount++;
-
-	//	blocks = FetchGO();
-	//	blocks->type = GameObject::GO_BLOCKS;	// Vertical
-	//	blocks->active = true;
-	//	blocks->dir.Set(1, 0, 0);
-	//	blocks->pos.Set(133 / 2 + 26, blocks->scale.y + 5, 0);
-	//	blocks->scale.Set(2, 8, 1);
-	//	blocks->Color.Set(0.8, 0.8, 0);
-	//	fortCount++;
-
-	//	blocks = FetchGO();
-	//	blocks->type = GameObject::GO_BLOCKS;	// Horizontal
-	//	blocks->active = true;
-	//	blocks->dir.Set(0, 1, 0);
-	//	blocks->pos.Set(133 / 2 + 21, blocks->scale.y + 7.5, 0);
-	//	blocks->scale.Set(2, 8, 1);
-	//	blocks->Color.Set(0.8, 0.8, 0);
-	//	fortCount++;
-	//	//
-	//	blocks = FetchGO();
-	//	blocks->type = GameObject::GO_BLOCKS;	// Vertical
-	//	blocks->active = true;
-	//	blocks->dir.Set(1, 0, 0);
-	//	blocks->pos.Set(133 / 2 + 6, blocks->scale.y + 8, 0);
-	//	blocks->scale.Set(2, 14, 1);
-	//	blocks->Color.Set(0.8, 0.8, 0);
-	//	fortCount++;
-
-	//	blocks = FetchGO();
-	//	blocks->type = GameObject::GO_BLOCKS;	// Vertical
-	//	blocks->active = true;
-	//	blocks->dir.Set(1, 0, 0);
-	//	blocks->pos.Set(133 / 2 + 36, blocks->scale.y + 8, 0);
-	//	blocks->scale.Set(2, 14, 1);
-	//	blocks->Color.Set(0.8, 0.8, 0);
-	//	fortCount++;
-
-	//	blocks = FetchGO();
-	//	blocks->type = GameObject::GO_BLOCKS;	// Horizontal
-	//	blocks->active = true;
-	//	blocks->dir.Set(0, 1, 0);
-	//	blocks->pos.Set(133 / 2 + 21, blocks->scale.y + 16.5, 0);
-	//	blocks->scale.Set(2, 31.2, 1);
 	//	blocks->Color.Set(0.8, 0.8, 0);
 	//	fortCount++;
 
@@ -1074,10 +1045,8 @@ void SceneCollision::Render()
 			RenderGO(go);
 		}
 	}
-	if (m_ghost01->active)
-		RenderGO(m_ghost01);
-	if (m_ghost02->active)
-		RenderGO(m_ghost02);
+	if (m_ghost->active)
+		RenderGO(m_ghost);
 
 	//if (Application::IsKeyPressed(VK_RETURN))
 	//{
@@ -1136,14 +1105,9 @@ void SceneCollision::Exit()
 		delete go;
 		m_goList.pop_back();
 	}
-	if (m_ghost01)
+	if (m_ghost)
 	{
-		delete m_ghost01;
-		m_ghost01 = NULL;
-	}
-	if (m_ghost02)
-	{
-		delete m_ghost02;
-		m_ghost02 = NULL;
+		delete m_ghost;
+		m_ghost = NULL;
 	}
 }

@@ -50,8 +50,7 @@ protected:
 	//Physics
 	std::vector<GameObject *> m_goList;
 
-	GameObject *m_ghost01;
-	GameObject *m_ghost02;
+	GameObject *m_ghost;
 
 	float m_speed;
 	float m_worldWidth;
@@ -102,6 +101,9 @@ protected:
 	int i_tempScore;
 
 	LoadTXT loadText;
+
+	int i_projectileType;
+
 };
 
 #endif
