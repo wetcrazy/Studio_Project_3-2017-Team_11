@@ -419,11 +419,14 @@ void SceneCollision::Update(double dt)
 			aim.Set(aim.x - platform->pos.x, aim.y - platform->pos.y, 0);
 			cannon->dir = aim.Cross(Vector3(0, 0, 1));
 			cannon->dir.Normalize();
+
 			powerbar->pos.x = original_position_powerbar; // Reset pos of powerbar
 
 			guidemarker->scale.y = 1;
 			guidemarker->dir = cannon->dir;
-		}
+			//std::cout << aim << std::endl;
+		}		
+		std::cout << guidemarker->pos << std::endl;
 	}
 
 	//std::cout << platform->pos.y << std::endl;
@@ -453,7 +456,7 @@ void SceneCollision::Update(double dt)
 			last_projectile->vel = aim;
 
 			// Maths to caulate speed multiplyer
-			float speed_multiplyer = (1.5 * (powerbar->pos.x / powerrange->scale.x));
+			float speed_multiplyer = (2 * (powerbar->pos.x / powerrange->scale.x));
 			std::cout << speed_multiplyer << std::endl; // Debug info for speed_multiplyer
 			if (last_projectile->vel.Length() > 10) // 10 is distance
 			{
@@ -506,7 +509,6 @@ void SceneCollision::Update(double dt)
 		bLButtonState = false;
 		std::cout << "LBUTTON DOWN" << std::endl;
 		NumMode_tiggered_powerbar = 3;
-		guidemarker->pos += aim.Normalized();
 	}
 	if (NumMode_tiggered_powerbar == 2)
 	{
@@ -783,8 +785,9 @@ void SceneCollision::CreateStuff()
 
 		guidemarker = new GameObject(GameObject::GO_GUIDEMARKER); // power range
 		guidemarker->active = true;
-		guidemarker->pos = platform->pos;
-		guidemarker->pos.z = 10.0f;
+		guidemarker->pos = cannon->pos;
+		guidemarker->pos.z = -1.0f; // push the marker behind
+		//guidemarker->pos.y = guidemarker->pos.y + 10.0f;
 		guidemarker->scale.Set(1, 1, 1);
 		m_goList.push_back(guidemarker);
 	}
@@ -1029,8 +1032,11 @@ void SceneCollision::RenderGO(GameObject *go)
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Rotate(Math::RadianToDegree(atan2(go->dir.y, go->dir.x)), 0, 0, 1);
+		modelStack.PushMatrix();
+		modelStack.Translate(0, 10, 0); // pff set the guide line to the cannon tip
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_GUIDEMARKER], true, go->Color);
+		modelStack.PopMatrix();
 		modelStack.PopMatrix();
 		break;
 	}
