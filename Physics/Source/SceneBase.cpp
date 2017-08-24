@@ -120,25 +120,25 @@ void SceneBase::Init()
 	meshList[GEO_MOUNTAIN]->textureID = LoadTGA("Image//Background/mountain.tga");
 
 	//Background Fire
-	meshList[GEO_BACKGROUND_FIRE] = MeshBuilder::GenerateSpriteAnimation("sprite background fire", 1, 9, 1.0f);
-	meshList[GEO_BACKGROUND_FIRE]->textureID = LoadTGA("Image//Background/background_fire_sprite.tga");
+	meshList[GEO_BACKGROUND_FIRE] = MeshBuilder::GenerateSpriteAnimation("sprite background fire", 1, 5, 1.0f);
+	meshList[GEO_BACKGROUND_FIRE]->textureID = LoadTGA("Image//Background/sprite_background_fire.tga");
 	//Sprite Animation for Background Fire
 	SpriteAnimation* sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_BACKGROUND_FIRE]);
 	if (sa)
 	{
 		sa->m_anim = new Animation();
-		sa->m_anim->Set(0, 8, 0, 1.75f, true);
+		sa->m_anim->Set(0, 4, 0, 0.85f, true);
 	}
 
 	//Foreground Fire
-	meshList[GEO_FOREGROUND_FIRE] = MeshBuilder::GenerateSpriteAnimation("sprite foreground fire", 1, 12, 1.0f);
-	meshList[GEO_FOREGROUND_FIRE]->textureID = LoadTGA("Image//Background/fire_sprite.tga");
+	meshList[GEO_FOREGROUND_FIRE] = MeshBuilder::GenerateSpriteAnimation("sprite foreground fire", 1, 5, 1.0f);
+	meshList[GEO_FOREGROUND_FIRE]->textureID = LoadTGA("Image//Background/sprite_foreground_fire.tga");
 	//Sprite Animation for Foreground Fire
 	SpriteAnimation* sa1 = dynamic_cast<SpriteAnimation*>(meshList[GEO_FOREGROUND_FIRE]);
 	if (sa1)
 	{
 		sa1->m_anim = new Animation();
-		sa1->m_anim->Set(0, 11, 0, 2.75f, true);
+		sa1->m_anim->Set(0, 4, 0, 0.75f, true);
 	}
 
 	meshList[GEO_GROUND] = MeshBuilder::GenerateQuad("ground", Color(1, 1, 1), 1.f);

@@ -50,9 +50,10 @@ void SceneCollision::Init()
 	ft_bulletAlive = 0;
 
 	//Scrolling
-	last_projectile = FetchGO();
-	last_projectile->active = false;
-	launched = 0;
+	projectile = FetchGO();
+	projectile->active = false;
+	launched = 0.f;
+	scrollOffset = 0.f;
 
 	// Power Bar
 	NumMode_tiggered_powerbar = 1;
@@ -351,6 +352,10 @@ void SceneCollision::CollisionResponse(GameObject * go1, GameObject * go2)
 
 void SceneCollision::Update(double dt)
 {
+	//Calculating aspect ratio
+	m_worldHeight = 100.f;
+	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
+	
 	//std::cout << "Count : " << m_objectCount << " / " << m_objRestrict << std::endl;
 	SceneBase::Update(dt);
 
@@ -365,27 +370,6 @@ void SceneCollision::Update(double dt)
 		m_speed += 0.1f;
 	}
 
-	//Update Sprite Animation
-	SpriteAnimation* sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_BACKGROUND_FIRE]);
-	SpriteAnimation* sa1 = dynamic_cast<SpriteAnimation*>(meshList[GEO_FOREGROUND_FIRE]);
-	if (sa && sa1)
-	{
-		sa->Update(dt);
-		sa->m_anim->animActive = true;
-
-		sa1->Update(dt);
-		sa1->m_anim->animActive = true;
-	}
-
-	if (Application::IsKeyPressed('R'))
-	{
-		SceneManager::getInstance()->changeScene(new SceneMainMenu());
-		SetCurrentLevel(1);
-		SetTempScore(0);
-		SetScore(0);
-		upgraded.ResetFile("Text//Speed_Upgrade.txt", "");
-	}
-
 	//Mouse Section
 	static bool bLButtonState = false;
 
@@ -396,25 +380,13 @@ void SceneCollision::Update(double dt)
 	float posX = static_cast<float>(x) / w * m_worldWidth;
 	float posY = (h - static_cast<float>(y)) / h * m_worldHeight;
 
-	int h_temp = 100;
-	int w_temp = 100 * Application::GetWindowWidth() / Application::GetWindowHeight();
-
-	//Mountain resizing
-	mountain->pos.Set(w_temp / 2 + launched, h_temp / 2, -5);
-	mountain->scale.Set(w_temp + 2, h_temp, 1);
-	//Background Fire resizing
-	background_fire->pos.Set(w_temp / 2 + launched, h_temp / 2, -7);
-	background_fire->scale.Set(w_temp + 2, h_temp, 1);
-	//Foreground Fire resizing
-	foreground_fire->pos.Set(w_temp / 2 + launched, h_temp / 2, -3);
-	foreground_fire->scale.Set(w_temp + 2, h_temp, 1);
-
 	//Cannon follows cursor position
 	if (posY > cannon->pos.y)        // Cannon cannot move when cursor is below cannon	
 	{
-		//if (!last_projectile->active)
+		//if (!projectile->active)
 		if (NumMode_tiggered_powerbar == 1)
 		{
+			//Cannon follow cursor
 			aim.Set(posX + launched, posY, 0);
 			aim.Set(aim.x - platform->pos.x, aim.y - platform->pos.y, 0);
 			cannon->dir = aim.Cross(Vector3(0, 0, 1));
@@ -424,41 +396,40 @@ void SceneCollision::Update(double dt)
 
 			guidemarker->scale.y = 1;
 			guidemarker->dir = cannon->dir;
-			//std::cout << aim << std::endl;
 		}		
 		std::cout << guidemarker->pos << std::endl;
 	}
 
-	//std::cout << platform->pos.y << std::endl;
-
-	//if (!bLButtonState && Application::IsMousePressed(0) && !last_projectile->active)
+	//if (!bLButtonState && Application::IsMousePressed(0) && !projectile->active)
 	// powerbar->pos.x = original_position_powerbar; // Update the pos of power bars (do not need this cause i updating the pos of power bar directly)
 
 	// Logic for the aim -> hold -> fire
-	if (!last_projectile->active && NumMode_tiggered_powerbar == 3)
+	if (!projectile->active && NumMode_tiggered_powerbar == 3)
 	{
 		bLButtonState = true;
 		std::cout << "LBUTTON UP" << std::endl;
 
 		if (posY > cannon->pos.y)
 		{
-			last_projectile->active = true;
+			projectile->active = true;
 			//
 			if (i_projectileType == 1)
-				last_projectile->type = GameObject::GO_BALL;
+				projectile->type = GameObject::GO_BALL;
 			else if (i_projectileType == 2)
-				last_projectile->type = GameObject::GO_CUBE;
+				projectile->type = GameObject::GO_CUBE;
 			else if (i_projectileType == 3)
-				last_projectile->type = GameObject::GO_HEXA;
+				projectile->type = GameObject::GO_HEXA;
 			//
-			last_projectile->pos = platform->pos;
-			last_projectile->pos += aim.Normalized() * 0.5;
-			last_projectile->vel = aim;
+
+			//Where projectile will shoot from
+			projectile->pos = platform->pos;
+			projectile->pos += aim.Normalized() * 0.5;
+			projectile->vel = aim;
 
 			// Maths to caulate speed multiplyer
 			float speed_multiplyer = (2 * (powerbar->pos.x / powerrange->scale.x));
 			std::cout << speed_multiplyer << std::endl; // Debug info for speed_multiplyer
-			if (last_projectile->vel.Length() > 10) // 10 is distance
+			if (projectile->vel.Length() > 10) // 10 is distance
 			{
 				int speed = 35;
 
@@ -472,22 +443,18 @@ void SceneCollision::Update(double dt)
 					speed = 55;
 				}
 
-				last_projectile->vel.Normalize();
-				last_projectile->vel *= speed * speed_multiplyer;
+				projectile->vel.Normalize();
+				projectile->vel *= speed * speed_multiplyer;
 			}
 
-			if (last_projectile->vel.y < 0)
-				last_projectile->vel.y *= -1;
+			if (projectile->vel.y < 0)
+				projectile->vel.y *= -1;
 
 			m_ghost->active = false;
-
-			last_projectile->scale.Set(2, 2, 2);
+			projectile->scale.Set(2, 2, 2);
 
 			// Randomize color of ball
-			last_projectile->Color.Set(Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1));
-
-			//Reset the camera position for scrolling
-			launched = 0;
+			projectile->Color.Set(Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1));
 		}
 	}
 	else if (!bLButtonState && Application::IsMousePressed(0) && NumMode_tiggered_powerbar == 1)
@@ -583,39 +550,92 @@ void SceneCollision::Update(double dt)
 		}
 	}
 
-	if (Application::IsKeyPressed(VK_RIGHT))	//Right scrolling 
-	{
-		if (launched >= 0 && launched <= m_worldWidth * 1.5)
-		{
-			launched += 60 * dt;
-		}
-	}
 
-	else if (Application::IsKeyPressed(VK_LEFT))	//Left scrolling 
+	//Manual Scrolling=============================================//
+	if (!projectile->active)
 	{
-		if (launched >= 0 && launched <= m_worldWidth * 1.5)
+		if (Application::IsKeyPressed(VK_RIGHT))	//Right scrolling 
 		{
-			launched -= 60 * dt;
+			if (scrollOffset >= 0 && scrollOffset <= m_worldWidth * 1.5)
+			{
+				scrollOffset += 60 * dt;
+			}
+		}
+		else if (Application::IsKeyPressed(VK_LEFT))	//Left scrolling 
+		{
+			if (scrollOffset > 0 && scrollOffset <= m_worldWidth * 1.5)
+			{
+				scrollOffset -= 60 * dt;
+			}
 		}
 	}
+	if (scrollOffset < 0)
+		scrollOffset = 0;
+	//End of Manual Scrolling======================================//
+
+
+
 
 	//Physics Simulation Section
 	dt *= m_speed;
 
+
 	//Projectile Scrolling========================================//
-	camera.target.x = launched;
-	camera.position.x = launched;
+	camera.target.x = launched + scrollOffset;
+	camera.position.x = launched + scrollOffset;
 
-	if (last_projectile->pos.x > w_temp / 2)	//projectile scrolling
-		launched = last_projectile->pos.x - w_temp / 2;
+	if (projectile->pos.x > m_worldWidth / 2)	//projectile scrolling
+	{
+		launched = projectile->pos.x - m_worldWidth / 2;
+	}
 
-	if (launched > w_temp)	//make camera.position.x stop moving
-		launched = w_temp;
+	if (launched > m_worldWidth)	//make camera.position.x stop moving
+		launched = m_worldWidth;
 
-	//cout << launched << endl;
+	if (!projectile->active)	//reset camera.position.x to initial position
+		launched = 0;
 	//End of Scrolling============================================//
 
 
+
+
+
+	//Background stuff============================================//
+	//Mountain resizing
+	mountain->pos.Set(m_worldWidth / 2 + launched + scrollOffset, m_worldHeight / 2, -5);
+	mountain->scale.Set(m_worldWidth + 2, m_worldHeight, 1);
+	//Background Fire resizing
+	background_fire->pos.Set(m_worldWidth / 2 + launched + scrollOffset, m_worldHeight / 2, -7);
+	background_fire->scale.Set(m_worldWidth + 2, m_worldHeight, 1);
+	//Foreground Fire resizing
+	foreground_fire->pos.Set(m_worldWidth / 2 + launched + scrollOffset, m_worldHeight / 2, -3);
+	foreground_fire->scale.Set(m_worldWidth + 2, m_worldHeight, 1);
+
+	//Update Sprite Animation
+	SpriteAnimation* sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_BACKGROUND_FIRE]);
+	SpriteAnimation* sa1 = dynamic_cast<SpriteAnimation*>(meshList[GEO_FOREGROUND_FIRE]);
+	if (sa && sa1)
+	{
+		sa->Update(dt);
+		sa->m_anim->animActive = true;
+
+		sa1->Update(dt);
+		sa1->m_anim->animActive = true;
+	}
+	//End of Background stuff=====================================//
+
+
+
+
+
+	if (Application::IsKeyPressed('R'))
+	{
+		SceneManager::getInstance()->changeScene(new SceneMainMenu());
+		SetCurrentLevel(1);
+		SetTempScore(0);
+		SetScore(0);
+		upgraded.ResetFile("Text//Speed_Upgrade.txt", "");
+	}
 
 	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 	{
@@ -688,15 +708,15 @@ void SceneCollision::CreateStuff()
 	float w = Application::GetWindowWidth();
 	float h = Application::GetWindowHeight();
 
-	float w_temp = 133;
-	float h_temp = 100;
+	float m_worldWidth = 133;
+	float m_worldHeight = 100;
 
-	GameObject *hexagon = FetchGO();
-	hexagon->type = GameObject::GO_HEXA;	// Left Wall
-	hexagon->active = true;
-	hexagon->dir.Set(1, 0, 0);
-	hexagon->pos.Set(w_temp / 2, h_temp / 2, 0);
-	hexagon->scale.Set(2, 2, 1);
+	//GameObject *hexagon = FetchGO();
+	//hexagon->type = GameObject::GO_HEXA;	// Left Wall
+	//hexagon->active = true;
+	//hexagon->dir.Set(1, 0, 0);
+	//hexagon->pos.Set(m_worldWidth / 2, m_worldHeight / 2, 0);
+	//hexagon->scale.Set(2, 2, 1);
 
 	GameObject *wall = FetchGO();
 	wall->type = GameObject::GO_PLATFORM;	// Left Wall
@@ -738,20 +758,20 @@ void SceneCollision::CreateStuff()
 
 	background_fire = new GameObject(GameObject::GO_BACKGROUND_FIRE);	// Background Fire
 	background_fire->active = true;
-	background_fire->pos.Set(w_temp / 2, h_temp / 2, -7);
-	background_fire->scale.Set(w_temp, h_temp, 1);
+	background_fire->pos.Set(m_worldWidth / 2, m_worldHeight / 2, -7);
+	background_fire->scale.Set(m_worldWidth, m_worldHeight, 1);
 	m_goList.push_back(background_fire);
 
 	mountain = new GameObject(GameObject::GO_MOUNTAIN);		// Background Mountain
 	mountain->active = true;
-	mountain->pos.Set(w_temp / 2, h_temp / 2, -5);
-	mountain->scale.Set(w_temp, h_temp, 1);
+	mountain->pos.Set(m_worldWidth / 2, m_worldHeight / 2, -5);
+	mountain->scale.Set(m_worldWidth, m_worldHeight, 1);
 	m_goList.push_back(mountain);
 
 	foreground_fire = new GameObject(GameObject::GO_FOREGROUND_FIRE);		// Foreground Fire
 	foreground_fire->active = true;
-	foreground_fire->pos.Set(w_temp / 2, h_temp / 2, -3);
-	foreground_fire->scale.Set(w_temp, h_temp, 1);
+	foreground_fire->pos.Set(m_worldWidth / 2, m_worldHeight / 2, -3);
+	foreground_fire->scale.Set(m_worldWidth, m_worldHeight, 1);
 	m_goList.push_back(foreground_fire);
 		
 	{
@@ -773,13 +793,13 @@ void SceneCollision::CreateStuff()
 	{
 		powerbar = new GameObject(GameObject::GO_POWERBAR); // power bar
 		powerbar->active = true;
-		powerbar->pos.Set(original_position_powerbar, h_temp - 2.5, 1);
+		powerbar->pos.Set(original_position_powerbar, m_worldHeight - 2.5, 1);
 		powerbar->scale.Set(2, 5, 1);
 		m_goList.push_back(powerbar);
 
 		powerrange = new GameObject(GameObject::GO_POWERRANGE); // power range
 		powerrange->active = true;
-		powerrange->pos.Set(25, h_temp - 2.5, 0);
+		powerrange->pos.Set(25, m_worldHeight - 2.5, 0);
 		powerrange->scale.Set(50, 5, 1);
 		m_goList.push_back(powerrange);
 
@@ -1046,10 +1066,6 @@ void SceneCollision::Render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	//Calculating aspect ratio
-	m_worldHeight = 100.f;
-	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
-
 	// Projection matrix : Orthographic Projection
 	Mtx44 projection;
 	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
@@ -1075,8 +1091,8 @@ void SceneCollision::Render()
 			RenderGO(go);
 		}
 	}
-	if (m_ghost->active)
-		RenderGO(m_ghost);
+	//if (m_ghost->active)
+	//	RenderGO(m_ghost);
 
 	//if (Application::IsKeyPressed(VK_RETURN))
 	//{

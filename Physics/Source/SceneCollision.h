@@ -76,8 +76,9 @@ protected:
 	GameObject *foreground_fire;
 
 	//Scrolling
-	GameObject *last_projectile;
+	GameObject *projectile;
 	float launched;
+	float scrollOffset;
 
 	// Power Bar
 	GameObject *powerbar;
