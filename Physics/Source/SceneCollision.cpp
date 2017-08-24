@@ -397,7 +397,7 @@ void SceneCollision::Update(double dt)
 			guidemarker->scale.y = 1;
 			guidemarker->dir = cannon->dir;
 		}		
-		std::cout << guidemarker->pos << std::endl;
+		// std::cout << guidemarker->pos << std::endl;
 	}
 
 	//if (!bLButtonState && Application::IsMousePressed(0) && !projectile->active)
@@ -427,7 +427,7 @@ void SceneCollision::Update(double dt)
 			projectile->vel = aim;
 
 			// Maths to caulate speed multiplyer
-			float speed_multiplyer = (2 * (powerbar->pos.x / powerrange->scale.x));
+			float speed_multiplyer = (1 * (powerbar->pos.x / (powerrange->scale.x/2)));
 			std::cout << speed_multiplyer << std::endl; // Debug info for speed_multiplyer
 			if (projectile->vel.Length() > 10) // 10 is distance
 			{
@@ -493,11 +493,12 @@ void SceneCollision::Update(double dt)
 		{
 			is_movement_powerbar = true;
 		}
-		else if (powerbar->pos.x >= powerrange->scale.x)
+		else if (powerbar->pos.x >= powerrange->scale.x / 2)
 		{
 			is_movement_powerbar = false;
 		}
 	}
+
 	// std::cout << original_position_powerbar << std::endl; // Debug info for power bar position.x
 	static bool bRButtonState = false;
 	if (!bRButtonState && Application::IsMousePressed(1))
@@ -622,6 +623,7 @@ void SceneCollision::Update(double dt)
 		sa1->Update(dt);
 		sa1->m_anim->animActive = true;
 	}
+
 	//End of Background stuff=====================================//
 
 
@@ -791,17 +793,17 @@ void SceneCollision::CreateStuff()
 	}
 	// Power bar
 	{
+		powerrange = new GameObject(GameObject::GO_POWERRANGE); // power range
+		powerrange->active = true;
+		powerrange->pos.Set(0, m_worldHeight - 2.5, 1);
+		powerrange->scale.Set(50, 80, 1);
+		m_goList.push_back(powerrange);
+
 		powerbar = new GameObject(GameObject::GO_POWERBAR); // power bar
 		powerbar->active = true;
 		powerbar->pos.Set(original_position_powerbar, m_worldHeight - 2.5, 1);
-		powerbar->scale.Set(2, 5, 1);
+		powerbar->scale.Set(1, 80, 1);
 		m_goList.push_back(powerbar);
-
-		powerrange = new GameObject(GameObject::GO_POWERRANGE); // power range
-		powerrange->active = true;
-		powerrange->pos.Set(25, m_worldHeight - 2.5, 0);
-		powerrange->scale.Set(50, 5, 1);
-		m_goList.push_back(powerrange);
 
 		guidemarker = new GameObject(GameObject::GO_GUIDEMARKER); // power range
 		guidemarker->active = true;
@@ -1036,16 +1038,18 @@ void SceneCollision::RenderGO(GameObject *go)
 		break;
 	case GameObject::GO_POWERBAR:
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_POWERBAR], true, go->Color);
+		//modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		//modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		//RenderMesh(meshList[GEO_POWERBAR], true, go->Color);
+		RenderMeshOnScreen(meshList[GEO_POWERBAR], go->pos.x, go->pos.y, go->scale.x, go->scale.y, 1);
 		modelStack.PopMatrix();
 		break;
 	case GameObject::GO_POWERRANGE:
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_POWERRANGE], true, go->Color);
+		//modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		//modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		//RenderMesh(meshList[GEO_POWERRANGE], true, go->Color);
+		RenderMeshOnScreen(meshList[GEO_POWERRANGE], go->pos.x, go->pos.y, go->scale.x, go->scale.y, 1);
 		modelStack.PopMatrix();
 		break;
 	case GameObject::GO_GUIDEMARKER:
