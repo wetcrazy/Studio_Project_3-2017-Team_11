@@ -45,6 +45,14 @@ public:
 	void SetTempScore(int score);
 	int GetTempScore();
 
+	//Getting and Setting of currency
+	void SetCurrency(int currency);
+	int GetCurrency();
+
+	//Getting and Setting of temporary currency
+	void SetTempCurrency(int currency);
+	int GetTempCurrency();
+
 protected:
 
 	//Physics
@@ -102,10 +110,12 @@ protected:
 	//TempScore.txt
 	int i_tempScore;
 
+	//TempCurrency.txt
+	int i_tempCurrency;
+
 	LoadTXT loadText;
 
 	int i_projectileType;
-
 };
 
 #endif

@@ -18,6 +18,19 @@ public:
 	//virtual void RenderMenu();
 	virtual void Exit();
 
+	//Setters
+	void SetCurrentLevel(int levelNo);
+	void SetScore(int score);
+	void SetTempScore(int score);
+
+	//Getting and Setting of currency
+	void SetCurrency(int currency);
+	int GetCurrency();
+
+	//Getting and Setting of temporary currency
+	void SetTempCurrency(int currency);
+	int GetTempCurrency();
+
 	void RenderGO(GameObject *go);
 
 	enum UPGRADES_MENU
@@ -29,9 +42,6 @@ public:
 	};
 
 protected:
-	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
-	void RenderMeshOnScreen(Mesh* mesh, float x, float y, int sizex, int sizey, int position);
-
 	//Physics
 	std::vector<GameObject *> m_goList;
 
@@ -44,11 +54,6 @@ protected:
 
 	GameObject* FetchGO();
 
-	//Getter and Setter
-	void SetCurrentLevel(int levelNo);
-	void SetScore(int score);
-	void SetTempScore(int score);
-
 	//UpgradesMenu
 	GameObject *arrows = FetchGO();
 	GameObject *upgradesMenu = FetchGO();
@@ -59,6 +64,13 @@ protected:
 
 	//.txt
 	LoadingUpgrades upgraded;
+
+	//Currency.txt
+	int i_currency;
+
+	//Cost of upgrade
+	int i_cost_speed_upgrade_1;
+	int i_cost_speed_upgrade_2;
 
 	//Options
 	float pressDelay = 0.f;

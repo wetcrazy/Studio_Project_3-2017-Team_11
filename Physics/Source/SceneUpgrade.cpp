@@ -11,6 +11,8 @@
 #include "MeshBuilder.h"
 #include "Mesh.h"
 
+#include <sstream>
+
 #include "SceneManager.h"
 #include "SceneMainMenu.h"
 #include "SceneCollision.h"
@@ -52,6 +54,12 @@ void SceneUpgrade::Init()
 	speed_upgrade_2->active = true;
 	speed_upgrade_2->pos.Set(-10, -10, -5);
 	speed_upgrade_2->scale.Set(1.0f, 1.0f, 1.0f);
+
+	i_currency = GetCurrency();
+
+	//Cost of upgrades
+	i_cost_speed_upgrade_1 = 50;
+	i_cost_speed_upgrade_2 = 100;
 }
 
 GameObject* SceneUpgrade::FetchGO()
@@ -86,6 +94,8 @@ void SceneUpgrade::Update(double dt)
 
 	upgraded.ReadFile("Text//Speed_Upgrade.txt");
 
+	SetCurrency(i_currency);
+
 	pressDelay += (float)dt;
 
 	int h_temp = 100;
@@ -109,6 +119,8 @@ void SceneUpgrade::Update(double dt)
 		SetCurrentLevel(1);
 		SetTempScore(0);
 		SetScore(0);
+		SetCurrency(0);
+		SetTempCurrency(0);
 		upgraded.ResetFile("Text//Speed_Upgrade.txt", "");
 		upgraded.ReadFile("Text//Speed_Upgrade.txt");
 	}
@@ -162,10 +174,23 @@ void SceneUpgrade::Update(double dt)
 				SceneManager::getInstance()->changeScene(new SceneCollision());
 
 			else if (selectOptions == SPEED_UPGRADE_1 && upgraded.speed_upgrade != 1 && upgraded.speed_upgrade != 2)
+			{
+				//Bought upgrade
 				b_speed_upgrade_1 = true;
 
+				//Deduct currency
+				i_currency -= i_cost_speed_upgrade_1;
+			}
+				
+
 			else if (selectOptions == SPEED_UPGRADE_2 && upgraded.speed_upgrade == 1 && upgraded.speed_upgrade != 2)
+			{
+				//Bought upgrade
 				b_speed_upgrade_2 = true;
+
+				//Deduct currency
+				i_currency -= i_cost_speed_upgrade_2;
+			}
 
 			pressDelay = 0.f;
 		}
@@ -288,6 +313,44 @@ void SceneUpgrade::SetTempScore(int tempScore)
 	myFile.close();
 }
 
+void SceneUpgrade::SetCurrency(int currency)
+{
+	ofstream myFile;
+	myFile.open("Text//Currency.txt");
+	myFile << currency << endl;
+	myFile.close();
+}
+
+int SceneUpgrade::GetCurrency()
+{
+	int currency;
+	ifstream myFile;
+	myFile.open("Text//Currency.txt");
+	myFile >> currency;
+	myFile.close();
+
+	return currency;
+}
+
+void SceneUpgrade::SetTempCurrency(int tempCurrency)
+{
+	ofstream myFile;
+	myFile.open("Text//TempCurrency.txt");
+	myFile << tempCurrency << endl;
+	myFile.close();
+}
+
+int SceneUpgrade::GetTempCurrency()
+{
+	int tempCurrency;
+	ifstream myFile;
+	myFile.open("Text//TempCurrency.txt");
+	myFile >> tempCurrency;
+	myFile.close();
+
+	return tempCurrency;
+}
+
 void SceneUpgrade::RenderGO(GameObject *go)
 {
 	switch (go->type)
@@ -356,53 +419,29 @@ void SceneUpgrade::Render()
 			RenderGO(go);
 		}
 	}
-}
 
-void SceneUpgrade::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
-{
-	if (!mesh || mesh->textureID <= 0) //Proper error check
-		return;
+	std::ostringstream ss;
 
-	glDisable(GL_DEPTH_TEST);
+	ss.str(std::string());
+	ss.precision(5);
+	ss << "Currency: " << GetCurrency();
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 0);
 
-	Mtx44 ortho;
-	ortho.SetToOrtho(0, 80, 0, 60, -10, 10); //size of screen UI
-	projectionStack.PushMatrix();
-	projectionStack.LoadMatrix(ortho);
-	viewStack.PushMatrix();
-	viewStack.LoadIdentity(); //No need camera for ortho mode
-	modelStack.PushMatrix();
-	modelStack.LoadIdentity(); //Reset modelStack
-	modelStack.Scale(size, size, size);
-	modelStack.Translate(x, y, 0);
-
-	projectionStack.PopMatrix();
-	viewStack.PopMatrix();
-	modelStack.PopMatrix();
-}
-
-void SceneUpgrade::RenderMeshOnScreen(Mesh* mesh, float x, float y, int sizex, int sizey, int position)
-{
-	glDisable(GL_DEPTH_TEST);
-	Mtx44 ortho;
-	ortho.SetToOrtho(0, 80, 0, 60, -10, 10); //size of screen UI
-	projectionStack.PushMatrix();
-	projectionStack.LoadMatrix(ortho);
-	viewStack.PushMatrix();
-	viewStack.LoadIdentity(); //No need camera for ortho mode
-	modelStack.PushMatrix();
-	modelStack.LoadIdentity();
-
-	//to do: scale and translate accordingly
-	modelStack.Scale(sizex, sizey, position);
-	modelStack.Translate(x + 0.5f, y + 0.5f, 0);
-
-	RenderMesh(mesh, false); //UI should not have light
-	projectionStack.PopMatrix();
-	viewStack.PopMatrix();
-	modelStack.PopMatrix();
-
-	glEnable(GL_DEPTH_TEST);
+	switch (selectOptions)
+	{
+	case SPEED_UPGRADE_1:	
+		ss.str(std::string());
+		ss.precision(5);
+		ss << "Cost: " << i_cost_speed_upgrade_1;
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 3);
+		break;
+	case SPEED_UPGRADE_2:
+		ss.str(std::string());
+		ss.precision(5);
+		ss << "Cost: " << i_cost_speed_upgrade_2;
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 3);
+		break;
+	}
 }
 
 void SceneUpgrade::Exit()

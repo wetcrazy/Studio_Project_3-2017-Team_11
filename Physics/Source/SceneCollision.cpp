@@ -64,6 +64,7 @@ void SceneCollision::Init()
 
 	i_CurrentLevel = GetCurrentLevel();
 	i_tempScore = GetScore();
+	i_tempCurrency = GetCurrency();
 
 	CreateStuff();
 	CreateLevel(i_CurrentLevel);
@@ -327,7 +328,8 @@ void SceneCollision::CollisionResponse(GameObject * go1, GameObject * go2)
 		go2->active = false;
 		m_objectCount--;
 		fortCount--;
-		i_tempScore++;
+		i_tempScore += 50;
+		i_tempCurrency += 50;
 		NumMode_tiggered_powerbar = 1;
 		break;
 	}
@@ -360,6 +362,7 @@ void SceneCollision::Update(double dt)
 	SceneBase::Update(dt);
 
 	SetTempScore(i_tempScore);
+	SetTempCurrency(i_tempCurrency);
 
 	if (Application::IsKeyPressed('9'))
 	{
@@ -636,6 +639,8 @@ void SceneCollision::Update(double dt)
 		SetCurrentLevel(1);
 		SetTempScore(0);
 		SetScore(0);
+		SetTempCurrency(0);
+		SetCurrency(0);
 		upgraded.ResetFile("Text//Speed_Upgrade.txt", "");
 	}
 
@@ -700,6 +705,8 @@ void SceneCollision::Update(double dt)
 		SceneManager::getInstance()->changeScene(new SceneUpgrade());
 		SetTempScore(i_tempScore);
 		SetScore(i_tempScore);
+		SetTempCurrency(i_tempCurrency);
+		SetCurrency(i_tempCurrency);
 		i_CurrentLevel++;
 		SetCurrentLevel(i_CurrentLevel);
 	}
@@ -924,6 +931,44 @@ int SceneCollision::GetTempScore()
 	myFile.close();
 
 	return tempScore;
+}
+
+void SceneCollision::SetCurrency(int currency)
+{
+	ofstream myFile;
+	myFile.open("Text//Currency.txt");
+	myFile << currency << endl;
+	myFile.close();
+}
+
+int SceneCollision::GetCurrency()
+{
+	int currency;
+	ifstream myFile;
+	myFile.open("Text//Currency.txt");
+	myFile >> currency;
+	myFile.close();
+
+	return currency;
+}
+
+void SceneCollision::SetTempCurrency(int tempCurrency)
+{
+	ofstream myFile;
+	myFile.open("Text//TempCurrency.txt");
+	myFile << tempCurrency << endl;
+	myFile.close();
+}
+
+int SceneCollision::GetTempCurrency()
+{
+	int tempCurrency;
+	ifstream myFile;
+	myFile.open("Text//TempCurrency.txt");
+	myFile >> tempCurrency;
+	myFile.close();
+
+	return tempCurrency;
 }
 
 void SceneCollision::RenderGO(GameObject *go)
