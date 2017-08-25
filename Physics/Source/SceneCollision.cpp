@@ -353,8 +353,8 @@ void SceneCollision::CollisionResponse(GameObject * go1, GameObject * go2)
 
 		m_objectCount--;
 		fortCount--;
-		i_tempScore += 50;
-		i_tempCurrency += 50;
+		i_tempScore += 10;
+		i_tempCurrency += 2;
 		NumMode_tiggered_powerbar = 1;
 		b_raceConfirmed = false;
 		b_abilityUsed = false;
@@ -458,18 +458,18 @@ void SceneCollision::Update(double dt)
 			projectile->pos += aim.Normalized() * 0.5;
 			projectile->vel = aim;
 		
-			// Maths to caulate speed multiplyer
+			//Maths to calculate speed multiplyer
 			float speed_multiplyer;
 			{
-				int speed_mutiplyer_multiplyer = 1;
+				float speed_mutiplyer_multiplyer = 1.f;
 				if (upgraded.speed_multiplyer_upgrade == 1)
 				{
-					speed_mutiplyer_multiplyer = 1;
+					speed_mutiplyer_multiplyer = 1.5f;
 				}
 
 				else if (upgraded.speed_multiplyer_upgrade == 2)
 				{
-					speed_mutiplyer_multiplyer = 2;
+					speed_mutiplyer_multiplyer = 2.f;
 				}
 				speed_multiplyer = (speed_mutiplyer_multiplyer * (powerbar->pos.x / (powerrange->scale.x - 17)));
 				std::cout << speed_mutiplyer_multiplyer << std::endl; // Debug info for speed_multiplyer
@@ -480,12 +480,12 @@ void SceneCollision::Update(double dt)
 			{
 				if (upgraded.speed_upgrade == 1)
 				{
-					speed = 45;
+					speed = 55;
 				}
 
 				else if (upgraded.speed_upgrade == 2)
 				{
-					speed = 55;
+					speed = 65;
 				}
 
 				projectile->vel.Normalize();
@@ -665,6 +665,7 @@ void SceneCollision::Update(double dt)
 	}
 	//End of Cannon Key Binding====================================//
 	
+
 	//Manual Scrolling=============================================//
 	if (!projectile->active)
 	{
@@ -694,8 +695,6 @@ void SceneCollision::Update(double dt)
 	dt *= m_speed;
 
 
-
-
 	//Projectile Scrolling========================================//
 	camera.target.x = launched + scrollOffset;
 	camera.position.x = launched + scrollOffset;
@@ -711,9 +710,6 @@ void SceneCollision::Update(double dt)
 	if (!projectile->active)	//reset camera.position.x to initial position
 		launched = 0;
 	//End of Scrolling============================================//
-
-
-
 
 
 	//Background stuff============================================//
@@ -741,9 +737,7 @@ void SceneCollision::Update(double dt)
 	//End of Background stuff=====================================//
 
 
-
-
-
+	//Press R to reset
 	if (Application::IsKeyPressed('R'))
 	{
 		SceneManager::getInstance()->changeScene(new SceneMainMenu());
@@ -752,7 +746,8 @@ void SceneCollision::Update(double dt)
 		SetScore(0);
 		SetTempCurrency(0);
 		SetCurrency(0);
-		upgraded.ResetFile("Text//Speed_Upgrade.txt", "");
+		upgraded.DeleteTextFile("Text//Speed_Upgrade.txt");
+		upgraded.DeleteTextFile("Text//Speed_Multiplyer_Upgrade.txt");
 	}
 
 	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)

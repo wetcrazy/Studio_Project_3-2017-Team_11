@@ -162,10 +162,16 @@ void SceneBase::Init()
 	//Upgrades Menu
 	meshList[GEO_UPGRADESMENU] = MeshBuilder::GenerateQuad("upgradesmenu", Color(1, 1, 1), 1);
 	meshList[GEO_UPGRADESMENU]->textureID = LoadTGA("Image//Menu/Upgrades/upgrades.tga");
+	meshList[GEO_UPGRADESMENU_NEXTPAGE] = MeshBuilder::GenerateQuad("upgradesmenu_nextpage", Color(1, 1, 1), 1);
+	meshList[GEO_UPGRADESMENU_NEXTPAGE]->textureID = LoadTGA("Image//Menu/Upgrades/upgrades_page2.tga");
 	meshList[GEO_SPEED_UPGRADE_1] = MeshBuilder::GenerateQuad("upgradesmenu_g1", Color(1, 1, 1), 1);
 	meshList[GEO_SPEED_UPGRADE_1]->textureID = LoadTGA("Image//Menu/Upgrades/upgrades_g1.tga");
 	meshList[GEO_SPEED_UPGRADE_2] = MeshBuilder::GenerateQuad("upgradesmenu_g2", Color(1, 1, 1), 1);
 	meshList[GEO_SPEED_UPGRADE_2]->textureID = LoadTGA("Image//Menu/Upgrades/upgrades_g2.tga");
+	meshList[GEO_SPEED_MULTIPLYER_UPGRADE_1] = MeshBuilder::GenerateQuad("upgradesmenu_m1", Color(1, 1, 1), 1);
+	meshList[GEO_SPEED_MULTIPLYER_UPGRADE_1]->textureID = LoadTGA("Image//Menu/Upgrades/upgrades_m1.tga");
+	meshList[GEO_SPEED_MULTIPLYER_UPGRADE_2] = MeshBuilder::GenerateQuad("upgradesmenu_m2", Color(1, 1, 1), 1);
+	meshList[GEO_SPEED_MULTIPLYER_UPGRADE_2]->textureID = LoadTGA("Image//Menu/Upgrades/upgrades_m2.tga");
 
 	// HighScore Menu
 	meshList[GEO_HIGHSCOREMENU] = MeshBuilder::GenerateQuad("highscore", Color(1, 1, 1));

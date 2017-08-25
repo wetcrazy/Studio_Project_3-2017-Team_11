@@ -17,7 +17,7 @@ public:
 
 	//Speed Upgrades
 	int speed_upgrade;
-	// Speed Multiplyer Upgrades
+	//Speed Multiplyer Upgrades
 	int speed_multiplyer_upgrade;
 
 	//Temp
@@ -26,7 +26,6 @@ public:
 	void ReadFile(string fileName);
 	void DeleteTextFile(string fileName);
 	void WriteFile(string fileName, string type, int number);
-	void ResetFile(string fileName, string reset);
 };
 
 #endif

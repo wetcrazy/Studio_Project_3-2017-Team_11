@@ -29,7 +29,8 @@ void LoadingUpgrades::ReadFile(string fileName)
 					//Speed upgrades
 					if (tempString.substr(0, i) == "<Speed>")
 						speed_upgrade = stoi(tempString.substr(i + 1));
-					if (tempString.substr(0, 1) == "<Speed_Multiplyer>")
+					//Speed multiplyer upgrades
+					if (tempString.substr(0, i) == "<Speed_Multiplyer>")
 						speed_multiplyer_upgrade = stoi(tempString.substr(i + 1));
 				}
 			}
@@ -62,13 +63,5 @@ void LoadingUpgrades::WriteFile(string fileName, string type, int number)
 		output << "<Speed_Multiplyer>=" << number << endl;
 	}
 
-	output.close();
-}
-
-void LoadingUpgrades::ResetFile(string fileName, string reset)
-{
-	ofstream output;
-	output.open(fileName);
-	output << reset << endl;
 	output.close();
 }
