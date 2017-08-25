@@ -252,6 +252,7 @@ void SceneUpgrade::Update(double dt)
 
 		//.txt
 		upgraded.WriteFile("Text//Speed_Upgrade.txt", "Speed", 1);
+		upgraded.WriteFile("Text//Speed_Upgrade.txt", "Speed_Multiplyer", 1);
 	}
 	//Buying second upgrade
 	if (b_speed_upgrade_2)
@@ -264,6 +265,7 @@ void SceneUpgrade::Update(double dt)
 
 		//.txt
 		upgraded.WriteFile("Text//Speed_Upgrade.txt", "Speed", 2);
+		upgraded.WriteFile("Text//Speed_Upgrade.txt", "Speed_Multiplyer", 2);
 	}
 
 	//Bought first upgrade

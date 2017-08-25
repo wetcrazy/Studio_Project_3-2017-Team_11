@@ -17,6 +17,8 @@ public:
 
 	//Speed Upgrades
 	int speed_upgrade;
+	// Speed Multiplyer Upgrades
+	int speed_multiplyer_upgrade;
 
 	//Temp
 	string tempString;

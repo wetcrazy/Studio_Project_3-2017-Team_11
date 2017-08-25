@@ -29,6 +29,8 @@ void LoadingUpgrades::ReadFile(string fileName)
 					//Speed upgrades
 					if (tempString.substr(0, i) == "<Speed>")
 						speed_upgrade = stoi(tempString.substr(i + 1));
+					if (tempString.substr(0, 1) == "<Speed_Multiplyer>")
+						speed_multiplyer_upgrade = stoi(tempString.substr(i + 1));
 				}
 			}
 		}
@@ -54,6 +56,10 @@ void LoadingUpgrades::WriteFile(string fileName, string type, int number)
 	if (type == "Speed")
 	{
 		output << "<Speed>=" << number << endl;
+	}
+	else if (type == "Speed_Multiplyer")
+	{
+		output << "<Speed_Multiplyer>=" << number << endl;
 	}
 
 	output.close();

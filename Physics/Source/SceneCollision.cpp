@@ -429,10 +429,25 @@ void SceneCollision::Update(double dt)
 			projectile->pos = platform->pos;
 			projectile->pos += aim.Normalized() * 0.5;
 			projectile->vel = aim;
-
+		
 			// Maths to caulate speed multiplyer
-			float speed_multiplyer = (1 * (powerbar->pos.x / (powerrange->scale.x - 17)));
-			// std::cout << speed_multiplyer << std::endl; // Debug info for speed_multiplyer
+			float speed_multiplyer;
+			{
+				int speed_mutiplyer_multiplyer = 1;
+				if (upgraded.speed_multiplyer_upgrade == 1)
+				{
+					speed_mutiplyer_multiplyer = 1;
+				}
+
+				else if (upgraded.speed_multiplyer_upgrade == 2)
+				{
+					speed_mutiplyer_multiplyer = 2;
+				}
+				speed_multiplyer = (speed_mutiplyer_multiplyer * (powerbar->pos.x / (powerrange->scale.x - 17)));
+				std::cout << speed_mutiplyer_multiplyer << std::endl; // Debug info for speed_multiplyer
+			}
+			
+			
 			if (projectile->vel.Length() > 10) // 10 is distance
 			{
 				int speed = 35;
