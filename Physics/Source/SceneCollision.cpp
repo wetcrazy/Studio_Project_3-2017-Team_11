@@ -543,16 +543,14 @@ void SceneCollision::Update(double dt)
 
 	if (Application::IsKeyPressed(VK_SPACE))
 	{
-		for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+		if (projectile->active)
 		{
-			GameObject *go = (GameObject *)*it;
-			if (go->active && go->type == GameObject::GO_HEXA)
-			{
-				go->active = false;
-				m_objectCount = 0;
-			}
+			projectile->active = false;
+			NumMode_tiggered_powerbar = 1;
+			m_objectCount = 0;
 		}
 	}
+	
 
 
 	//Manual Scrolling=============================================//
