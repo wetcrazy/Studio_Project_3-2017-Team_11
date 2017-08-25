@@ -581,14 +581,14 @@ void SceneCollision::Update(double dt)
 	{
 		if (Application::IsKeyPressed(VK_RIGHT))	//Right scrolling 
 		{
-			if (scrollOffset >= 0 && scrollOffset <= m_worldWidth * 1.5)
+			if (scrollOffset >= 0 && scrollOffset <= 200)
 			{
 				scrollOffset += 60 * dt;
 			}
 		}
 		else if (Application::IsKeyPressed(VK_LEFT))	//Left scrolling 
 		{
-			if (scrollOffset >= 0 && scrollOffset <= m_worldWidth * 1.5)
+			if (scrollOffset >= 0 && scrollOffset <= 200)
 			{
 				scrollOffset -= 60 * dt;
 			}
@@ -597,8 +597,8 @@ void SceneCollision::Update(double dt)
 
 	if (scrollOffset < 0)
 		scrollOffset = 0;
-	else if (scrollOffset > m_worldWidth * 1.5)
-		scrollOffset = m_worldWidth * 1.5;
+	else if (scrollOffset > 200)
+		scrollOffset = 200;
 	//End of Manual Scrolling======================================//
 
 
