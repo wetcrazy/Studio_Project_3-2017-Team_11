@@ -92,6 +92,7 @@ protected:
 	GameObject *powerbar;
 	GameObject *powerrange;
 	GameObject *guidemarker;
+	GameObject *powerbg;
 	size_t NumMode_tiggered_powerbar;
 	bool is_movement_powerbar;
 	float original_position_powerbar;

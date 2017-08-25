@@ -173,8 +173,17 @@ void SceneBase::Init()
 
 	// Power Bar
 	meshList[GEO_POWERRANGE] = MeshBuilder::GenerateQuad("POWERBAR", Color(1, 0, 1), 1);
-	meshList[GEO_POWERBAR] = MeshBuilder::GenerateQuad("POWERBAR", Color(1, 1, 1), 1);
+	meshList[GEO_POWERRANGE]->textureID = LoadTGA("Image//Powerbar/power_bar.tga");
+
+	meshList[GEO_POWERRANGE_FIRED] = MeshBuilder::GenerateQuad("POWERBAR_FIRED", Color(1, 0, 1), 1);
+	meshList[GEO_POWERRANGE_FIRED]->textureID = LoadTGA("Image//Powerbar/power_bar_blast.tga");
+
+	meshList[GEO_POWERBAR] = MeshBuilder::GenerateQuad("POWERBAR", Color(0, 0, 0), 1);
+
 	meshList[GEO_GUIDEMARKER] = MeshBuilder::GenerateQuad("POWERBAR", Color(1, 1, 1), 1);
+
+	meshList[GEO_POWER_BG] = MeshBuilder::GenerateQuad("POWERBAR_BG", Color(1, 1, 1), 1);
+	meshList[GEO_POWER_BG]->textureID = LoadTGA("Image//Powerbar/marker.tga");
 
 	bLightEnabled = true;
 }

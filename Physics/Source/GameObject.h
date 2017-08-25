@@ -51,6 +51,8 @@ struct GameObject
 		GO_POWERBAR,
 		GO_POWERRANGE,
 		GO_GUIDEMARKER,
+		GO_POWER_BG,
+		GO_POWERRANGE_FIRED,
 
 		GO_TOTAL, //must be last
 	};
