@@ -550,7 +550,30 @@ void SceneCollision::Update(double dt)
 			m_objectCount = 0;
 		}
 	}
-	
+
+
+
+
+	//Cannon Key Binding===========================================// //use cannon->dir
+	if (Application::IsKeyPressed('W')) //Upward rotation
+	{
+
+		if (cannon->pos.y >= 0 && cannon->pos.y <= 85) //Cannon rotate limit
+		{
+			aim.Set(aim.x - platform->pos.x, aim.y - platform->pos.y, 0);
+			cannon->pos.y += 30 * dt;
+		}
+	}
+	else if (Application::IsKeyPressed('S')) //Downward rotation
+	{
+		if (cannon->pos.y >= 0 && cannon->pos.y <= 85) //Cannon rotate limit
+		{
+			cannon->pos.y -= 30 * dt;
+		}
+	}
+	//End of Cannon Key Binding====================================//
+
+
 
 
 	//Manual Scrolling=============================================//
@@ -565,14 +588,17 @@ void SceneCollision::Update(double dt)
 		}
 		else if (Application::IsKeyPressed(VK_LEFT))	//Left scrolling 
 		{
-			if (scrollOffset > 0 && scrollOffset <= m_worldWidth * 1.5)
+			if (scrollOffset >= 0 && scrollOffset <= m_worldWidth * 1.5)
 			{
 				scrollOffset -= 60 * dt;
 			}
 		}
 	}
+
 	if (scrollOffset < 0)
 		scrollOffset = 0;
+	else if (scrollOffset > m_worldWidth * 1.5)
+		scrollOffset = m_worldWidth * 1.5;
 	//End of Manual Scrolling======================================//
 
 
@@ -580,6 +606,8 @@ void SceneCollision::Update(double dt)
 
 	//Physics Simulation Section
 	dt *= m_speed;
+
+
 
 
 	//Projectile Scrolling========================================//
@@ -624,7 +652,6 @@ void SceneCollision::Update(double dt)
 		sa1->Update(dt);
 		sa1->m_anim->animActive = true;
 	}
-
 	//End of Background stuff=====================================//
 
 
