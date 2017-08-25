@@ -1,128 +1,81 @@
 #include "ClassRace.h"
 
-// ============================
-// Construtor and Desconstrutor
-Race::Race() // Set them to 0
+Race::Race()
 {
-	color.Set(0.0f, 0.0f, 0.0f);
-	scale.Set(0.0f, 0.0f, 0.0f);
-	pos.Set(0.0f, 0.0f, 0.0f);
-	target.Set(0.0f, 0.0f, 0.0f);
-	dir.Set(0.0f, 0.0f, 0.0f);
-	vel.Set(0.0f, 0.0f, 0.0f);
-	mass = 0.0f;
+	this->tempRace_N.type = GameObject::GO_BALL;
+	this->tempRace_N.active = false;
+	this->tempRace_N.dir.SetZero();
+	this->tempRace_N.pos.SetZero();
+	this->tempRace_N.scale.Set(1, 1, 1);
+	this->tempRace_N.Color.Set(0.5f, 0.5f, 0.5f);
+	this->tempRace_N.mass = 1.0f;
+	this->tempRace_N.momentOfInertia = 1.0f;
+	this->tempRace_N.angularVeloctiy = 1.0f;
+
 }
 
 Race::~Race()
 {
-
 }
-// ============================
 
-// Get variables vec3
-//Inputs = (1,Color)(2,Scale)(3,Pos)(4,Target)(5,Direction)(6,Velocity)(7,Mass)
-Vector3 Race::Getter_Vec3(int input)
+Race::Race(GameObject temp)
 {
-	Vector3 output;
-	switch (input)
+	this->tempRace_N = temp;
+}
+
+void Race::f_setDraft(GameObject *temp)
+{
+	this->tempRace_PTR = temp;
+}
+
+string Race::sf_CheckRace_N()
+{
+	if (this->tempRace_N.type == GameObject::GO_BALL)
+		return "Ball is True!\n";
+	else if (this->tempRace_N.type == GameObject::GO_CUBE)
+		return "Cube is True!\n";
+	else if (this->tempRace_N.type == GameObject::GO_HEXA)
+		return "Hexa is True!\n";
+	else
+		return "sf_CheckRace_N() Error!\n";
+}
+
+string Race::sf_CheckRace_PTR()
+{
+	if (this->tempRace_PTR->type == GameObject::GO_BALL)
+		return "BALL IS TRUE!\n";
+	else if (this->tempRace_PTR->type == GameObject::GO_CUBE)
+		return "CUBE IS TRUE!\n";
+	else if (this->tempRace_PTR->type == GameObject::GO_HEXA)
+		return "HEXA IS TRUE!\n";
+	else
+		return "sf_CheckRace_PTR() Error!\n";
+}
+
+bool Race::b_CheckRace_GENERAL()
+{
+	if (this->tempRace_PTR->type == GameObject::GO_BALL)
+		return true;
+	else if (this->tempRace_PTR->type == GameObject::GO_CUBE)
+		return true;
+	else if (this->tempRace_PTR->type == GameObject::GO_HEXA)
+		return true;
+	else
+		return false;
+}
+
+Vector3 Race::vf_getVectAbility(int i_projectileType)
+{
+	if (i_projectileType == 1)
 	{
-	case 1:
-		output = this->color;
-		break;
-	case 2:
-		output = this->scale;
-		break;
-	case 3:
-		output = this->pos;
-		break;
-	case 4:
-		output = this->target;
-		break;
-	case 5:
-		output = this->dir;
-		break;
-	case 6:
-		output = this->vel;
-		break;
-	default:
-		break;
+		return Vector3(1, 1, 1);
 	}
-	return output;
-}
-
-// Get variables float
-// Inputs = (1, Mass)
-float Race::Getter_float(int input)
-{
-	float output;
-	switch (input)
+	else if (i_projectileType == 2)
 	{
-	case 1:
-		output = this->mass;
-		break;
-	default:
-		break;
+		return Vector3(5, 5, 5);
 	}
-	return output;
+	else
+		return Vector3(1, 1, 1);
 }
 
-// Set all variables
-// Inputs = (1,Color)(2,Scale)(3,Pos)(4,Target)(5,Direction)(6,Velocity);
-void Race::SetAll(Vector3 color, Vector3 scale, Vector3 pos, Vector3 target, Vector3 dir, Vector3 vel, float mass)
-{
-	this->color = color;
-	this->scale = scale;
-	this->pos = pos;
-	this->target = target;
-	this->dir = dir;
-	this->vel = vel;
-	this->mass = mass;
-}
 
-// Setters
-void Race::Set_Color(Vector3 color)
-{
-	this->color = color;
-}
-
-void Race::Set_Scale(Vector3 scale)
-{
-	this->scale = scale;
-}
-
-void Race::Set_Pos(Vector3 pos)
-{
-	this->pos = pos;
-}
-
-void Race::Set_Target(Vector3 target)
-{
-	this->target = target;
-}
-
-void Race::Set_Dir(Vector3 dir)
-{
-	this->dir = dir;
-}
-
-void Race::Set_Vel(Vector3 vel)
-{
-	this->vel = vel;
-}
-
-void Race::Set_Mass(float mass)
-{
-	this->mass = mass;
-}
-
-// Reset to 0 for everything
-void Race::ResetRace()
-{
-	this->color.Set(0.0f, 0.0f, 0.0f);
-	this->scale.Set(0.0f, 0.0f, 0.0f);
-	this->pos.Set(0.0f, 0.0f, 0.0f);
-	this->target.Set(0.0f, 0.0f, 0.0f);
-	this->dir.Set(0.0f, 0.0f, 0.0f);
-	this->vel.Set(0.0f, 0.0f, 0.0f);
-	this->mass = 0.0f;
-}

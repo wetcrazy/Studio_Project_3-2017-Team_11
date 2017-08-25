@@ -8,9 +8,6 @@
 #include "SceneHighScore.h"
 #include "SceneMainMenu.h"
 #include "ClassStorage.h"
-#include "RaceCircle.h"
-#include "RaceHexagon.h"
-#include "RaceSquare.h"
 
 SceneHighScore::SceneHighScore()
 {
@@ -38,24 +35,24 @@ void SceneHighScore::Init()
 	QuickSort(&highscore, 1, highscore.size() - 1);
 	WriteCSV(file_path, highscore);
 
-	// testing codes
-	Circle circle;
-	circle.SetAll(Vector3(1.0f, 1.0f, 1.0f), Vector3(1.0f, 1.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f), Vector3(1.0f, 1.0f, 0.0f), 5.0f);
-	circle.Abilites();
-	circle.Set_Mass(1.0f);
-	circle.ResetRace();
+	//// testing codes
+	//Circle circle;
+	//circle.SetAll(Vector3(1.0f, 1.0f, 1.0f), Vector3(1.0f, 1.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f), Vector3(1.0f, 1.0f, 0.0f), 5.0f);
+	//circle.Abilites();
+	//circle.Set_Mass(1.0f);
+	//circle.ResetRace();
 
-	Square square;
-	square.SetAll(Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f, 1.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f), Vector3(1.0f, 1.0f, 0.0f), 5.0f);
-	square.Abilites();
-	square.Set_Piercing(false);
-	square.ResetRace();
+	//Square square;
+	//square.SetAll(Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f, 1.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f), Vector3(1.0f, 1.0f, 0.0f), 5.0f);
+	//square.Abilites();
+	//square.Set_Piercing(false);
+	//square.ResetRace();
 
-	Hexagon hexagon;
-	hexagon.SetAll(Vector3(1.0f, 1.0f, 1.0f), Vector3(1.0f, 1.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f), Vector3(1.0f, 1.0f, 0.0f), 5.0f);
-	hexagon.Abilites();
-	hexagon.Set_Spilt(false);
-	hexagon.ResetRace();
+	//Hexagon hexagon;
+	//hexagon.SetAll(Vector3(1.0f, 1.0f, 1.0f), Vector3(1.0f, 1.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f), Vector3(1.0f, 1.0f, 0.0f), 5.0f);
+	//hexagon.Abilites();
+	//hexagon.Set_Spilt(false);
+	//hexagon.ResetRace();
 }
 
 void SceneHighScore::CreateStuff()

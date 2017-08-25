@@ -35,7 +35,7 @@ void SceneCollision::Init()
 	initialKE = 0;
 	finalKE = 0;
 
-	i_projectileType = 3;
+	i_projectileType = 1;
 
 	if (i_projectileType == 1)
 		m_ghost = new GameObject(GameObject::GO_BALL);
@@ -60,7 +60,10 @@ void SceneCollision::Init()
 	original_position_powerbar = 8;
 	is_movement_powerbar = true;
 
-	//LoadTXT loadtxt;
+	b_raceConfirmed = false;
+	rot = 5.f;
+	speed = 35;
+	b_abilityUsed = false;
 
 	i_CurrentLevel = GetCurrentLevel();
 	i_tempScore = GetScore();
@@ -128,6 +131,27 @@ bool SceneCollision::CheckCollision(GameObject *go1, GameObject *go2, float dt)
 
 		return vel.Dot(dis) < 0 &&
 			dis.LengthSquared() < (r1 + r2) * (r1 + r2);
+	}
+	case GameObject::GO_CUBE:
+	{
+		Vector3 w0 = go2->pos;
+		Vector3 b1 = go1->pos;
+
+		float r = go1->scale.x;
+		float h = go2->scale.x;
+		float l = go2->scale.y;
+
+		Vector3 N = go2->dir;
+		Vector3 NP = go2->dir.Cross(Vector3(0, 0, 1));
+
+		Vector3 relativePos = b1 - w0;
+		if (relativePos.Dot(N) > 0)
+			N = -N;
+
+		return (go1->vel.Dot(N) > 0 &&
+			((abs((w0 - b1).Dot(N)) < r + h * 0.5f && abs((w0 - b1).Dot(NP)) < r + l * 0.5f)
+				||
+				(abs((w0 - b1).Dot(N)) < r + h * 0.5f && abs((w0 - b1).Dot(NP)) < r + l * 0.5f)));
 	}
 	case GameObject::GO_WALL:
 	{
@@ -326,11 +350,15 @@ void SceneCollision::CollisionResponse(GameObject * go1, GameObject * go2)
 		go2->vel = u2 + ((2 * m2) / (m1 + m2)) * (u1N - u2N);
 		go1->active = false;
 		go2->active = false;
+
 		m_objectCount--;
 		fortCount--;
 		i_tempScore += 50;
 		i_tempCurrency += 50;
 		NumMode_tiggered_powerbar = 1;
+		b_raceConfirmed = false;
+		b_abilityUsed = false;
+
 		break;
 	}
 	case GameObject::GO_PILLAR:
@@ -450,8 +478,6 @@ void SceneCollision::Update(double dt)
 			
 			if (projectile->vel.Length() > 10) // 10 is distance
 			{
-				int speed = 35;
-
 				if (upgraded.speed_upgrade == 1)
 				{
 					speed = 45;
@@ -476,6 +502,13 @@ void SceneCollision::Update(double dt)
 			projectile->Color.Set(Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1));
 
 			powerrange->type = GameObject::GO_POWERRANGE_FIRED; // change power range ui into fired form
+		
+			b_abilityUsed = false;
+
+			//Set Racial Ability
+			raceTemp.f_setDraft(projectile);
+			raceTemp.sf_CheckRace_PTR();
+			b_raceConfirmed = raceTemp.b_CheckRace_GENERAL();
 		}
 	}
 	else if (!bLButtonState && Application::IsMousePressed(0) && NumMode_tiggered_powerbar == 1)
@@ -569,10 +602,50 @@ void SceneCollision::Update(double dt)
 			m_objectCount = 0;
 		}
 	}
+	if (b_raceConfirmed)
+		std::cout << "Confirmed!\n";
+	else
+		std::cout << "Unconfirmed!\n";
+	//
+	if (projectile->active && !bLButtonState && Application::IsMousePressed(0) && !b_abilityUsed)
+	{
+		if (i_projectileType == 1)
+		{
+			projectile->scale.x += raceTemp.vf_getVectAbility(1).x;
+			projectile->scale.y += raceTemp.vf_getVectAbility(1).y;
+			b_abilityUsed = true;
+			std::cout << "Ability used 1.\n";
+		}
+		else if (i_projectileType == 2)
+		{
+			float speed_multiplyer = (1 * (powerbar->pos.x / (powerrange->scale.x / 2)));
+			speed += 10;
+			if (upgraded.speed_upgrade == 1)
+			{
+				speed = 55;
+			}
 
-
-
-
+			else if (upgraded.speed_upgrade == 2)
+			{
+				speed = 65;
+			}
+			projectile->vel.Normalize();
+			projectile->vel *= speed * speed_multiplyer;
+			projectile->vel += raceTemp.vf_getVectAbility(2) * dt;
+			b_abilityUsed = true;
+			std::cout << speed << std::endl;
+			std::cout << "Ability used 2.\n";
+		}
+		else
+		{
+			std::cout << "Ability used Error!\n";
+		}
+	}
+	else
+	{
+		speed = 45;
+	}
+	//
 	//Cannon Key Binding===========================================// //use cannon->dir
 	if (Application::IsKeyPressed('W')) //Upward rotation
 	{
@@ -591,10 +664,7 @@ void SceneCollision::Update(double dt)
 		}
 	}
 	//End of Cannon Key Binding====================================//
-
-
-
-
+	
 	//Manual Scrolling=============================================//
 	if (!projectile->active)
 	{
@@ -619,9 +689,6 @@ void SceneCollision::Update(double dt)
 	else if (scrollOffset > 200)
 		scrollOffset = 200;
 	//End of Manual Scrolling======================================//
-
-
-
 
 	//Physics Simulation Section
 	dt *= m_speed;
@@ -1034,6 +1101,8 @@ void SceneCollision::RenderGO(GameObject *go)
 	case GameObject::GO_BALL:
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		angle = Math::RadianToDegree(atan2(go->dir.y, go->dir.x));
+		modelStack.Rotate(angle, 0, 0, 1);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_BALL], true, go->Color);
 		modelStack.PopMatrix();
@@ -1041,6 +1110,8 @@ void SceneCollision::RenderGO(GameObject *go)
 	case GameObject::GO_HEXA:
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		angle = Math::RadianToDegree(atan2(go->dir.y, go->dir.x));
+		modelStack.Rotate(angle, 0, 0, 1);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_HEXA], true, go->Color);
 		modelStack.PopMatrix();
@@ -1048,6 +1119,8 @@ void SceneCollision::RenderGO(GameObject *go)
 	case GameObject::GO_CUBE:
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		angle = Math::RadianToDegree(atan2(go->dir.y, go->dir.x));
+		modelStack.Rotate(angle, 0, 0, 1);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_CUBE], true, go->Color);
 		modelStack.PopMatrix();

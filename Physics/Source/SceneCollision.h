@@ -6,6 +6,7 @@
 #include "SceneBase.h"
 #include "LoadingUpgrades.h"
 #include "LoadTXT.h"
+#include "ClassRace.h"
 
 class SceneCollision : public SceneBase
 {
@@ -117,6 +118,14 @@ protected:
 	LoadTXT loadText;
 
 	int i_projectileType;
+	bool b_raceConfirmed;
+	float rot;
+	int speed;
+	bool b_abilityUsed;
+
+	float speed_multiplyer;
+
+	Race raceTemp;
 };
 
 #endif
