@@ -86,6 +86,12 @@ public:
 		GEO_POWER_BG,
 		GEO_POWERRANGE_FIRED,
 
+		// Fail Menu
+		GEO_FAILMENU,
+		
+		// Win Menu
+		GEO_WINMENU,
+
 		NUM_GEOMETRY,
 	};
 	enum UPGRADES_MENU

@@ -57,6 +57,12 @@ struct GameObject
 		GO_POWER_BG,
 		GO_POWERRANGE_FIRED,
 
+		// Fail Menu
+		GO_FAILMENU,
+
+		// Win Menu
+		GO_WINMENU,
+
 		GO_TOTAL, //must be last
 	};
 	GAMEOBJECT_TYPE type;
