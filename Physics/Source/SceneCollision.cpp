@@ -61,7 +61,7 @@ void SceneCollision::Init()
 
 	// Power Bar
 	NumMode_tiggered_powerbar = 1;
-	original_position_powerbar = 9;
+	original_position_powerbar = 10;
 	is_movement_powerbar = true;
 	percentage_of_powerbar = 0;
 
@@ -482,7 +482,7 @@ void SceneCollision::Update(double dt)
 				{
 					speed_mutiplyer_multiplyer = 2.f;
 				}
-				speed_multiplyer = (speed_mutiplyer_multiplyer * (powerbar->pos.x / (powerrange->scale.x - 21)));
+				speed_multiplyer = (speed_mutiplyer_multiplyer * (powerbar->pos.x / (powerrange->scale.x - 12)));
 				std::cout << speed_mutiplyer_multiplyer << std::endl; // Debug info for speed_multiplyer
 			}
 			
@@ -559,11 +559,11 @@ void SceneCollision::Update(double dt)
 		{
 			is_movement_powerbar = true;
 		}
-		else if (powerbar->pos.x >= powerrange->scale.x - 21)
+		else if (powerbar->pos.x >= powerrange->scale.x - 12)
 		{
 			is_movement_powerbar = false;
 		}
-		percentage_of_powerbar = ((powerbar->pos.x - original_position_powerbar) / (powerrange->scale.x - 30)) * 100; // Updater for power percentage (I know! Very werid numbers - Ryan)
+		percentage_of_powerbar = ((powerbar->pos.x - original_position_powerbar) / (powerrange->scale.x - 22)) * 100; // Updater for power percentage (I know! Very werid numbers - Ryan)
 	}
 	
 
@@ -945,33 +945,26 @@ void SceneCollision::CreateStuff()
 	{
 		powerbg = new GameObject(GameObject::GO_POWER_BG); // power bg
 		powerbg->active = true;
-		//powerbg->pos.Set(17, m_worldHeight - 43.5, 0);
-		powerbg->pos.Set(20, m_worldHeight - 44.5, 0);
-		//powerbg->scale.Set(42, 25, 1);
-		powerbg->scale.Set(52, 35, 1);
+		powerbg->pos.Set(19.5, m_worldHeight - 43.5, 0);
+		powerbg->scale.Set(45, 20, 1);
 		m_goList.push_back(powerbg);
-
-		powerbar = new GameObject(GameObject::GO_POWERBAR); // power bar
-		powerbar->active = true;
-		//powerbar->pos.Set(original_position_powerbar, m_worldHeight - 43.5, 0);
-		powerbar->pos.Set(original_position_powerbar, m_worldHeight - 44.5, 0);
-		//powerbar->scale.Set(1, 2.5, 1);
-		powerbar->scale.Set(1, 3.5, 1);
-		m_goList.push_back(powerbar);
 
 		powerrange = new GameObject(GameObject::GO_POWERRANGE); // power range
 		powerrange->active = true;
-		//powerrange->pos.Set(14, m_worldHeight - 43.5, 0);
-		powerrange->pos.Set(17, m_worldHeight - 44.5, 0);
-		//powerrange->scale.Set(40, 30, 1);
-		powerrange->scale.Set(50, 40, 1);
-		m_goList.push_back(powerrange);	
+		powerrange->pos.Set(19.5f, m_worldHeight - 43.5, 0);	
+		powerrange->scale.Set(40, 10, 1);
+		m_goList.push_back(powerrange);
+
+		powerbar = new GameObject(GameObject::GO_POWERBAR); // power bar
+		powerbar->active = true;
+		powerbar->pos.Set(original_position_powerbar, m_worldHeight - 43.5, 0);
+		powerbar->scale.Set(1, 3, 1);
+		m_goList.push_back(powerbar);
 
 		guidemarker = new GameObject(GameObject::GO_GUIDEMARKER); // Guide marker
 		guidemarker->active = true;
 		guidemarker->pos = cannon->pos;
 		guidemarker->pos.z = -1.0f; // push the marker behind
-		//guidemarker->pos.y = guidemarker->pos.y + 10.0f;
 		guidemarker->scale.Set(1, 1, 1);
 		m_goList.push_back(guidemarker);
 	}
@@ -1284,7 +1277,7 @@ void SceneCollision::RenderGO(GameObject *go)
 		//modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		//RenderMesh(meshList[GEO_POWERRANGE], true, go->Color);
 		// Add abit more to pos x to make it not move too much
-		RenderMeshOnScreen(meshList[GEO_POWERRANGE_FIRED], go->pos.x + 3.46f, go->pos.y, go->scale.x, go->scale.y, 1); // Added some numbers to pos.x to make an illusion that the object is not moving after obj being changed
+		RenderMeshOnScreen(meshList[GEO_POWERRANGE_FIRED], go->pos.x, go->pos.y, go->scale.x, go->scale.y, 1); // Added some numbers to pos.x to make an illusion that the object is not moving after obj being changed
 		modelStack.PopMatrix();
 		break;
 	case GameObject::GO_GUIDEMARKER:
@@ -1387,11 +1380,11 @@ void SceneCollision::Render()
 	ss.str("");
 	ss << percentage_of_powerbar;
 	if (std::to_string(percentage_of_powerbar).size() == 3)
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 0), textsize + 0.5, textsize + 2, 2.3, m_worldHeight - 46.5, spacing);
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 0), textsize + 0.5, textsize + 2, 2.5, m_worldHeight - 45.5, spacing);
 	else if (std::to_string(percentage_of_powerbar).size() == 2)
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 0), textsize + 0.5, textsize + 2, 2.3 + spacing, m_worldHeight - 46.5, spacing);
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 0), textsize + 0.5, textsize + 2, 2.5 + spacing, m_worldHeight - 45.5, spacing);
 	else if (std::to_string(percentage_of_powerbar).size() == 1)
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 0), textsize + 0.5, textsize + 2, 2.3 + (2 * spacing + 0.1), m_worldHeight - 46.5, spacing);
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 0), textsize + 0.5, textsize + 2, 2.5 + (2 * spacing + 0.1), m_worldHeight - 45.5, spacing);
 	ss.str("");
 
 }
