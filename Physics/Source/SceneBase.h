@@ -89,8 +89,8 @@ public:
 		// Fail Menu
 		GEO_FAILMENU,
 		
-		// Win Menu
-		GEO_WINMENU,
+		//Success Menu
+		GEO_SUCCESSMENU,
 
 		//Star
 		GEO_STAR,

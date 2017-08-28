@@ -5,7 +5,7 @@
 
 #include "SceneManager.h"
 #include "SceneMainMenu.h"
-#include "SceneUpgrade.h"
+#include "SceneSuccess.h"
 
 #include "SpriteAnimation.h"
 // #include "LoadTXT.h"
@@ -845,7 +845,7 @@ void SceneCollision::Update(double dt)
 
 	if (fortCount == 0)
 	{
-		SceneManager::getInstance()->changeScene(new SceneUpgrade());
+		SceneManager::getInstance()->changeScene(new SceneSuccess());
 		SetTempScore(i_tempScore);
 		SetScore(i_tempScore);
 		SetTempCurrency(i_tempCurrency);

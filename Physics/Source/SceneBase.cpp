@@ -195,9 +195,9 @@ void SceneBase::Init()
 	meshList[GEO_FAILMENU] = MeshBuilder::GenerateQuad("FAIL", Color(1, 1, 1));
 	meshList[GEO_FAILMENU]->textureID = LoadTGA("Image//Menu/fail.tga");
 
-	// Win Menu
-	meshList[GEO_WINMENU] = MeshBuilder::GenerateQuad("WIN", Color(1, 1, 1));
-	meshList[GEO_WINMENU]->textureID = LoadTGA("Image//Menu/success.tga");
+	//Success Menu
+	meshList[GEO_SUCCESSMENU] = MeshBuilder::GenerateQuad("SUCCESS", Color(1, 1, 1));
+	meshList[GEO_SUCCESSMENU]->textureID = LoadTGA("Image//Menu/success.tga");
 
 	// Star
 	meshList[GEO_STAR] = MeshBuilder::GenerateQuad("STAR", Color(1, 1, 1));

@@ -1,4 +1,4 @@
-#include "SceneFail.h"
+#include "SceneSuccess.h"
 #include <sstream>
 
 #include "GL\glew.h"
@@ -8,24 +8,35 @@
 #include "QuickSort.h"
 
 #include "SceneManager.h"
-#include "SceneCollision.h"
 #include "SceneMainMenu.h"
+#include "SceneUpgrade.h"
 
-SceneFail::SceneFail()
+SceneSuccess::SceneSuccess()
 {
 }
 
-SceneFail::~SceneFail()
+SceneSuccess::~SceneSuccess()
 {
 }
 
-void SceneFail::Init()
+void SceneSuccess::Init()
 {
 	SceneBase::Init();
 
 	Math::InitRNG();
 
 	i_score = GetScore();
+
+	//Setting star requirements
+	//If score is less than i_first, get 1 star
+	//If score is between i_first and i_second, get 2 stars
+	//If score is more than i_second, get 3 stars
+	i_first = 60;
+	i_second = 100;
+
+	b_first = false;
+	b_second = false;
+	b_third = false;
 
 	file_path = "CSV//highscore.csv";
 
@@ -42,13 +53,28 @@ void SceneFail::Init()
 	arrows->pos.Set(-10, -10, 1);
 	arrows->scale.Set(1.0f, 1.0f, 1.0f);
 
-	failMenu->type = GameObject::GO_FAILMENU;	//Success Menu
-	failMenu->active = true;
-	failMenu->pos.Set(-10, -10, -5);
-	failMenu->scale.Set(1.0f, 1.0f, 1.0f);
+	successMenu->type = GameObject::GO_SUCCESSMENU;	//Success Menu
+	successMenu->active = true;
+	successMenu->pos.Set(-10, -10, -5);
+	successMenu->scale.Set(1.0f, 1.0f, 1.0f);
+
+	star1->type = GameObject::GO_STAR;	//Star
+	star1->active = true;
+	star1->pos.Set(-10, -10, 1);
+	star1->scale.Set(1.0f, 1.0f, 1.0f);
+
+	star2->type = GameObject::GO_STAR;	//Star
+	star2->active = true;
+	star2->pos.Set(-10, -10, 1);
+	star2->scale.Set(1.0f, 1.0f, 1.0f);
+
+	star3->type = GameObject::GO_STAR;	//Star
+	star3->active = true;
+	star3->pos.Set(-10, -10, 1);
+	star3->scale.Set(1.0f, 1.0f, 1.0f);
 }
 
-GameObject* SceneFail::FetchGO()
+GameObject* SceneSuccess::FetchGO()
 {
 	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 	{
@@ -74,7 +100,7 @@ GameObject* SceneFail::FetchGO()
 	return go;
 }
 
-void SceneFail::Update(double dt)
+void SceneSuccess::Update(double dt)
 {
 	SceneBase::Update(dt);
 
@@ -86,7 +112,11 @@ void SceneFail::Update(double dt)
 	//Position values (for success menu)
 	float posXDownArrow_MainMenu = 1.15f;
 	float posXDownArrow_Next = 0.59f;
+	float posXStar_First = 1.6f;
+	float posXStar_Second = 0.987f;
+	float posXStar_Third = 0.711f;
 	float posYDownArrow = 3.37f;
+	float posYStar = 1.0f;
 
 	//Scale values (for success menu)
 	float scaleDown_Arrow = 20.f;
@@ -124,7 +154,7 @@ void SceneFail::Update(double dt)
 		if (Application::IsKeyPressed(VK_RETURN) && pressDelay >= cooldownPressed)
 		{
 			if (selectOptions == NEXT)
-				SceneManager::getInstance()->changeScene(new SceneCollision());
+				SceneManager::getInstance()->changeScene(new SceneUpgrade());
 
 			else if (selectOptions == MAIN_MENU)
 				SceneManager::getInstance()->changeScene(new SceneMainMenu());
@@ -142,9 +172,26 @@ void SceneFail::Update(double dt)
 		arrows->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
 
 		//Render in success menu
-		failMenu->active = true;
-		failMenu->pos.Set(w_temp / 2, h_temp / 2, -5);
-		failMenu->scale.Set(w_temp + 2, h_temp, 1);
+		successMenu->active = true;
+		successMenu->pos.Set(w_temp / 2, h_temp / 2, -5);
+		successMenu->scale.Set(w_temp + 2, h_temp, 1);
+
+		//Render in first star
+		if (i_score <= i_first)
+			b_first = true;
+		//Render in first and second star
+		if (i_score > i_first && i_score <= i_second)
+		{
+			b_first = true;
+			b_second = true;
+		}
+		//Render in first, second and third star
+		if (i_score > i_second)
+		{
+			b_first = true;
+			b_second = true;
+			b_third = true;
+		}
 
 		break;
 
@@ -154,14 +201,53 @@ void SceneFail::Update(double dt)
 		arrows->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
 
 		//Render in success menu
-		failMenu->pos.Set(w_temp / 2, h_temp / 2, -5);
-		failMenu->scale.Set(w_temp + 2, h_temp, 1);
+		successMenu->pos.Set(w_temp / 2, h_temp / 2, -5);
+		successMenu->scale.Set(w_temp + 2, h_temp, 1);
+
+		//Render in first star
+		if (i_score <= i_first)
+			b_first = true;
+		//Render in first and second star
+		if (i_score > i_first && i_score <= i_second)
+		{
+			b_first = true;
+			b_second = true;
+		}
+		//Render in first, second and third star
+		if (i_score > i_second)
+		{
+			b_first = true;
+			b_second = true;
+			b_third = true;
+		}
 
 		break;
 	}
+
+	//Obtained first star
+	if (b_first)
+	{
+		star1->active = true;
+		star1->pos.Set((w_temp / 2) / posXStar_First, (h_temp / 2) / posYStar, 1);
+		star1->scale.Set((w_temp + 2) / scaleXDown_Star, h_temp / scaleYDown_Star, 1);
+	}
+	//Obtained second star
+	if (b_second)
+	{
+		star2->active = true;
+		star2->pos.Set((w_temp / 2) / posXStar_Second, (h_temp / 2) / posYStar, 1);
+		star2->scale.Set((w_temp + 2) / scaleXDown_Star, h_temp / scaleYDown_Star, 1);
+	}
+	//Obtained third star
+	if (b_third)
+	{
+		star3->active = true;
+		star3->pos.Set((w_temp / 2) / posXStar_Third, (h_temp / 2) / posYStar, 1);
+		star3->scale.Set((w_temp + 2) / scaleXDown_Star, h_temp / scaleYDown_Star, 1);
+	}
 }
 
-int SceneFail::GetScore()
+int SceneSuccess::GetScore()
 {
 	int score;
 	ifstream myFile;
@@ -172,15 +258,15 @@ int SceneFail::GetScore()
 	return score;
 }
 
-void SceneFail::RenderGO(GameObject *go)
+void SceneSuccess::RenderGO(GameObject *go)
 {
 	switch (go->type)
 	{
-	case GameObject::GO_FAILMENU:
+	case GameObject::GO_SUCCESSMENU:
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_FAILMENU], true, go->Color);
+		RenderMesh(meshList[GEO_SUCCESSMENU], true, go->Color);
 		modelStack.PopMatrix();
 		break;
 	case GameObject::GO_ARROW:
@@ -190,10 +276,17 @@ void SceneFail::RenderGO(GameObject *go)
 		RenderMesh(meshList[GEO_ARROW], true, go->Color);
 		modelStack.PopMatrix();
 		break;
+	case GameObject::GO_STAR:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_STAR], true, go->Color);
+		modelStack.PopMatrix();
+		break;
 	}
 }
 
-void SceneFail::Render()
+void SceneSuccess::Render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -232,7 +325,7 @@ void SceneFail::Render()
 	ss.str(std::string());
 	ss.precision(5);
 	ss << i_score;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 37, 35);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 37, 40);
 
 	ss.str(std::string());
 	ss.precision(5);
@@ -240,7 +333,7 @@ void SceneFail::Render()
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 37, 17.5);
 }
 
-void SceneFail::Exit()
+void SceneSuccess::Exit()
 {
 	// Cleanup VBO here
 	for (int i = 0; i < NUM_GEOMETRY; ++i)

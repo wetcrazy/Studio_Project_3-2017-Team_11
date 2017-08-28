@@ -16,7 +16,7 @@ HighScore::~HighScore()
 }
 
 // Functions
-void HighScore::HighScore_Caulator(const char *file_ScoreDestination,const char *file_LevelDestination) 
+void HighScore::HighScore_Calculator(const char *file_ScoreDestination, const char *file_LevelDestination) 
 {
 	int curr_score, curr_level;
 	ifstream curr_File;
@@ -31,7 +31,8 @@ void HighScore::HighScore_Caulator(const char *file_ScoreDestination,const char 
 	curr_File.close();
 
 	// Return Highscore (Total_Score / Num_Levels Done)
-	this->Data.score = std::to_string(curr_score / curr_level);
+	
+	
 }
 
 

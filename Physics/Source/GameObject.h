@@ -60,8 +60,11 @@ struct GameObject
 		// Fail Menu
 		GO_FAILMENU,
 
-		// Win Menu
-		GO_WINMENU,
+		//Success Menu
+		GO_SUCCESSMENU,
+
+		//Star
+		GO_STAR,
 
 		GO_TOTAL, //must be last
 	};

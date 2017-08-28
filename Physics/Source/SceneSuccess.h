@@ -1,5 +1,5 @@
-#ifndef SCENEFAIL_H
-#define SCENEFAIL_H
+#ifndef SCENESUCCESS_H
+#define SCENESUCCESS_H
 
 #include "GameObject.h"
 #include <vector>
@@ -7,11 +7,11 @@
 #include "SceneUpgrade.h"
 #include "ClassStorage.h"
 
-class SceneFail : public SceneBase
+class SceneSuccess : public SceneBase
 {
 public:
-	SceneFail();
-	~SceneFail();
+	SceneSuccess();
+	~SceneSuccess();
 
 	virtual void Init();
 	virtual void Update(double dt);
@@ -24,7 +24,7 @@ public:
 	//Getter for score
 	int GetScore();
 
-	enum FAIL_MENU
+	enum SUCCESS_MENU
 	{
 		MAIN_MENU = 0,
 		NEXT
@@ -39,14 +39,17 @@ protected:
 	float m_worldHeight;
 
 	//Default optoin
-	FAIL_MENU selectOptions = MAIN_MENU;
+	SUCCESS_MENU selectOptions = MAIN_MENU;
 
 	GameObject* FetchGO();
 
 	//UpgradesMenu
 	GameObject *arrows = FetchGO();
-	GameObject *failMenu = FetchGO();
-
+	GameObject *successMenu = FetchGO();
+	GameObject *star1 = FetchGO();
+	GameObject *star2 = FetchGO();
+	GameObject *star3 = FetchGO();	
+	
 	//Success Stuff
 	std::vector<HighScore> highscore;
 	const char *file_path;
@@ -57,6 +60,10 @@ protected:
 
 	//Score
 	int i_score;
+	int i_first, i_second;
+
+	//Stars
+	bool b_first, b_second, b_third;
 
 	//Options
 	float pressDelay = 0.f;

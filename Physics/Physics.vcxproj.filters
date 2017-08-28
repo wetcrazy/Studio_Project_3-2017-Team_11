@@ -119,6 +119,9 @@
     <ClCompile Include="Source\SceneFail.cpp">
       <Filter>Scene UI</Filter>
     </ClCompile>
+    <ClCompile Include="Source\SceneSuccess.cpp">
+      <Filter>Scene UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -209,6 +212,9 @@
       <Filter>Playground Scenes</Filter>
     </ClInclude>
     <ClInclude Include="Source\SceneFail.h">
+      <Filter>Scene UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SceneSuccess.h">
       <Filter>Scene UI</Filter>
     </ClInclude>
   </ItemGroup>
