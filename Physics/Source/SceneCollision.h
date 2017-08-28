@@ -23,6 +23,7 @@ public:
 	virtual void Update(double dt);
 	virtual void CreateStuff();	//create game objects here
 	virtual void CreateLevel(int i_level);
+	virtual void CreateSplits(int pos, GameObject*base);
 	virtual void Render();
 	virtual void Exit();
 
@@ -86,6 +87,10 @@ protected:
 
 	//Scrolling
 	GameObject *projectile;
+
+	bool b_splitDone;
+	int i_despawnHexa;
+
 	float launched;
 	float scrollOffset;
 

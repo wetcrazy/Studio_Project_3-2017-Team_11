@@ -35,7 +35,7 @@ void SceneCollision::Init()
 	initialKE = 0;
 	finalKE = 0;
 
-	i_projectileType = 1;
+	i_projectileType = 3;
 
 	if (i_projectileType == 1)
 		m_ghost = new GameObject(GameObject::GO_BALL);
@@ -52,6 +52,10 @@ void SceneCollision::Init()
 	//Scrolling
 	projectile = FetchGO();
 	projectile->active = false;
+
+	i_despawnHexa = 3;
+	b_splitDone = false;
+
 	launched = 0.f;
 	scrollOffset = 0.f;
 
@@ -359,6 +363,9 @@ void SceneCollision::CollisionResponse(GameObject * go1, GameObject * go2)
 		b_raceConfirmed = false;
 		b_abilityUsed = false;
 
+		if (go1->type == GameObject::GO_HEXA)
+			i_despawnHexa--;
+
 		break;
 	}
 	case GameObject::GO_PILLAR:
@@ -382,6 +389,7 @@ void SceneCollision::CollisionResponse(GameObject * go1, GameObject * go2)
 
 void SceneCollision::Update(double dt)
 {
+	std::cout << i_despawnHexa << std::endl;
 	//Calculating aspect ratio
 	m_worldHeight = 100.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
@@ -599,6 +607,10 @@ void SceneCollision::Update(double dt)
 		{
 			projectile->active = false;
 			NumMode_tiggered_powerbar = 1;
+
+			i_despawnHexa = 3;
+			b_splitDone = false;
+
 			m_objectCount = 0;
 		}
 	}
@@ -636,6 +648,15 @@ void SceneCollision::Update(double dt)
 			std::cout << speed << std::endl;
 			std::cout << "Ability used 2.\n";
 		}
+		else if (i_projectileType == 3)
+		{
+			if (!b_splitDone)
+			{
+				CreateSplits(5, projectile);
+				CreateSplits(-5, projectile);
+				b_splitDone = true;
+			}
+		}
 		else
 		{
 			std::cout << "Ability used Error!\n";
@@ -644,6 +665,17 @@ void SceneCollision::Update(double dt)
 	else
 	{
 		speed = 45;
+	}
+	if (!projectile->active)
+	{
+		if (i_despawnHexa < 3)
+		{
+			i_despawnHexa = 3;
+			b_splitDone = false;
+		}
+		else
+		{
+		}
 	}
 	//
 	//Cannon Key Binding===========================================// //use cannon->dir
@@ -992,6 +1024,18 @@ void SceneCollision::CreateLevel(int level)
 	}
 }
 
+void SceneCollision::CreateSplits(int pos, GameObject * base)
+{
+	GameObject *split = FetchGO();
+	split->type = GameObject::GO_HEXA;
+	split->active = true;
+	split->pos.Set(base->pos.x, base->pos.y + pos, base->pos.z);
+	split->dir.Set(base->dir.x, base->pos.y, base->pos.z);
+	split->vel.Set(base->vel.x, base->vel.y + pos, base->vel.z);
+	split->scale.Set(base->scale.x, base->scale.y, base->scale.z);
+	split->Color.Set(Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1));
+}
+
 void SceneCollision::SetCurrentLevel(int levelNo)
 {
 	ofstream myFile;
@@ -1116,7 +1160,7 @@ void SceneCollision::RenderGO(GameObject *go)
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		angle = Math::RadianToDegree(atan2(go->dir.y, go->dir.x));
 		modelStack.Rotate(angle, 0, 0, 1);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		modelStack.Scale(go->scale.x * 1.5, go->scale.y * 1.5, go->scale.z);
 		RenderMesh(meshList[GEO_CUBE], true, go->Color);
 		modelStack.PopMatrix();
 		break;
