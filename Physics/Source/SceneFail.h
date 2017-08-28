@@ -5,8 +5,7 @@
 
 #include "SceneBase.h"
 #include "GameObject.h"
-
-class HighScore;
+#include "ClassStorage.h"
 
 class SceneFail : public SceneBase
 {
@@ -24,6 +23,9 @@ public:
 	virtual void CreateStuff();	//create game objects here
 	virtual void Render();
 	virtual void Exit();
+
+	// To get curr score
+	int GetScore();
 
 	enum UPGRADE_MENU
 	{
@@ -75,8 +77,13 @@ protected:
 	HighScore input;
 
 	// Fail Stuff
-	std::vector<HighScore> Fail;
+	std::vector<HighScore> highscore;
 	const char *file_path;
+
+	// Score & Highcsore
+	int curr_score;
+	HighScore curr_highscore;
+	const char *file_ScoreDestination, *file_LevelDestination;
 };
 
 #endif

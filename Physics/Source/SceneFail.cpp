@@ -3,11 +3,11 @@
 #include "GL\glew.h"
 #include "Application.h"
 #include "LoadCSV.h"
+#include "LoadTXT.h"
 #include "QuickSort.h"
 #include "SceneManager.h"
 #include "SceneFail.h"
 #include "SceneMainMenu.h"
-#include "ClassStorage.h"
 
 SceneFail::SceneFail()
 {
@@ -28,31 +28,27 @@ void SceneFail::Init()
 	initialKE = 0;
 	finalKE = 0;
 	gravity.Set(0.0f, -9.8f, 0.0f);
-	file_path = "CSV//Fail.csv";
+	file_path = "CSV//highscore.csv";
 
 	CreateStuff();
-	Fail = LoadCSV(file_path);
-	QuickSort(&Fail, 1, Fail.size() - 1);
-	WriteCSV(file_path, Fail);
+	highscore = LoadCSV(file_path);
+	QuickSort(&highscore, 1, highscore.size() - 1);
+	WriteCSV(file_path, highscore);
 
-	//// testing codes
-	//Circle circle;
-	//circle.SetAll(Vector3(1.0f, 1.0f, 1.0f), Vector3(1.0f, 1.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f), Vector3(1.0f, 1.0f, 0.0f), 5.0f);
-	//circle.Abilites();
-	//circle.Set_Mass(1.0f);
-	//circle.ResetRace();
+	file_ScoreDestination = "Text//Score.txt";
+	file_LevelDestination = "Text//CurrentLevel.txt";
+	curr_score = GetScore();
+	curr_highscore.HighScore_Caulator(file_ScoreDestination, file_LevelDestination);
+}
+int SceneFail::GetScore()
+{
+	int score;
+	ifstream myFile;
+	myFile.open(file_ScoreDestination);
+	myFile >> score;
+	myFile.close();
 
-	//Square square;
-	//square.SetAll(Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f, 1.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f), Vector3(1.0f, 1.0f, 0.0f), 5.0f);
-	//square.Abilites();
-	//square.Set_Piercing(false);
-	//square.ResetRace();
-
-	//Hexagon hexagon;
-	//hexagon.SetAll(Vector3(1.0f, 1.0f, 1.0f), Vector3(1.0f, 1.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f), Vector3(1.0f, 1.0f, 0.0f), 5.0f);
-	//hexagon.Abilites();
-	//hexagon.Set_Spilt(false);
-	//hexagon.ResetRace();
+	return score;
 }
 
 void SceneFail::CreateStuff()
@@ -345,7 +341,7 @@ void SceneFail::Update(double dt)
 
 		if (Application::IsKeyPressed('Z') && pressDelay >= cooldownPressed)
 		{
-			Fail = DeleteCSV(file_path);
+			highscore = DeleteCSV(file_path);
 
 			pressDelay = 0.f;
 		}
@@ -357,9 +353,9 @@ void SceneFail::Update(double dt)
 			temp.Data.rank = "4";
 			temp.Data.name = "GAYY";
 			temp.Data.score = "1234";
-			Fail.push_back(temp);
-			QuickSort(&Fail, 1, Fail.size() - 1);
-			WriteCSV(file_path, Fail);
+			highscore.push_back(temp);
+			QuickSort(&highscore, 1, highscore.size() - 1);
+			WriteCSV(file_path, highscore);
 
 			pressDelay = 0.f;
 		}
@@ -456,7 +452,7 @@ void SceneFail::Update(double dt)
 		if (Application::IsKeyPressed(VK_RETURN) && pressDelay >= cooldownPressed)
 		{
 			if (selectOptions == DELETE_Fail)
-				Fail = DeleteCSV(file_path);
+				highscore = DeleteCSV(file_path);
 
 			if (selectOptions == EXIT_Fail)
 				SceneManager::getInstance()->changeScene(new SceneMainMenu());
@@ -608,31 +604,16 @@ void SceneFail::Render()
 	}
 
 	//On screen text
-	float textsize = 3.0f;
+	float textsize = 8.0f;
 	std::ostringstream ss;
-	ss << Fail[0];
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), textsize, 18, 43);
+	ss << curr_score;
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), textsize, 40, 33);
+	ss.str("");
+	ss << curr_highscore.Data.score;
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), textsize, 45, 16);
 	ss.str("");
 
-	// Fail Table (Prints out only 10)
-	if (Fail.size() > 11) // Force set print less than 11
-	{
-		for (int check_index = 1, sizer = 0; check_index < 11; ++check_index)
-		{
-			ss << Fail[check_index];
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), textsize, 18, 40 - sizer);
-			ss.str("");
-			sizer += 3;
-		}
-	}
-	else // Just print
-		for (int check_index = 1, sizer = 0; check_index < Fail.size(); ++check_index)
-		{
-			ss << Fail[check_index];
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), textsize, 18, 40 - sizer);
-			ss.str("");
-			sizer += 3;
-		}
+	
 	// ===================================
 }
 
