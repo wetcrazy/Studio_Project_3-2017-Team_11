@@ -116,6 +116,9 @@
     <ClCompile Include="Source\SpriteAnimation.cpp">
       <Filter>Playground Scenes</Filter>
     </ClCompile>
+    <ClCompile Include="Source\SceneFail.cpp">
+      <Filter>Scene UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -204,6 +207,9 @@
     </ClInclude>
     <ClInclude Include="Source\SpriteAnimation.h">
       <Filter>Playground Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SceneFail.h">
+      <Filter>Scene UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
