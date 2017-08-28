@@ -193,11 +193,15 @@ void SceneBase::Init()
 
 	// FAIL Menu
 	meshList[GEO_FAILMENU] = MeshBuilder::GenerateQuad("FAIL", Color(1, 1, 1));
-	meshList[GEO_FAILMENU]->textureID = LoadTGA("Image//Menu/HighScore Menu//highscore.tga");
+	meshList[GEO_FAILMENU]->textureID = LoadTGA("Image//Menu/fail.tga");
 
 	// Win Menu
 	meshList[GEO_WINMENU] = MeshBuilder::GenerateQuad("WIN", Color(1, 1, 1));
-	meshList[GEO_WINMENU]->textureID = LoadTGA("Image//Menu/HighScore Menu//highscore.tga");
+	meshList[GEO_WINMENU]->textureID = LoadTGA("Image//Menu/success.tga");
+
+	// Star
+	meshList[GEO_STAR] = MeshBuilder::GenerateQuad("STAR", Color(1, 1, 1));
+	meshList[GEO_STAR]->textureID = LoadTGA("Image//Menu/star.tga");
 
 	bLightEnabled = true;
 }

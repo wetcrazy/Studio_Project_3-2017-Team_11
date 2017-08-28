@@ -92,6 +92,9 @@ public:
 		// Win Menu
 		GEO_WINMENU,
 
+		//Star
+		GEO_STAR,
+
 		NUM_GEOMETRY,
 	};
 	enum UPGRADES_MENU
