@@ -61,8 +61,9 @@ void SceneCollision::Init()
 
 	// Power Bar
 	NumMode_tiggered_powerbar = 1;
-	original_position_powerbar = 8;
+	original_position_powerbar = 9;
 	is_movement_powerbar = true;
+	percentage_of_powerbar = 0;
 
 	b_raceConfirmed = false;
 	rot = 5.f;
@@ -434,8 +435,10 @@ void SceneCollision::Update(double dt)
 			powerbar->pos.x = original_position_powerbar; // Reset pos of powerbar
 			powerrange->type = GameObject::GO_POWERRANGE; // Reset the texture of power range
 
-			guidemarker->scale.y = 1;
-			guidemarker->dir = cannon->dir;
+			guidemarker->scale.y = 1; // Reset size of guide marker
+			guidemarker->dir = cannon->dir; // Update dir of guide marker with cannon dir until the shooting starts
+
+			percentage_of_powerbar = 0; // Reset the percentage of the power;
 		}		
 		// std::cout << guidemarker->pos << std::endl;
 	}
@@ -479,7 +482,7 @@ void SceneCollision::Update(double dt)
 				{
 					speed_mutiplyer_multiplyer = 2.f;
 				}
-				speed_multiplyer = (speed_mutiplyer_multiplyer * (powerbar->pos.x / (powerrange->scale.x - 17)));
+				speed_multiplyer = (speed_mutiplyer_multiplyer * (powerbar->pos.x / (powerrange->scale.x - 21)));
 				std::cout << speed_mutiplyer_multiplyer << std::endl; // Debug info for speed_multiplyer
 			}
 			
@@ -523,7 +526,6 @@ void SceneCollision::Update(double dt)
 	{
 		bLButtonState = true;
 		std::cout << "LBUTTON UP" << std::endl;
-
 		NumMode_tiggered_powerbar = 2;
 	}
 	else if (!bLButtonState && Application::IsMousePressed(0) && NumMode_tiggered_powerbar == 2)
@@ -537,6 +539,7 @@ void SceneCollision::Update(double dt)
 	{
 		bLButtonState = false;
 		std::cout << "LBUTTON DOWN" << std::endl;
+		
 		NumMode_tiggered_powerbar = 3;
 	}
 	// Power Bar movement
@@ -545,22 +548,24 @@ void SceneCollision::Update(double dt)
 		if (!is_movement_powerbar) // Move left
 		{
 			powerbar->pos.x -= 0.2f;
-			guidemarker->scale.y -= 0.3f;
+			guidemarker->scale.y -= 0.2f;
 		}
 		else if (is_movement_powerbar) // Move right
 		{
 			powerbar->pos.x += 0.2f;
-			guidemarker->scale.y += 0.3f;
+			guidemarker->scale.y += 0.2f;
 		}
 		if (powerbar->pos.x <= original_position_powerbar)
 		{
 			is_movement_powerbar = true;
 		}
-		else if (powerbar->pos.x >= powerrange->scale.x - 17)
+		else if (powerbar->pos.x >= powerrange->scale.x - 21)
 		{
 			is_movement_powerbar = false;
 		}
+		percentage_of_powerbar = ((powerbar->pos.x - original_position_powerbar) / (powerrange->scale.x - 30)) * 100; // Updater for power percentage (I know! Very werid numbers - Ryan)
 	}
+	
 
 	// std::cout << original_position_powerbar << std::endl; // Debug info for power bar position.x
 	static bool bRButtonState = false;
@@ -938,29 +943,31 @@ void SceneCollision::CreateStuff()
 	}
 	// Power bar
 	{
-		powerbg = new GameObject(GameObject::GO_POWER_BG); // power bar
+		powerbg = new GameObject(GameObject::GO_POWER_BG); // power bg
 		powerbg->active = true;
-		//powerbar->pos.Set(original_position_powerbar, m_worldHeight - 2.5, 1);
-		powerbg->pos.Set(17, m_worldHeight - 43.5, 0);
-		powerbg->scale.Set(42, 25, 1);
+		//powerbg->pos.Set(17, m_worldHeight - 43.5, 0);
+		powerbg->pos.Set(20, m_worldHeight - 44.5, 0);
+		//powerbg->scale.Set(42, 25, 1);
+		powerbg->scale.Set(52, 35, 1);
 		m_goList.push_back(powerbg);
 
 		powerbar = new GameObject(GameObject::GO_POWERBAR); // power bar
 		powerbar->active = true;
-		//powerbar->pos.Set(original_position_powerbar, m_worldHeight - 2.5, 1);
-		powerbar->pos.Set(original_position_powerbar, m_worldHeight - 43.5, 0);
-		powerbar->scale.Set(1, 2.5, 1);
+		//powerbar->pos.Set(original_position_powerbar, m_worldHeight - 43.5, 0);
+		powerbar->pos.Set(original_position_powerbar, m_worldHeight - 44.5, 0);
+		//powerbar->scale.Set(1, 2.5, 1);
+		powerbar->scale.Set(1, 3.5, 1);
 		m_goList.push_back(powerbar);
 
 		powerrange = new GameObject(GameObject::GO_POWERRANGE); // power range
 		powerrange->active = true;
-		//powerrange->pos.Set(0, m_worldHeight - 2.5, 1);
-		powerrange->pos.Set(14, m_worldHeight - 43.5, 0);
-		//powerrange->scale.Set(50, 80, 1);
-		powerrange->scale.Set(40, 30, 1);
-		m_goList.push_back(powerrange);
+		//powerrange->pos.Set(14, m_worldHeight - 43.5, 0);
+		powerrange->pos.Set(17, m_worldHeight - 44.5, 0);
+		//powerrange->scale.Set(40, 30, 1);
+		powerrange->scale.Set(50, 40, 1);
+		m_goList.push_back(powerrange);	
 
-		guidemarker = new GameObject(GameObject::GO_GUIDEMARKER); // power range
+		guidemarker = new GameObject(GameObject::GO_GUIDEMARKER); // Guide marker
 		guidemarker->active = true;
 		guidemarker->pos = cannon->pos;
 		guidemarker->pos.z = -1.0f; // push the marker behind
@@ -1277,7 +1284,7 @@ void SceneCollision::RenderGO(GameObject *go)
 		//modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		//RenderMesh(meshList[GEO_POWERRANGE], true, go->Color);
 		// Add abit more to pos x to make it not move too much
-		RenderMeshOnScreen(meshList[GEO_POWERRANGE_FIRED], go->pos.x + 2.77, go->pos.y, go->scale.x, go->scale.y, 1);
+		RenderMeshOnScreen(meshList[GEO_POWERRANGE_FIRED], go->pos.x + 3.46f, go->pos.y, go->scale.x, go->scale.y, 1); // Added some numbers to pos.x to make an illusion that the object is not moving after obj being changed
 		modelStack.PopMatrix();
 		break;
 	case GameObject::GO_GUIDEMARKER:
@@ -1296,6 +1303,9 @@ void SceneCollision::RenderGO(GameObject *go)
 
 void SceneCollision::Render()
 {
+	float m_worldWidth = 133;
+	float m_worldHeight = 100;
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Projection matrix : Orthographic Projection
@@ -1371,6 +1381,19 @@ void SceneCollision::Render()
 	ss.precision(5);
 	ss << "TempScore: " << i_tempScore;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 3);
+	
+	float textsize = 2.0f;
+	float spacing = 0.4f;
+	ss.str("");
+	ss << percentage_of_powerbar;
+	if (std::to_string(percentage_of_powerbar).size() == 3)
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 0), textsize + 0.5, textsize + 2, 2.3, m_worldHeight - 46.5, spacing);
+	else if (std::to_string(percentage_of_powerbar).size() == 2)
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 0), textsize + 0.5, textsize + 2, 2.3 + spacing, m_worldHeight - 46.5, spacing);
+	else if (std::to_string(percentage_of_powerbar).size() == 1)
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 0), textsize + 0.5, textsize + 2, 2.3 + (2 * spacing + 0.1), m_worldHeight - 46.5, spacing);
+	ss.str("");
+
 }
 
 void SceneCollision::Exit()

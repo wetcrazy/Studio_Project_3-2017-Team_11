@@ -102,6 +102,7 @@ protected:
 	size_t NumMode_tiggered_powerbar;
 	bool is_movement_powerbar;
 	float original_position_powerbar;
+	int percentage_of_powerbar;
 
 	//Upgrades
 	LoadingUpgrades upgraded;

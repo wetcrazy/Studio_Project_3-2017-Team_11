@@ -118,6 +118,7 @@ public:
 
 	void RenderText(Mesh* mesh, std::string text, Color color);
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
+	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size_x, float size_y, float x, float y, float spacing);
 	void RenderMesh(Mesh *mesh, bool enableLight);
 	void RenderMesh(Mesh *mesh, bool enableLight, Vector3 color);
 	void RenderMeshOnScreen(Mesh *mesh, float x, float y, float sizex, float sizey, float rotate);
