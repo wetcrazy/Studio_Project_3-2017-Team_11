@@ -126,13 +126,12 @@ void SceneUpgrade::Update(double dt)
 	//Position values (for upgrade menu)
 	float posXDownArrow = 0.7f;
 	float posXDownArrow_NextLevel = 1.1f;
-	float posXDownArrow_NextPage = 0.57f;
-	float posXDownArrow_PreviousPage = 0.57f;
+	float posXDownArrow_Page = 0.57f;
 	float posYDownArrow_Upgrade1 = 0.82f;
 	float posYDownArrow_Upgrade2 = 1.33f;
 	float posYDownArrow_Multiplyer_Upgrade1 = 0.82f;
 	float posYDownArrow_Multiplyer_Upgrade2 = 1.33f;
-	float posYDownArrow_NextPage_NextLevel = 3.35f;
+	float posYDownArrow_Page_Level = 3.35f;
 
 	//Scale values (for upgrade menu)
 	float scaleDown_Arrow = 20.f;
@@ -328,7 +327,7 @@ void SceneUpgrade::Update(double dt)
 
 	case NEXTLEVEL_1:
 		//Render in arrow
-		arrows->pos.Set((w_temp / 2) / posXDownArrow_NextLevel, (h_temp / 2) / posYDownArrow_NextPage_NextLevel, 1);
+		arrows->pos.Set((w_temp / 2) / posXDownArrow_NextLevel, (h_temp / 2) / posYDownArrow_Page_Level, 1);
 		arrows->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
 
 		//Render in upgrades menu
@@ -338,7 +337,7 @@ void SceneUpgrade::Update(double dt)
 
 	case NEXTLEVEL_2:
 		//Render in arrow
-		arrows->pos.Set((w_temp / 2) / posXDownArrow_NextLevel, (h_temp / 2) / posYDownArrow_NextPage_NextLevel, 1);
+		arrows->pos.Set((w_temp / 2) / posXDownArrow_NextLevel, (h_temp / 2) / posYDownArrow_Page_Level, 1);
 		arrows->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
 
 		//Render in upgrades menu
@@ -348,7 +347,7 @@ void SceneUpgrade::Update(double dt)
 
 	case NEXTPAGE:
 		//Render in arrow
-		arrows->pos.Set((w_temp / 2) / posXDownArrow_NextPage, (h_temp / 2) / posYDownArrow_NextPage_NextLevel, 1);
+		arrows->pos.Set((w_temp / 2) / posXDownArrow_Page, (h_temp / 2) / posYDownArrow_Page_Level, 1);
 		arrows->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
 
 		//Render in upgrades menu
@@ -358,7 +357,7 @@ void SceneUpgrade::Update(double dt)
 
 	case PREVIOUSPAGE:
 		//Render in arrow
-		arrows->pos.Set((w_temp / 2) / posXDownArrow_PreviousPage, (h_temp / 2) / posYDownArrow_NextPage_NextLevel, 1);
+		arrows->pos.Set((w_temp / 2) / posXDownArrow_Page, (h_temp / 2) / posYDownArrow_Page_Level, 1);
 		arrows->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
 
 		//Render in upgrades menu
