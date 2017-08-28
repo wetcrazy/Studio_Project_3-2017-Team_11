@@ -27,6 +27,10 @@ public:
 	HighScore();
 	~HighScore();
 
+	// Functions
+	// Function input = (&const char)
+	int HighScore_Caulator(const char *file_ScoreDestination, const char *file_LevelDestination); // returns highscore for that instance
+
 	// Struct Storage for Scores
 	Score Data;
 

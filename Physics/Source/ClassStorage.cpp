@@ -1,4 +1,5 @@
 #include "ClassStorage.h"
+#include "LoadTXT.h"
 
 // HighScore Class
 // ======================================================================================
@@ -13,6 +14,26 @@ HighScore::~HighScore()
 {
 
 }
+
+// Functions
+int HighScore::HighScore_Caulator(const char *file_ScoreDestination,const char *file_LevelDestination) 
+{
+	int curr_score, curr_level;
+	ifstream curr_File;
+
+	// Open score file
+	curr_File.open(file_ScoreDestination);
+	curr_File >> curr_score;
+	curr_File.close();
+	// Open level file
+	curr_File.open(file_LevelDestination);
+	curr_File >> curr_level;
+	curr_File.close();
+
+	// Return Highscore (Total_Score / Num_Levels Done)
+	return curr_score / curr_level;
+}
+
 
 // Operator
 ostream &operator<<(ostream &os, HighScore &input)
