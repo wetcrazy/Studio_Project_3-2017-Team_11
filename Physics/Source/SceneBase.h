@@ -68,6 +68,12 @@ public:
 		// Main Menu
 		GEO_MAINMENU,
 
+		//Credits
+		GEO_CREDITS,
+
+		//Indicator
+		GEO_INDICATOR,
+
 		// Upgrades Menu
 		GEO_UPGRADESMENU,
 		GEO_UPGRADESMENU_NEXTPAGE,

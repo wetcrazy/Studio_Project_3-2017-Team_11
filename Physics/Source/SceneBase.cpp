@@ -159,6 +159,14 @@ void SceneBase::Init()
 	meshList[GEO_MAINMENU] = MeshBuilder::GenerateQuad("mainmenu", Color(1, 1, 1), 1);
 	meshList[GEO_MAINMENU]->textureID = LoadTGA("Image//Menu/main_menu.tga");
 
+	//Credits
+	meshList[GEO_CREDITS] = MeshBuilder::GenerateQuad("credits", Color(1, 1, 1), 1);
+	meshList[GEO_CREDITS]->textureID = LoadTGA("Image//Menu/credits.tga");
+
+	//Indicator
+	meshList[GEO_INDICATOR] = MeshBuilder::GenerateQuad("indicator", Color(1, 1, 1), 1);
+	meshList[GEO_INDICATOR]->textureID = LoadTGA("Image//Menu/indicator.tga");
+
 	//Upgrades Menu
 	meshList[GEO_UPGRADESMENU] = MeshBuilder::GenerateQuad("upgradesmenu", Color(1, 1, 1), 1);
 	meshList[GEO_UPGRADESMENU]->textureID = LoadTGA("Image//Menu/Upgrades/upgrades.tga");

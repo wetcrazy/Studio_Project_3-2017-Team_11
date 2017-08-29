@@ -39,6 +39,12 @@ struct GameObject
 		//Main Menu
 		GO_MAINMENU,
 
+		//Credits
+		GO_CREDITS,
+
+		//Indicator
+		GO_INDICATOR,
+
 		//Upgrades Menu
 		GO_UPGRADESMENU,
 		GO_UPGRADESMENU_NEXTPAGE,
