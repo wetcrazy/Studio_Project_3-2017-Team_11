@@ -34,25 +34,6 @@ void SceneHighScore::Init()
 	highscore = LoadCSV(file_path);
 	QuickSort(&highscore, 1, highscore.size() - 1);
 	WriteCSV(file_path, highscore);
-
-	//// testing codes
-	//Circle circle;
-	//circle.SetAll(Vector3(1.0f, 1.0f, 1.0f), Vector3(1.0f, 1.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f), Vector3(1.0f, 1.0f, 0.0f), 5.0f);
-	//circle.Abilites();
-	//circle.Set_Mass(1.0f);
-	//circle.ResetRace();
-
-	//Square square;
-	//square.SetAll(Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f, 1.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f), Vector3(1.0f, 1.0f, 0.0f), 5.0f);
-	//square.Abilites();
-	//square.Set_Piercing(false);
-	//square.ResetRace();
-
-	//Hexagon hexagon;
-	//hexagon.SetAll(Vector3(1.0f, 1.0f, 1.0f), Vector3(1.0f, 1.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f), Vector3(1.0f, 1.0f, 0.0f), 5.0f);
-	//hexagon.Abilites();
-	//hexagon.Set_Spilt(false);
-	//hexagon.ResetRace();
 }
 
 void SceneHighScore::CreateStuff()
@@ -300,9 +281,8 @@ void SceneHighScore::Update(double dt)
 		m_speed += 0.1f;
 	}
 
-	//Mouse Section
-	static bool bLButtonState = false;
-
+	
+	// Mouse Variables
 	double x, y;
 	Application::GetCursorPos(&x, &y);
 	int w = Application::GetWindowWidth();
@@ -310,6 +290,7 @@ void SceneHighScore::Update(double dt)
 	float posX = static_cast<float>(x) / w * m_worldWidth;
 	float posY = (h - static_cast<float>(y)) / h * m_worldHeight;
 
+	// Window Variables
 	int h_temp = 100;
 	int w_temp = 100 * Application::GetWindowWidth() / Application::GetWindowHeight();
 
@@ -320,50 +301,51 @@ void SceneHighScore::Update(double dt)
 
 	//Scale values (for upgrade menu)
 	float scaleDown_Arrow = 20.f;
-
-	if (!bLButtonState && Application::IsMousePressed(0))
+	//Mouse Section
+	static bool bLButtonState = false;
+	if (!bLButtonState && Application::IsMousePressed(0)) // Left Click
 	{
 	}
 
-	else if (bLButtonState && !Application::IsMousePressed(0))
+	else if (bLButtonState && !Application::IsMousePressed(0)) 
 	{
 	}
 
 	static bool bRButtonState = false;
-	if (!bRButtonState && Application::IsMousePressed(1))
+	if (!bRButtonState && Application::IsMousePressed(1)) // Right Click
 	{
 	}
 	else if (bRButtonState && !Application::IsMousePressed(1))
 	{
 	}
+	//Inserting and Deleting Data (Debugging)
+	//{	
 
-	{	//Inserting and Deleting Data
+	//	//Prevent pressDelay from exceeding 0.5f
+	//	if (pressDelay > 0.5f)
+	//		pressDelay = 0.5f;
 
-		//Prevent pressDelay from exceeding 0.5f
-		if (pressDelay > 0.5f)
-			pressDelay = 0.5f;
+	//	if (Application::IsKeyPressed('Z') && pressDelay >= cooldownPressed)
+	//	{
+	//		highscore = DeleteCSV(file_path);
 
-		if (Application::IsKeyPressed('Z') && pressDelay >= cooldownPressed)
-		{
-			highscore = DeleteCSV(file_path);
+	//		pressDelay = 0.f;
+	//	}
 
-			pressDelay = 0.f;
-		}
+	//	if (Application::IsKeyPressed(VK_SPACE) && pressDelay >= cooldownPressed)
+	//	{
+	//		//highscore = DeleteCSV(file_path);
+	//		HighScore temp;
+	//		temp.Data.rank = "4";
+	//		temp.Data.name = "GAYY";
+	//		temp.Data.score = "1234";
+	//		highscore.push_back(temp);
+	//		QuickSort(&highscore, 1, highscore.size() - 1);
+	//		WriteCSV(file_path, highscore);
 
-		if (Application::IsKeyPressed(VK_SPACE) && pressDelay >= cooldownPressed)
-		{
-			//highscore = DeleteCSV(file_path);
-			HighScore temp;
-			temp.Data.rank = "4";
-			temp.Data.name = "GAYY";
-			temp.Data.score = "1234";
-			highscore.push_back(temp);
-			QuickSort(&highscore, 1, highscore.size() - 1);
-			WriteCSV(file_path, highscore);
-
-			pressDelay = 0.f;
-		}
-	}
+	//		pressDelay = 0.f;
+	//	}
+	//}
 	//Physics Simulation Section
 	dt *= m_speed;
 
@@ -624,7 +606,7 @@ void SceneHighScore::Render()
 			sizer += 3;
 		}
 	}
-	else // Just print
+	else // Just print (Prints out 10 or less) prevents the framework from crash when there is nothing to print
 		for (int check_index = 1, sizer = 0; check_index < highscore.size(); ++check_index)
 		{
 			ss << highscore[check_index];
@@ -635,7 +617,7 @@ void SceneHighScore::Render()
 	// ===================================
 }
 
-void SceneHighScore::Exit()
+void SceneHighScore::Exit() // Kills this scene
 {
 	SceneBase::Exit();
 	//Cleanup GameObjects
