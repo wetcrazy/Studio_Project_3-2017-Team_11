@@ -7,6 +7,7 @@
 #include "SceneMainMenu.h"
 #include "SceneSuccess.h"
 #include "SceneFail.h"
+#include "SceneCredit.h"
 
 #include "SpriteAnimation.h"
 // #include "LoadTXT.h"
@@ -884,7 +885,11 @@ void SceneCollision::Update(double dt)
 			SceneManager::getInstance()->changeScene(new SceneFail());
 		}
 	}
-	
+
+	if (i_CurrentLevel == 10)
+	{
+		SceneManager::getInstance()->changeScene(new SceneCredit());
+	}
 }
 
 void SceneCollision::CreateStuff()

@@ -1,20 +1,8 @@
 #include "SceneCredit.h"
 #include "GL\glew.h"
-#include "GLFW\glfw3.h"
-#include "Mtx44.h"
-#include "Application.h"
-#include "Vertex.h"
-#include "Utility.h"
-#include "shader.hpp"
 #include "LoadTGA.h"
-#include "Camera.h"
-#include "MeshBuilder.h"
-#include "Mesh.h"
 
 #include "SceneManager.h"
-#include "SceneCollision.h"
-#include "SceneHighScore.h"
-#include "SceneSaveFile.h"
 
 #include "SceneMainMenu.h"
 
@@ -86,12 +74,7 @@ void SceneCredit::Update(double dt)
 
 	//Position values (arrows)
 	float posXDownArrow = 0.67f;
-	float posYDownArrow_Play = 0.69f;
-	float posYDownArrow_Levels = 0.84f;
-	float posYDownArrow_Instructions = 1.07f;
-	float posYDownArrow_Highscore = 1.45f;
-	float posYDownArrow_Options = 2.25f;
-	float posYDownArrow_Quit = 5.1f;
+	float posYDownArrow = 0.69f;
 
 	//Scale values
 	float scaleDown_Arrow = 20.f;
@@ -136,7 +119,7 @@ void SceneCredit::Update(double dt)
 	case BACK:
 		//Arrow
 		arrows->active = true;
-		arrows->pos.Set((w_temp / 4.5) / posXDownArrow, (h_temp / 9.5) / posYDownArrow_Play, 1);
+		arrows->pos.Set((w_temp / 4.5) / posXDownArrow, (h_temp / 9.5) / posYDownArrow, 1);
 		arrows->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
 
 		//Credit
