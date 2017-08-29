@@ -842,13 +842,13 @@ void SceneCollision::Update(double dt)
 	if (fortCount == 0)
 	{
 		SceneManager::getInstance()->changeScene(new SceneSuccess());
-		i_tempScore += (50 * i_projectileCount);
-		i_levelScore += (50 * i_projectileCount);
+		i_tempScore += (6 * i_projectileCount);
+		i_levelScore += (6 * i_projectileCount);
 		SetLevelScore(i_levelScore);
 		SetTempScore(i_tempScore);
 		SetTotalScore(i_tempScore);
 		SetTempCurrency(i_tempCurrency);
-		i_tempCurrency += (20 * i_projectileCount);
+		i_tempCurrency += (4 * i_projectileCount);
 		SetCurrency(i_tempCurrency);
 		i_CurrentLevel++;
 		SetCurrentLevel(i_CurrentLevel);

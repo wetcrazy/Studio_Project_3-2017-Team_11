@@ -728,7 +728,7 @@ void SceneUpgrade::Render()
 	ss.str(std::string());
 	ss.precision(5);
 	ss << "Currency: " << GetCurrency();
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 0);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0.580, 1, 0.827), 3, 0, 0);
 
 	switch (selectOptions)
 	{
@@ -736,25 +736,25 @@ void SceneUpgrade::Render()
 		ss.str(std::string());
 		ss.precision(5);
 		ss << "Cost: " << i_cost_speed_upgrade_1;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 3);
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0.580, 0, 0.827), 3, 0, 3);
 		break;
 	case SPEED_UPGRADE_2:
 		ss.str(std::string());
 		ss.precision(5);
 		ss << "Cost: " << i_cost_speed_upgrade_2;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 3);
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0.580, 0, 0.827), 3, 0, 3);
 		break;
 	case SPEED_MULTIPLYER_1:
 		ss.str(std::string());
 		ss.precision(5);
 		ss << "Cost: " << i_cost_speed_multiplyer_upgrade_1;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 3);
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0.580, 0, 0.827), 3, 0, 3);
 		break;
 	case SPEED_MULTIPLYER_2:
 		ss.str(std::string());
 		ss.precision(5);
 		ss << "Cost: " << i_cost_speed_multiplyer_upgrade_2;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 3);
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0.580, 0, 0.827), 3, 0, 3);
 		break;
 	}
 }
