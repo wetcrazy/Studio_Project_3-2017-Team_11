@@ -2,6 +2,7 @@
 
 #include "SceneUpgrade.h"
 #include "GL\glew.h"
+#include "Application.h"
 #include "LoadTGA.h"
 
 #include <sstream>

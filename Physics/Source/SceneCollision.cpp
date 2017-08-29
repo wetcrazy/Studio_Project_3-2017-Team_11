@@ -336,7 +336,6 @@ void SceneCollision::CollisionResponse(GameObject * go1, GameObject * go2)
 	case GameObject::GO_WALL:
 	{
 		float mag = go1->vel.Length();
-		//std::cout << mag << std::endl;
 		Vector3 vel = go1->vel;
 		Vector3 N = go2->dir;
 		go1->vel = vel - (2.f * vel.Dot(N)) * N;
@@ -346,7 +345,6 @@ void SceneCollision::CollisionResponse(GameObject * go1, GameObject * go2)
 	case GameObject::GO_GROUND:
 	{
 		float mag = go1->vel.Length();
-		//std::cout << mag << std::endl;
 		Vector3 vel = go1->vel;
 		Vector3 N = go2->dir;
 		go1->vel = vel - (2.f * vel.Dot(N)) * N;
@@ -356,7 +354,6 @@ void SceneCollision::CollisionResponse(GameObject * go1, GameObject * go2)
 	case GameObject::GO_PLATFORM:
 	{
 		float mag = go1->vel.Length();
-		std::cout << mag << std::endl;
 		Vector3 vel = go1->vel;
 		Vector3 N = go2->dir;
 		go1->vel = vel - (2.f * vel.Dot(N)) * N;
@@ -410,14 +407,6 @@ void SceneCollision::CollisionResponse(GameObject * go1, GameObject * go2)
 
 void SceneCollision::Update(double dt)
 {
-	std::cout << i_projectileCount << std::endl;
-	//std::cout << i_CurrentLevel << std::endl;
-	std::cout << i_despawnHexa << std::endl;
-	//if (b_raceConfirmed)
-	//	std::cout << "Confirmed!\n";
-	//else
-	//	std::cout << "Unconfirmed!\n";
-	//
 	//Calculating aspect ratio
 	m_worldHeight = 100.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
@@ -441,7 +430,6 @@ void SceneCollision::Update(double dt)
 	//Cannon follows cursor position
 	if (posY > cannon->pos.y)        // Cannon cannot move when cursor is below cannon	
 	{
-		//if (!projectile->active)
 		if (NumMode_tiggered_powerbar == 1)
 		{
 			//Cannon follow cursor
@@ -458,17 +446,13 @@ void SceneCollision::Update(double dt)
 
 			percentage_of_powerbar = 0; // Reset the percentage of the power;
 		}		
-		// std::cout << guidemarker->pos << std::endl;
 	}
 
-	//if (!bLButtonState && Application::IsMousePressed(0) && !projectile->active)
-	// powerbar->pos.x = original_position_powerbar; // Update the pos of power bars (do not need this cause i updating the pos of power bar directly)
-
 	// Logic for the aim -> hold -> fire
+	//LButton Up
 	if (!projectile->active && NumMode_tiggered_powerbar == 3)
 	{
 		bLButtonState = true;
-		std::cout << "LBUTTON UP" << std::endl;
 
 		if (posY > cannon->pos.y)
 		{
@@ -507,7 +491,6 @@ void SceneCollision::Update(double dt)
 					speed_mutiplyer_multiplyer = 2.f;
 				}
 				speed_multiplyer = (speed_mutiplyer_multiplyer * (powerbar->pos.x / (powerrange->scale.x - 12)));
-				std::cout << speed_mutiplyer_multiplyer << std::endl; // Debug info for speed_multiplyer
 			}
 			
 			
@@ -546,22 +529,22 @@ void SceneCollision::Update(double dt)
 			b_raceConfirmed = raceTemp.b_CheckRace_GENERAL();
 		}
 	}
+	//LButton Up
 	else if (!bLButtonState && Application::IsMousePressed(0) && NumMode_tiggered_powerbar == 1)
 	{
 		bLButtonState = true;
-		std::cout << "LBUTTON UP" << std::endl;
 		NumMode_tiggered_powerbar = 2;
 	}
+	//LButton Up
 	else if (!bLButtonState && Application::IsMousePressed(0) && NumMode_tiggered_powerbar == 2)
 	{
 		bLButtonState = true;
-		std::cout << "LBUTTON UP" << std::endl;
 		//NumMode_tiggered_powerbar = 3;
 	}
+	//LButton Down
 	else if (bLButtonState && !Application::IsMousePressed(0))
 	{
 		bLButtonState = false;
-		std::cout << "LBUTTON DOWN" << std::endl;
 		NumMode_tiggered_powerbar = 3;
 	}
 	// Power Bar movement
@@ -588,23 +571,21 @@ void SceneCollision::Update(double dt)
 		percentage_of_powerbar = ((powerbar->pos.x - original_position_powerbar) / (powerrange->scale.x - 22)) * 100; // Updater for power percentage (I know! Very werid numbers - Ryan)
 	}
 	
-
-	// std::cout << original_position_powerbar << std::endl; // Debug info for power bar position.x
+	//RButton Down
 	static bool bRButtonState = false;
 	if (!bRButtonState && Application::IsMousePressed(1))
 	{
 		bRButtonState = true;
-		std::cout << "RBUTTON DOWN" << std::endl;
 
 		m_ghost->pos.Set(posX, posY, 0); //IMPT
 		m_ghost->active = true;
 		float sc = 3;
 		m_ghost->scale.Set(sc, sc, sc);
 	}
+	//RButton Up
 	else if (bRButtonState && !Application::IsMousePressed(1))
 	{
 		bRButtonState = false;
-		std::cout << "RBUTTON UP" << std::endl;
 
 		//spawn large GO_BALL
 		GameObject *go = FetchGO();
@@ -642,6 +623,7 @@ void SceneCollision::Update(double dt)
 		}
 	}
 
+	//Activating ability
 	if (projectile->active && !bLButtonState && Application::IsMousePressed(0) && !b_abilityUsed)
 	{
 		if (i_projectileType == 1)
@@ -649,7 +631,6 @@ void SceneCollision::Update(double dt)
 			projectile->scale.x += raceTemp.vf_getVectAbility(1).x;
 			projectile->scale.y += raceTemp.vf_getVectAbility(1).y;
 			b_abilityUsed = true;
-			std::cout << "Ability used 1.\n";
 		}
 		else if (i_projectileType == 2)
 		{
@@ -668,8 +649,6 @@ void SceneCollision::Update(double dt)
 			projectile->vel *= speed * speed_multiplyer;
 			projectile->vel += raceTemp.vf_getVectAbility(2) * dt;
 			b_abilityUsed = true;
-			std::cout << speed << std::endl;
-			std::cout << "Ability used 2.\n";
 		}
 		else if (i_projectileType == 3)
 		{
@@ -679,10 +658,6 @@ void SceneCollision::Update(double dt)
 				CreateSplits(-5, projectile);
 				b_splitDone = true;
 			}
-		}
-		else
-		{
-			std::cout << "Ability used Error!\n";
 		}
 	}
 	else
@@ -863,6 +838,7 @@ void SceneCollision::Update(double dt)
 		}
 	}
 
+	//Destroyed all blocks
 	if (fortCount == 0)
 	{
 		SceneManager::getInstance()->changeScene(new SceneSuccess());
@@ -877,7 +853,7 @@ void SceneCollision::Update(double dt)
 		i_CurrentLevel++;
 		SetCurrentLevel(i_CurrentLevel);
 	}
-
+	//If did not destroy all blocks
 	if (fortCount != 0)
 	{
 		if (i_projectileCount == 0 && !projectile->active)
@@ -885,7 +861,7 @@ void SceneCollision::Update(double dt)
 			SceneManager::getInstance()->changeScene(new SceneFail());
 		}
 	}
-
+	//If complete all levels
 	if (i_CurrentLevel >= 10)
 	{
 		SceneManager::getInstance()->changeScene(new SceneCredit());
@@ -899,13 +875,6 @@ void SceneCollision::CreateStuff()
 
 	float m_worldWidth = 133;
 	float m_worldHeight = 100;
-
-	//GameObject *hexagon = FetchGO();
-	//hexagon->type = GameObject::GO_HEXA;	// Left Wall
-	//hexagon->active = true;
-	//hexagon->dir.Set(1, 0, 0);
-	//hexagon->pos.Set(m_worldWidth / 2, m_worldHeight / 2, 0);
-	//hexagon->scale.Set(2, 2, 1);
 
 	GameObject *wall = FetchGO();
 	wall->type = GameObject::GO_PLATFORM;	// Left Wall
@@ -1011,19 +980,6 @@ void SceneCollision::CreateStuff()
 	indicator->pos.Set(70.5, m_worldHeight - 47, 0);
 	indicator->scale.Set(20, 15, 10);
 	m_goList.push_back(indicator);
-
-	//{ // Testing Structure
-	//	GameObject* blocks = FetchGO();
-	//	blocks->type = GameObject::GO_BLOCKS;	// Vertical
-	//	blocks->active = true;
-	//	blocks->dir.Set(1, 0, 0);
-	//	blocks->pos.Set(133 / 2 + 16, blocks->scale.y + 5, 0);
-	//	blocks->scale.Set(2, 8, 1);
-	//	blocks->Color.Set(0.8, 0.8, 0);
-	//	fortCount++;
-
-	//	std::cout << "This is spawned!" << std::endl;
-	//}
 }
 
 void SceneCollision::CreateLevel(int level)
@@ -1032,23 +988,6 @@ void SceneCollision::CreateLevel(int level)
 	createLevel = loadText.LoadTextFile();
 	for (unsigned int i = 0; i < createLevel.size(); i++)
 	{
-		/*std::cout <<
-		createLevel[i].get_level() << ", " <<
-		createLevel[i].get_type() << ", " <<
-		createLevel[i].get_active() << ", " <<
-		createLevel[i].get_dirx() << ", " <<
-		createLevel[i].get_diry() << ", " <<
-		createLevel[i].get_dirz() << ", " <<
-		createLevel[i].get_posx() << ", " <<
-		createLevel[i].get_posy() << ", " <<
-		createLevel[i].get_posz() << ", " <<
-		createLevel[i].get_scax() << ", " <<
-		createLevel[i].get_scay() << ", " <<
-		createLevel[i].get_scaz() << ", " <<
-		createLevel[i].get_colr() << ", " <<
-		createLevel[i].get_colg() << ", " <<
-		createLevel[i].get_colb() << std::endl;*/
-
 		if (createLevel[i].get_level() == level)
 		{
 			GameObject* go = FetchGO();
@@ -1062,8 +1001,6 @@ void SceneCollision::CreateLevel(int level)
 			go->Color.Set(createLevel[i].get_colr(), createLevel[i].get_colg(), createLevel[i].get_colb());
 			fortCount++;
 		}
-
-		//std::cout << createLevel.size() << std::endl;
 	}
 }
 
@@ -1435,41 +1372,8 @@ void SceneCollision::Render()
 			RenderGO(go);
 		}
 	}
-	//if (m_ghost->active)
-	//	RenderGO(m_ghost);
-
-	//if (Application::IsKeyPressed(VK_RETURN))
-	//{
-	//	//On screen text
+	//On screen text
 	std::ostringstream ss;
-	//	ss << "Object count: " << m_objectCount;
-	//	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 9);
-
-	//	ss.str(std::string());
-	//	ss.precision(5);
-	//	ss << "Initial momentum: " << initialMomentum;
-	//	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 15);
-
-	//	ss.str(std::string());
-	//	ss.precision(5);
-	//	ss << "Final momentum: " << finalMomentum;
-	//	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 12);
-
-	//	//Exercise 3: render initial and final kinetic energy
-	//	ss.str(std::string());
-	//	ss.precision(5);
-	//	ss << "Initial KE: " << initialKE;
-	//	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 21);
-
-	//	ss.str(std::string());
-	//	ss.precision(5);
-	//	ss << "Final KE: " << finalKE;
-	//	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 18);
-
-	//	ss.str(std::string());
-	//	ss.precision(3);
-	//	ss << "Speed: " << m_speed;
-	//	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 6);
 
 	ss.str(std::string());
 	ss.precision(5);

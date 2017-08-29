@@ -1,5 +1,6 @@
 #include "SceneCredit.h"
 #include "GL\glew.h"
+#include "Application.h"
 #include "LoadTGA.h"
 
 #include "SceneManager.h"
