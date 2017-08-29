@@ -177,6 +177,14 @@ void SceneBase::Init()
 	meshList[GEO_HIGHSCOREMENU] = MeshBuilder::GenerateQuad("highscore", Color(1, 1, 1));
 	meshList[GEO_HIGHSCOREMENU]->textureID = LoadTGA("Image//Menu/HighScore Menu//highscore.tga");
 
+	//Save File Menu
+	meshList[GEO_SAVE1] = MeshBuilder::GenerateQuad("save1", Color(1, 1, 1));
+	meshList[GEO_SAVE1]->textureID = LoadTGA("Image//Menu/Save File//save1.tga");
+	meshList[GEO_SAVE2] = MeshBuilder::GenerateQuad("save2", Color(1, 1, 1));
+	meshList[GEO_SAVE2]->textureID = LoadTGA("Image//Menu/Save File//save2.tga");
+	meshList[GEO_SAVE3] = MeshBuilder::GenerateQuad("save3", Color(1, 1, 1));
+	meshList[GEO_SAVE3]->textureID = LoadTGA("Image//Menu/Save File//save3.tga");
+
 	// Power Bar
 	meshList[GEO_POWERRANGE] = MeshBuilder::GenerateQuad("POWERBAR", Color(1, 0, 1), 1);
 	meshList[GEO_POWERRANGE]->textureID = LoadTGA("Image//Powerbar/power_bar.tga");

@@ -79,6 +79,11 @@ public:
 		// HighScore Menu
 		GEO_HIGHSCOREMENU,
 
+		//Save File Menu
+		GEO_SAVE1,
+		GEO_SAVE2,
+		GEO_SAVE3,
+
 		// Power Bar
 		GEO_POWERBAR,
 		GEO_POWERRANGE,

@@ -14,6 +14,7 @@
 #include "SceneManager.h"
 #include "SceneCollision.h"
 #include "SceneHighScore.h"
+#include "SceneSaveFile.h"
 
 SceneMainMenu::SceneMainMenu()
 {
@@ -143,7 +144,7 @@ void SceneMainMenu::Update(double dt)
 		if (Application::IsKeyPressed(VK_RETURN) && pressDelay >= cooldownPressed)
 		{
 			if (selectOptions == NEWGAME)
-				SceneManager::getInstance()->changeScene(new SceneCollision());
+				SceneManager::getInstance()->changeScene(new SceneSaveFile());
 
 			else if (selectOptions == HIGHSCORE)
 			SceneManager::getInstance()->changeScene(new SceneHighScore());
