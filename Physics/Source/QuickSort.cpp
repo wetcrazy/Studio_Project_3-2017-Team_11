@@ -18,7 +18,7 @@ void QuickSort(vector<HighScore> *list, int first_index, int last_index)
 	}
 }
 
-void Swap(vector<HighScore> *list, int first_index, int second_index)
+void Swap(vector<HighScore> *list, int first_index, int second_index) 
 {
 	HighScore temp = list->at(first_index);
 	list->at(first_index) = list->at(second_index);
