@@ -390,7 +390,8 @@ void SceneCollision::CollisionResponse(GameObject * go1, GameObject * go2)
 
 void SceneCollision::Update(double dt)
 {
-	std::cout << i_despawnHexa << std::endl;
+	//std::cout << i_CurrentLevel << std::endl;
+	//std::cout << i_despawnHexa << std::endl;
 	//Calculating aspect ratio
 	m_worldHeight = 100.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
@@ -619,10 +620,10 @@ void SceneCollision::Update(double dt)
 			m_objectCount = 0;
 		}
 	}
-	if (b_raceConfirmed)
-		std::cout << "Confirmed!\n";
-	else
-		std::cout << "Unconfirmed!\n";
+	//if (b_raceConfirmed)
+	//	std::cout << "Confirmed!\n";
+	//else
+	//	std::cout << "Unconfirmed!\n";
 	//
 	if (projectile->active && !bLButtonState && Application::IsMousePressed(0) && !b_abilityUsed)
 	{
