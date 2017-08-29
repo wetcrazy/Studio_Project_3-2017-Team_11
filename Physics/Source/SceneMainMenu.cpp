@@ -7,6 +7,7 @@
 #include "SceneCollision.h"
 #include "SceneHighScore.h"
 #include "SceneSaveFile.h"
+#include "SceneInstructions.h"
 
 #include "../IK/irrKlang.h"
 using namespace irrklang;
@@ -130,6 +131,9 @@ void SceneMainMenu::Update(double dt)
 		{
 			if (selectOptions == NEWGAME)
 				SceneManager::getInstance()->changeScene(new SceneSaveFile());
+
+			else if (selectOptions == INSTRUCTIONS)
+				SceneManager::getInstance()->changeScene(new SceneInstructions());
 
 			else if (selectOptions == HIGHSCORE)
 			SceneManager::getInstance()->changeScene(new SceneHighScore());

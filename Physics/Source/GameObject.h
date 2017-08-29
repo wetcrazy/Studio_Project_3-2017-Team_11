@@ -50,6 +50,11 @@ struct GameObject
 		//Highscore Menu
 		GO_HIGHSCOREMENU,
 
+		//Instructions Menu
+		GO_INSTRUCTIONS1,
+		GO_INSTRUCTIONS2,
+		GO_INSTRUCTIONS3,
+
 		//Save File Menu
 		GO_SAVEMENU,
 		GO_SAVE1,

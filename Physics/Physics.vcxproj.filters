@@ -122,6 +122,9 @@
     <ClCompile Include="Source\SceneCredit.cpp">
       <Filter>Scene UI</Filter>
     </ClCompile>
+    <ClCompile Include="Source\SceneInstructions.cpp">
+      <Filter>Scene UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -215,6 +218,9 @@
       <Filter>Scene UI</Filter>
     </ClInclude>
     <ClInclude Include="Source\SceneCredit.h">
+      <Filter>Scene UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SceneInstructions.h">
       <Filter>Scene UI</Filter>
     </ClInclude>
   </ItemGroup>

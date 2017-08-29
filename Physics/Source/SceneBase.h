@@ -83,6 +83,11 @@ public:
 		// HighScore Menu
 		GEO_HIGHSCOREMENU,
 
+		//Instructions Menu
+		GEO_INSTRUCTIONS1,
+		GEO_INSTRUCTIONS2,
+		GEO_INSTRUCTIONS3,
+
 		//Save File Menu
 		GEO_SAVEMENU,
 		GEO_SAVE1,

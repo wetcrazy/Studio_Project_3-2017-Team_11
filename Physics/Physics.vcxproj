@@ -172,6 +172,7 @@
     <ClCompile Include="Source\SceneCredit.cpp" />
     <ClCompile Include="Source\SceneFail.cpp" />
     <ClCompile Include="Source\SceneHighScore.cpp" />
+    <ClCompile Include="Source\SceneInstructions.cpp" />
     <ClCompile Include="Source\SceneMainMenu.cpp" />
     <ClCompile Include="Source\SceneManager.cpp" />
     <ClCompile Include="Source\SceneSaveFile.cpp" />
@@ -204,6 +205,7 @@
     <ClInclude Include="Source\SceneCredit.h" />
     <ClInclude Include="Source\SceneFail.h" />
     <ClInclude Include="Source\SceneHighScore.h" />
+    <ClInclude Include="Source\SceneInstructions.h" />
     <ClInclude Include="Source\SceneMainMenu.h" />
     <ClInclude Include="Source\SceneManager.h" />
     <ClInclude Include="Source\SceneSaveFile.h" />
