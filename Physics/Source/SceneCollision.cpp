@@ -789,6 +789,7 @@ void SceneCollision::Update(double dt)
 	//Press R to reset current level
 	if (Application::IsKeyPressed('R'))
 	{
+		SceneManager::getInstance()->changeScene(new SceneCollision());
 		SetCurrentLevel(i_CurrentLevel);
 		SetTempScore(0);
 		SetTempCurrency(0);
