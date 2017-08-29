@@ -188,16 +188,7 @@ void SceneSaveFile::Update(double dt)
 				select1 = false;
 				select2 = false;
 				select_delete = false;
-			}
-				
-			else if (selectOptions == DELETE_FILE)
-			{
-				select1 = false;
-				select2 = false;
-				select3 = false;
-				select_delete = true;
-			}
-				
+			}				
 
 			if (selectOptions == SELECT)
 			{
@@ -220,31 +211,30 @@ void SceneSaveFile::Update(double dt)
 
 			else if (selectOptions == DELETE_FILE)
 			{
+				select_delete = true;
 				DeleteSaveFile("savefile.txt");
 
+				SetCurrentLevel(1);
+				SetTempScore(0);
+				SetScore(0);
+				SetCurrency(0);
+				SetTempCurrency(0);
 				if (select1)
 				{
-					SetCurrentLevel(1);
-					SetTempScore(0);
-					SetScore(0);
-					SetCurrency(0);
-					SetTempCurrency(0);
-					if (select1)
-					{
-						upgraded.DeleteTextFile("Save1//Speed_Upgrade.txt");
-						upgraded.ReadFile("Save1//Speed_Upgrade.txt");
-					}
-					else if (select2)
-					{
-						upgraded.DeleteTextFile("Save2//Speed_Upgrade.txt");
-						upgraded.ReadFile("Save2//Speed_Upgrade.txt");
-					}
-					else if (select3)
-					{
-						upgraded.DeleteTextFile("Save3//Speed_Upgrade.txt");
-						upgraded.ReadFile("Save3//Speed_Upgrade.txt");
-					}
+					upgraded.DeleteTextFile("Save1//Speed_Upgrade.txt");
+					upgraded.ReadFile("Save1//Speed_Upgrade.txt");
 				}
+				else if (select2)
+				{
+					upgraded.DeleteTextFile("Save2//Speed_Upgrade.txt");
+					upgraded.ReadFile("Save2//Speed_Upgrade.txt");
+				}
+				else if (select3)
+				{
+					upgraded.DeleteTextFile("Save3//Speed_Upgrade.txt");
+					upgraded.ReadFile("Save3//Speed_Upgrade.txt");
+				}
+
 			}
 
 			else if (selectOptions == MAIN_MENU)
@@ -446,6 +436,17 @@ void SceneSaveFile::SetTempCurrency(int tempCurrency)
 	myFile.close();
 }
 
+int SceneSaveFile::GetCurrentLevel(string fileName)
+{
+	int level;
+	ifstream myFile;
+	myFile.open(fileName);
+	myFile >> level;
+	myFile.close();
+
+	return level;
+}
+
 void SceneSaveFile::DeleteSaveFile(string fileName)
 {
 	ofstream output;
@@ -532,6 +533,29 @@ void SceneSaveFile::Render()
 			RenderGO(go);
 		}
 	}
+
+	std::ostringstream ss;
+
+	//Show current level of save file 1
+	int i_currentLevel_1 = GetCurrentLevel("Save1//CurrentLevel.txt");
+	ss.str(std::string());
+	ss.precision(5);
+	ss << i_currentLevel_1;
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 45, 36.5);
+
+	//Show current level of save file 2
+	int i_currentLevel_2 = GetCurrentLevel("Save2//CurrentLevel.txt");
+	ss.str(std::string());
+	ss.precision(5);
+	ss << i_currentLevel_2;
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 45, 24.5);
+
+	//Show current level of save file 3
+	int i_currentLevel_3 = GetCurrentLevel("Save3//CurrentLevel.txt");
+	ss.str(std::string());
+	ss.precision(5);
+	ss << i_currentLevel_3;
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 45, 12.5);
 }
 
 void SceneSaveFile::Exit()

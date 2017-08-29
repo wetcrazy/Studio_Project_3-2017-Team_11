@@ -25,9 +25,9 @@ void SceneFail::Init()
 
 	Math::InitRNG();
 
-	i_score = GetScore();
-
 	i_saveFile = GetSaveFile();
+
+	i_score = GetScore();
 
 	file_path = "CSV//highscore.csv";
 

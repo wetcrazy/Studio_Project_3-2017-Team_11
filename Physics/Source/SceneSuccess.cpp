@@ -25,9 +25,9 @@ void SceneSuccess::Init()
 
 	Math::InitRNG();
 
-	i_score = GetScore();
-
 	i_saveFile = GetSaveFile();
+
+	i_score = GetScore();
 
 	//Setting star requirements
 	//If score is less than i_first, get 1 star

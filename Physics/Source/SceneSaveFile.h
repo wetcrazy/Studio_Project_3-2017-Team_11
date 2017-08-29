@@ -30,6 +30,9 @@ public:
 	//Setting of temporary currency
 	void SetTempCurrency(int currency);
 
+	//Getting of current level
+	int GetCurrentLevel(string fileName);
+
 	void RenderGO(GameObject *go);
 
 	enum SAVE_MENU

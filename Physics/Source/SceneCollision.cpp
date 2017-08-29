@@ -6,6 +6,7 @@
 #include "SceneManager.h"
 #include "SceneMainMenu.h"
 #include "SceneSuccess.h"
+#include "SceneFail.h"
 
 #include "SpriteAnimation.h"
 // #include "LoadTXT.h"
@@ -859,6 +860,12 @@ void SceneCollision::Update(double dt)
 		SetCurrency(i_tempCurrency);
 		i_CurrentLevel++;
 		SetCurrentLevel(i_CurrentLevel);
+	}
+
+	if (i_projectileCount == 0 && !projectile->active)
+	{
+		SceneManager::getInstance()->changeScene(new SceneFail());
+
 	}
 }
 
