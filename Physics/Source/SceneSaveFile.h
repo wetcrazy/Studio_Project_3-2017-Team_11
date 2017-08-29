@@ -57,19 +57,22 @@ protected:
 
 	//Save Menu
 	GameObject *arrows = FetchGO();
+	GameObject *saveMenu = FetchGO();
 	GameObject *save1 = FetchGO();
 	GameObject *save2 = FetchGO();
 	GameObject *save3 = FetchGO();
+	GameObject *deleteOption = FetchGO();
 
 	//.txt
 	LoadingUpgrades upgraded;
 
+	//if save files are selected
+	bool select1, select2, select3, select_delete;
+
 	//Options
 	float pressDelay = 0.f;
 
-	bool select1, select2, select3, select_delete; //if save files are selected
-
-												   //Cooldown for Button Pressed
+	//Cooldown for Button Pressed
 	const float cooldownPressed = 0.2f;
 };
 #endif

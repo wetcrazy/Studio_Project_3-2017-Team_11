@@ -24,6 +24,9 @@ public:
 	//Getter for score
 	int GetScore();
 
+	//Getter for save file
+	int GetSaveFile();
+
 	enum SUCCESS_MENU
 	{
 		MAIN_MENU = 0,
@@ -64,6 +67,9 @@ protected:
 
 	//Stars
 	bool b_first, b_second, b_third;
+
+	//savefile.txt
+	int i_saveFile;
 
 	//Options
 	float pressDelay = 0.f;

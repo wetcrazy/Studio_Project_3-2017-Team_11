@@ -31,6 +31,8 @@ void SceneUpgrade::Init()
 	b_speed_multiplyer_upgrade_1 = false;
 	b_speed_multiplyer_upgrade_2 = false;
 
+	i_saveFile = GetSaveFile();
+
 	arrows->type = GameObject::GO_ARROW;	//Arrow 
 	arrows->active = true;
 	arrows->pos.Set(-10, -10, 1);
@@ -105,8 +107,21 @@ void SceneUpgrade::Update(double dt)
 {
 	SceneBase::Update(dt);
 
-	upgraded.ReadFile("Text//Speed_Upgrade.txt");
-	upgraded.ReadFile("Text//Speed_Multiplyer_Upgrade.txt");
+	if (i_saveFile == 1)
+	{
+		upgraded.ReadFile("Save1//Speed_Upgrade.txt");
+		upgraded.ReadFile("Save1//Speed_Multiplyer_Upgrade.txt");
+	}
+	else if (i_saveFile == 2)
+	{
+		upgraded.ReadFile("Save2//Speed_Upgrade.txt");
+		upgraded.ReadFile("Save2//Speed_Multiplyer_Upgrade.txt");
+	}
+	else if (i_saveFile == 3)
+	{
+		upgraded.ReadFile("Save3//Speed_Upgrade.txt");
+		upgraded.ReadFile("Save3//Speed_Multiplyer_Upgrade.txt");
+	}
 
 	SetCurrency(i_currency);
 
@@ -128,8 +143,8 @@ void SceneUpgrade::Update(double dt)
 	//Scale values (for upgrade menu)
 	float scaleDown_Arrow = 20.f;
 
-	//Press R to reset
-	if (Application::IsKeyPressed('R'))
+	//Press O to reset entire game
+	if (Application::IsKeyPressed('O'))
 	{
 		SceneManager::getInstance()->changeScene(new SceneMainMenu());
 		SetCurrentLevel(1);
@@ -137,10 +152,27 @@ void SceneUpgrade::Update(double dt)
 		SetScore(0);
 		SetCurrency(0);
 		SetTempCurrency(0);
-		upgraded.DeleteTextFile("Text//Speed_Upgrade.txt");
-		upgraded.ReadFile("Text//Speed_Upgrade.txt");
-		upgraded.DeleteTextFile("Text//Speed_Multiplyer_Upgrade.txt");
-		upgraded.ReadFile("Text//Speed_Multiplyer_Upgrade.txt");
+		if (i_saveFile == 1)
+		{
+			upgraded.DeleteTextFile("Save1//Speed_Upgrade.txt");
+			upgraded.ReadFile("Save1//Speed_Upgrade.txt");
+			upgraded.DeleteTextFile("Save1//Speed_Multiplyer_Upgrade.txt");
+			upgraded.ReadFile("Save1//Speed_Multiplyer_Upgrade.txt");
+		}
+		else if (i_saveFile == 2)
+		{
+			upgraded.DeleteTextFile("Save2//Speed_Upgrade.txt");
+			upgraded.ReadFile("Save2//Speed_Upgrade.txt");
+			upgraded.DeleteTextFile("Save2//Speed_Multiplyer_Upgrade.txt");
+			upgraded.ReadFile("Save2//Speed_Multiplyer_Upgrade.txt");
+		}
+		else if (i_saveFile == 3)
+		{
+			upgraded.DeleteTextFile("Save3//Speed_Upgrade.txt");
+			upgraded.ReadFile("Save3//Speed_Upgrade.txt");
+			upgraded.DeleteTextFile("Save3//Speed_Multiplyer_Upgrade.txt");
+			upgraded.ReadFile("Save3//Speed_Multiplyer_Upgrade.txt");
+		}
 	}
 
 	//UP, DOWN and ENTER controls
@@ -378,7 +410,12 @@ void SceneUpgrade::Update(double dt)
 			speed_upgrade_1->scale.Set(w_temp + 2, h_temp, 1);
 
 			//.txt
-			upgraded.WriteFile("Text//Speed_Upgrade.txt", "Speed", 1);
+			if (i_saveFile == 1)
+				upgraded.WriteFile("Save1//Speed_Upgrade.txt", "Speed", 1);
+			else if (i_saveFile == 2)
+				upgraded.WriteFile("Save2//Speed_Upgrade.txt", "Speed", 1);
+			else if (i_saveFile == 3)
+				upgraded.WriteFile("Save3//Speed_Upgrade.txt", "Speed", 1);
 		}
 		//Buying second speed upgrade
 		if (b_speed_upgrade_2)
@@ -391,7 +428,12 @@ void SceneUpgrade::Update(double dt)
 			speed_upgrade_2->scale.Set(w_temp + 2, h_temp, 1);
 
 			//.txt
-			upgraded.WriteFile("Text//Speed_Upgrade.txt", "Speed", 2);
+			if (i_saveFile == 1)
+				upgraded.WriteFile("Save1//Speed_Upgrade.txt", "Speed", 2);
+			else if (i_saveFile == 2)
+				upgraded.WriteFile("Save2//Speed_Upgrade.txt", "Speed", 2);
+			else if (i_saveFile == 3)
+				upgraded.WriteFile("Save3//Speed_Upgrade.txt", "Speed", 2);
 		}
 		//Bought first speed upgrade
 		if (upgraded.speed_upgrade == 1)
@@ -435,7 +477,12 @@ void SceneUpgrade::Update(double dt)
 			speed_multiplyer_upgrade_1->scale.Set(w_temp + 2, h_temp, 1);
 
 			//.txt
-			upgraded.WriteFile("Text//Speed_Multiplyer_Upgrade.txt", "Speed_Multiplyer", 1);
+			if (i_saveFile == 1)
+				upgraded.WriteFile("Save1//Speed_Multiplyer_Upgrade.txt", "Speed_Multiplyer", 1);
+			else if (i_saveFile == 2)
+				upgraded.WriteFile("Save2//Speed_Multiplyer_Upgrade.txt", "Speed_Multiplyer", 1);
+			else if (i_saveFile == 3)
+				upgraded.WriteFile("Save3//Speed_Multiplyer_Upgrade.txt", "Speed_Multiplyer", 1);
 		}
 		//Buying second speed multiplyer upgrade
 		if (b_speed_multiplyer_upgrade_2)
@@ -448,7 +495,12 @@ void SceneUpgrade::Update(double dt)
 			speed_multiplyer_upgrade_2->scale.Set(w_temp + 2, h_temp, 1);
 
 			//.txt
-			upgraded.WriteFile("Text//Speed_Multiplyer_Upgrade.txt", "Speed_Multiplyer", 2);
+			if (i_saveFile == 1)
+				upgraded.WriteFile("Save1//Speed_Multiplyer_Upgrade.txt", "Speed_Multiplyer", 2);
+			else if (i_saveFile == 2)
+				upgraded.WriteFile("Save2//Speed_Multiplyer_Upgrade.txt", "Speed_Multiplyer", 2);
+			else if (i_saveFile == 3)
+				upgraded.WriteFile("Save3//Speed_Multiplyer_Upgrade.txt", "Speed_Multiplyer", 2);
 		}
 		//Bought first speed multiplyer upgrade
 		if (upgraded.speed_multiplyer_upgrade == 1)
@@ -476,7 +528,12 @@ void SceneUpgrade::Update(double dt)
 void SceneUpgrade::SetCurrentLevel(int levelNo)
 {
 	ofstream myFile;
-	myFile.open("Text//CurrentLevel.txt");
+	if (i_saveFile == 1)
+		myFile.open("Save1//CurrentLevel.txt");
+	else if (i_saveFile == 2)
+		myFile.open("Save2//CurrentLevel.txt");
+	else if (i_saveFile == 3)
+		myFile.open("Save3//CurrentLevel.txt");
 	myFile << levelNo << endl;
 	myFile.close();
 }
@@ -484,7 +541,12 @@ void SceneUpgrade::SetCurrentLevel(int levelNo)
 void SceneUpgrade::SetScore(int score)
 {
 	ofstream myFile;
-	myFile.open("Text//Score.txt");
+	if (i_saveFile == 1)
+		myFile.open("Save1//Score.txt");
+	else if (i_saveFile == 2)
+		myFile.open("Save2//Score.txt");
+	else if (i_saveFile == 3)
+		myFile.open("Save3//Score.txt");
 	myFile << score << endl;
 	myFile.close();
 }
@@ -492,7 +554,12 @@ void SceneUpgrade::SetScore(int score)
 void SceneUpgrade::SetTempScore(int tempScore)
 {
 	ofstream myFile;
-	myFile.open("Text//TempScore.txt");
+	if (i_saveFile == 1)
+		myFile.open("Save1//TempScore.txt");
+	else if (i_saveFile == 2)
+		myFile.open("Save2//TempScore.txt");
+	else if (i_saveFile == 3)
+		myFile.open("Save3//TempScore.txt");
 	myFile << tempScore << endl;
 	myFile.close();
 }
@@ -500,7 +567,12 @@ void SceneUpgrade::SetTempScore(int tempScore)
 void SceneUpgrade::SetCurrency(int currency)
 {
 	ofstream myFile;
-	myFile.open("Text//Currency.txt");
+	if (i_saveFile == 1)
+		myFile.open("Save1//Currency.txt");
+	else if (i_saveFile == 2)
+		myFile.open("Save2//Currency.txt");
+	else if (i_saveFile == 3)
+		myFile.open("Save3//Currency.txt");
 	myFile << currency << endl;
 	myFile.close();
 }
@@ -509,7 +581,12 @@ int SceneUpgrade::GetCurrency()
 {
 	int currency;
 	ifstream myFile;
-	myFile.open("Text//Currency.txt");
+	if (i_saveFile == 1)
+		myFile.open("Save1//Currency.txt");
+	else if (i_saveFile == 2)
+		myFile.open("Save2//Currency.txt");
+	else if (i_saveFile == 3)
+		myFile.open("Save3//Currency.txt");
 	myFile >> currency;
 	myFile.close();
 
@@ -519,7 +596,12 @@ int SceneUpgrade::GetCurrency()
 void SceneUpgrade::SetTempCurrency(int tempCurrency)
 {
 	ofstream myFile;
-	myFile.open("Text//TempCurrency.txt");
+	if (i_saveFile == 1)
+		myFile.open("Save1//TempCurrency.txt");
+	else if (i_saveFile == 2)
+		myFile.open("Save2//TempCurrency.txt");
+	else if (i_saveFile == 3)
+		myFile.open("Save3//TempCurrency.txt");
 	myFile << tempCurrency << endl;
 	myFile.close();
 }
@@ -528,11 +610,27 @@ int SceneUpgrade::GetTempCurrency()
 {
 	int tempCurrency;
 	ifstream myFile;
-	myFile.open("Text//TempCurrency.txt");
+	if (i_saveFile == 1)
+		myFile.open("Save1//TempCurrency.txt");
+	else if (i_saveFile == 2)
+		myFile.open("Save2//TempCurrency.txt");
+	else if (i_saveFile == 3)
+		myFile.open("Save3//TempCurrency.txt");
 	myFile >> tempCurrency;
 	myFile.close();
 
 	return tempCurrency;
+}
+
+int SceneUpgrade::GetSaveFile()
+{
+	int saveFile;
+	ifstream myFile;
+	myFile.open("savefile.txt");
+	myFile >> saveFile;
+	myFile.close();
+
+	return saveFile;
 }
 
 void SceneUpgrade::RenderGO(GameObject *go)

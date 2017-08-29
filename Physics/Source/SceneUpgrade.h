@@ -31,6 +31,9 @@ public:
 	void SetTempCurrency(int currency);
 	int GetTempCurrency();
 
+	//Getter for save file
+	int GetSaveFile();
+
 	void RenderGO(GameObject *go);
 
 	enum UPGRADES_MENU
@@ -88,6 +91,9 @@ protected:
 	int i_cost_speed_upgrade_2;
 	int i_cost_speed_multiplyer_upgrade_1;
 	int i_cost_speed_multiplyer_upgrade_2;
+
+	//savefile.txt
+	int i_saveFile;
 
 	//Options
 	float pressDelay = 0.f;

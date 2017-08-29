@@ -55,6 +55,9 @@ public:
 	void SetTempCurrency(int currency);
 	int GetTempCurrency();
 
+	//Getting of save file
+	int GetSaveFile();
+
 protected:
 
 	//Physics
@@ -122,6 +125,9 @@ protected:
 
 	//TempCurrency.txt
 	int i_tempCurrency;
+
+	//savefile.txt
+	int i_saveFile;
 
 	LoadTXT loadText;
 

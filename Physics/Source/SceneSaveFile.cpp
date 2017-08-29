@@ -38,6 +38,11 @@ void SceneSaveFile::Init()
 	arrows->pos.Set(-10, -10, 1);
 	arrows->scale.Set(1.0f, 1.0f, 1.0f);
 
+	saveMenu->type = GameObject::GO_SAVEMENU;	//Save Menu
+	saveMenu->active = true;
+	saveMenu->pos.Set(-10, -10, -5);
+	saveMenu->scale.Set(1.0f, 1.0f, 1.0f);
+
 	save1->type = GameObject::GO_SAVE1;	//Save 1
 	save1->active = true;
 	save1->pos.Set(-10, -10, -5);
@@ -89,18 +94,22 @@ void SceneSaveFile::Update(double dt)
 {
 	SceneBase::Update(dt);
 
+	pressDelay += (float)dt;
+
 	int h_temp = 100;
 	int w_temp = 100 * Application::GetWindowWidth() / Application::GetWindowHeight();
 
-	//Position values (for upgrade menu)
-	float posXDownArrow = 0.7f;
-	float posXDownArrow_NextLevel = 1.1f;
-	float posXDownArrow_NextPage = 0.57f;
-	float posYDownArrow_Upgrade1 = 0.82f;
-	float posYDownArrow_Upgrade2 = 1.33f;
-	float posYDownArrow_NextPage_NextLevel = 3.35f;
+	//Position values (for save file)
+	float posXDownArrow_Saves = 0.72f;
+	float posXDownArrow_Select = 1.55f;
+	float posXDownArrow_Delete = 0.9f;
+	float posXDownArrow_MainMenu = 0.57f;
+	float posYDownArrow_Save1 = 0.765f;
+	float posYDownArrow_Save2 = 1.1f;
+	float posYDownArrow_Save3 = 1.89f;
+	float posYDownArrow_Options = 5.f;
 
-	//Scale values (for upgrade menu)
+	//Scale values (for save file)
 	float scaleDown_Arrow = 20.f;
 
 	//UP, DOWN and ENTER controls
@@ -111,7 +120,10 @@ void SceneSaveFile::Update(double dt)
 
 		if ((Application::IsKeyPressed(VK_UP)) && pressDelay >= cooldownPressed)
 		{
-			if (selectOptions == MAIN_MENU)
+			if (selectOptions == SAVE1)
+				selectOptions = MAIN_MENU;
+
+			else if (selectOptions == MAIN_MENU)
 				selectOptions = DELETE_FILE;
 
 			else if (selectOptions == DELETE_FILE)
@@ -146,19 +158,46 @@ void SceneSaveFile::Update(double dt)
 			else if (selectOptions == DELETE_FILE)
 				selectOptions = MAIN_MENU;
 
+			else if (selectOptions == MAIN_MENU)
+				selectOptions = SAVE1;
+
 			pressDelay = 0.f;
 		}
 
 		if (Application::IsKeyPressed(VK_RETURN) && pressDelay >= cooldownPressed)
 		{
 			if (selectOptions == SAVE1)
+			{
 				select1 = true;
+				select2 = false;
+				select3 = false;
+				select_delete = false;
+			}
+				
 			else if (selectOptions == SAVE2)
+			{
 				select2 = true;
+				select1 = false;
+				select3 = false;
+				select_delete = false;
+			}
+				
 			else if (selectOptions == SAVE3)
+			{
 				select3 = true;
+				select1 = false;
+				select2 = false;
+				select_delete = false;
+			}
+				
 			else if (selectOptions == DELETE_FILE)
+			{
+				select1 = false;
+				select2 = false;
+				select3 = false;
 				select_delete = true;
+			}
+				
 
 			if (selectOptions == SELECT)
 			{
@@ -181,33 +220,29 @@ void SceneSaveFile::Update(double dt)
 
 			else if (selectOptions == DELETE_FILE)
 			{
-				if (select_delete)
-				{
-					DeleteSaveFile("savefile.txt");
+				DeleteSaveFile("savefile.txt");
 
+				if (select1)
+				{
+					SetCurrentLevel(1);
+					SetTempScore(0);
+					SetScore(0);
+					SetCurrency(0);
+					SetTempCurrency(0);
 					if (select1)
 					{
-						SceneManager::getInstance()->changeScene(new SceneMainMenu());
-						SetCurrentLevel(1);
-						SetTempScore(0);
-						SetScore(0);
-						SetCurrency(0);
-						SetTempCurrency(0);
-						if (select1)
-						{
-							upgraded.DeleteTextFile("Save1//Speed_Upgrade.txt");
-							upgraded.ReadFile("Save1//Speed_Upgrade.txt");
-						}
-						else if (select2)
-						{
-							upgraded.DeleteTextFile("Save2//Speed_Upgrade.txt");
-							upgraded.ReadFile("Save2//Speed_Upgrade.txt");
-						}
-						else if (select3)
-						{
-							upgraded.DeleteTextFile("Save3//Speed_Upgrade.txt");
-							upgraded.ReadFile("Save3//Speed_Upgrade.txt");
-						}
+						upgraded.DeleteTextFile("Save1//Speed_Upgrade.txt");
+						upgraded.ReadFile("Save1//Speed_Upgrade.txt");
+					}
+					else if (select2)
+					{
+						upgraded.DeleteTextFile("Save2//Speed_Upgrade.txt");
+						upgraded.ReadFile("Save2//Speed_Upgrade.txt");
+					}
+					else if (select3)
+					{
+						upgraded.DeleteTextFile("Save3//Speed_Upgrade.txt");
+						upgraded.ReadFile("Save3//Speed_Upgrade.txt");
 					}
 				}
 			}
@@ -224,44 +259,117 @@ void SceneSaveFile::Update(double dt)
 	case SAVE1:
 		//Render arrow 
 		arrows->active = true;
-		arrows->pos.Set((w_temp / 2) / posXDownArrow, (h_temp / 2) / posYDownArrow_Upgrade1, 1);
+		arrows->pos.Set((w_temp / 2) / posXDownArrow_Saves, (h_temp / 2) / posYDownArrow_Save1, 1);
 		arrows->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
 
 		//Render save menu
-		save1->active = true;
-		save1->pos.Set(w_temp / 2, h_temp / 2, -5);
-		save1->scale.Set(w_temp + 2, h_temp, 1);
+		saveMenu->active = true;
+		saveMenu->pos.Set(w_temp / 2, h_temp / 2, -5);
+		saveMenu->scale.Set(w_temp + 2, h_temp, 1);
 		break;
 
 	case SAVE2:
 		//Render arrow
-		arrows->pos.Set((w_temp / 2) / posXDownArrow, (h_temp / 2) / posYDownArrow_Upgrade2, 1);
+		arrows->pos.Set((w_temp / 2) / posXDownArrow_Saves, (h_temp / 2) / posYDownArrow_Save2, 1);
 		arrows->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
 
-		//Render in upgrades menu
-		save2->pos.Set(w_temp / 2, h_temp / 2, -5);
-		save2->scale.Set(w_temp + 2, h_temp, 1);
+		//Render save menu
+		saveMenu->pos.Set(w_temp / 2, h_temp / 2, -5);
+		saveMenu->scale.Set(w_temp + 2, h_temp, 1);
 		break;
 
 	case SAVE3:
 		//Render arrow
-		arrows->pos.Set((w_temp / 2) / posXDownArrow_NextLevel, (h_temp / 2) / posYDownArrow_NextPage_NextLevel, 1);
+		arrows->pos.Set((w_temp / 2) / posXDownArrow_Saves, (h_temp / 2) / posYDownArrow_Save3, 1);
 		arrows->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
 
-		//Render in upgrades menu
-		save3->pos.Set(w_temp / 2, h_temp / 2, -5);
-		save3->scale.Set(w_temp + 2, h_temp, 1);
+		//Render save menu
+		saveMenu->pos.Set(w_temp / 2, h_temp / 2, -5);
+		saveMenu->scale.Set(w_temp + 2, h_temp, 1);
 		break;
 
 	case SELECT:
 		//Render arrow
-		arrows->pos.Set((w_temp / 2) / posXDownArrow_NextPage, (h_temp / 2) / posYDownArrow_NextPage_NextLevel, 1);
+		arrows->pos.Set((w_temp / 2) / posXDownArrow_Select, (h_temp / 2) / posYDownArrow_Options, 1);
 		arrows->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
 
-		//Render in upgrades menu
+		//Render save menu
+		saveMenu->pos.Set(w_temp / 2, h_temp / 2, -5);
+		saveMenu->scale.Set(w_temp + 2, h_temp, 1);
+		break;
+
+	case DELETE_FILE:
+		//Render arrow
+		arrows->pos.Set((w_temp / 2) / posXDownArrow_Delete, (h_temp / 2) / posYDownArrow_Options, 1);
+		arrows->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
+
+		//Render save menu
+		saveMenu->pos.Set(w_temp / 2, h_temp / 2, -5);
+		saveMenu->scale.Set(w_temp + 2, h_temp, 1);
+		break;
+
+	case MAIN_MENU:
+		//Render arrow
+		arrows->pos.Set((w_temp / 2) / posXDownArrow_MainMenu, (h_temp / 2) / posYDownArrow_Options, 1);
+		arrows->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
+
+		//Render save menu
+		saveMenu->pos.Set(w_temp / 2, h_temp / 2, -5);
+		saveMenu->scale.Set(w_temp + 2, h_temp, 1);
+		break;
+	}
+
+	//If First Save File selected
+	if (select1)
+	{
+		//False actives
+		saveMenu->active = false;
+		save2->active = false;
+		save3->active = false;
+
+		//Render in save1
+		save1->active = true;
 		save1->pos.Set(w_temp / 2, h_temp / 2, -5);
 		save1->scale.Set(w_temp + 2, h_temp, 1);
-		break;
+	}
+	//If Second Save File selected
+	if (select2)
+	{
+		//False actives
+		saveMenu->active = false;
+		save1->active = false;
+		save3->active = false;
+
+		//Render in save2
+		save2->active = true;
+		save2->pos.Set(w_temp / 2, h_temp / 2, -5);
+		save2->scale.Set(w_temp + 2, h_temp, 1);
+	}
+	//If Third Save File selected
+	if (select3)
+	{
+		//False actives
+		saveMenu->active = false;
+		save1->active = false;
+		save2->active = false;
+
+		//Render in save3
+		save3->active = true;
+		save3->pos.Set(w_temp / 2, h_temp / 2, -5);
+		save3->scale.Set(w_temp + 2, h_temp, 1);
+	}
+	//If deleted save file
+	if (select_delete)
+	{
+		//False actives
+		save1->active = false;
+		save2->active = false;
+		save3->active = false;
+
+		//Render in saveMenu
+		saveMenu->active = true;
+		saveMenu->pos.Set(w_temp / 2, h_temp / 2, -5);
+		saveMenu->scale.Set(w_temp + 2, h_temp, 1);
 	}
 }
 
@@ -353,6 +461,20 @@ void SceneSaveFile::RenderGO(GameObject *go)
 {
 	switch (go->type)
 	{
+	case GameObject::GO_ARROW:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_ARROW], true, go->Color);
+		modelStack.PopMatrix();
+		break;
+	case GameObject::GO_SAVEMENU:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_SAVEMENU], true, go->Color);
+		modelStack.PopMatrix();
+		break;
 	case GameObject::GO_SAVE1:
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);

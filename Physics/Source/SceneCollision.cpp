@@ -22,8 +22,17 @@ void SceneCollision::Init()
 {
 	SceneBase::Init();
 
+	i_saveFile = GetSaveFile();
+
+	i_projectileType = i_saveFile;
+
 	//Upgrades
-	upgraded.ReadFile("Text//Speed_Upgrade.txt");
+	if (i_saveFile == 1)
+		upgraded.ReadFile("Save1//Speed_Upgrade.txt");
+	else if (i_saveFile == 2)
+		upgraded.ReadFile("Save2//Speed_Upgrade.txt");
+	else if (i_saveFile == 3)
+		upgraded.ReadFile("Save3//Speed_Upgrade.txt");
 
 	//Physics code here
 	m_speed = 1.f;
@@ -34,8 +43,6 @@ void SceneCollision::Init()
 	fortCount = 0;
 	initialKE = 0;
 	finalKE = 0;
-
-	i_projectileType = 3;
 
 	if (i_projectileType == 1)
 		m_ghost = new GameObject(GameObject::GO_BALL);
@@ -409,15 +416,6 @@ void SceneCollision::Update(double dt)
 	SetTempScore(i_tempScore);
 	SetTempCurrency(i_tempCurrency);
 
-	if (Application::IsKeyPressed('9'))
-	{
-		m_speed = Math::Max(0.f, m_speed - 0.1f);
-	}
-	if (Application::IsKeyPressed('0'))
-	{
-		m_speed += 0.1f;
-	}
-
 	//Mouse Section
 	static bool bLButtonState = false;
 
@@ -764,8 +762,8 @@ void SceneCollision::Update(double dt)
 	//End of Background stuff=====================================//
 
 
-	//Press R to reset
-	if (Application::IsKeyPressed('R'))
+	//Press O to reset entire game
+	if (Application::IsKeyPressed('O'))
 	{
 		SceneManager::getInstance()->changeScene(new SceneMainMenu());
 		SetCurrentLevel(1);
@@ -773,8 +771,26 @@ void SceneCollision::Update(double dt)
 		SetScore(0);
 		SetTempCurrency(0);
 		SetCurrency(0);
-		upgraded.DeleteTextFile("Text//Speed_Upgrade.txt");
-		upgraded.DeleteTextFile("Text//Speed_Multiplyer_Upgrade.txt");
+		if (i_saveFile == 1)
+		{
+			upgraded.DeleteTextFile("Save1//Speed_Upgrade.txt");
+		}
+		else if (i_saveFile == 2)
+		{
+			upgraded.DeleteTextFile("Save2//Speed_Upgrade.txt");
+		}
+		else if (i_saveFile == 3)
+		{
+			upgraded.DeleteTextFile("Save3//Speed_Upgrade.txt");
+		}
+	}
+
+	//Press R to reset current level
+	if (Application::IsKeyPressed('R'))
+	{
+		SetCurrentLevel(i_CurrentLevel);
+		SetTempScore(0);
+		SetTempCurrency(0);
 	}
 
 	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
@@ -1030,7 +1046,12 @@ void SceneCollision::CreateSplits(int pos, GameObject * base)
 void SceneCollision::SetCurrentLevel(int levelNo)
 {
 	ofstream myFile;
-	myFile.open("Text//CurrentLevel.txt");
+	if (i_saveFile == 1)
+		myFile.open("Save1//CurrentLevel.txt");
+	else if (i_saveFile == 2)
+		myFile.open("Save2//CurrentLevel.txt");
+	else if (i_saveFile == 3)
+		myFile.open("Save3//CurrentLevel.txt");
 	myFile << levelNo << endl;
 	myFile.close();
 }
@@ -1039,7 +1060,12 @@ int SceneCollision::GetCurrentLevel()
 {
 	int level;
 	ifstream myFile;
-	myFile.open("Text//CurrentLevel.txt");
+	if (i_saveFile == 1)
+		myFile.open("Save1//CurrentLevel.txt");
+	else if (i_saveFile == 2)
+		myFile.open("Save2//CurrentLevel.txt");
+	else if (i_saveFile == 3)
+		myFile.open("Save3//CurrentLevel.txt");
 	myFile >> level;
 	myFile.close();
 
@@ -1049,7 +1075,12 @@ int SceneCollision::GetCurrentLevel()
 void SceneCollision::SetScore(int score)
 {
 	ofstream myFile;
-	myFile.open("Text//Score.txt");
+	if (i_saveFile == 1)
+		myFile.open("Save1//Score.txt");
+	else if (i_saveFile == 2)
+		myFile.open("Save2//Score.txt");
+	else if (i_saveFile == 3)
+		myFile.open("Save3//Score.txt");
 	myFile << score << endl;
 	myFile.close();
 }
@@ -1058,7 +1089,12 @@ int SceneCollision::GetScore()
 {
 	int score;
 	ifstream myFile;
-	myFile.open("Text//Score.txt");
+	if (i_saveFile == 1)
+		myFile.open("Save1//Score.txt");
+	else if (i_saveFile == 2)
+		myFile.open("Save2//Score.txt");
+	else if (i_saveFile == 3)
+		myFile.open("Save3//Score.txt");
 	myFile >> score;
 	myFile.close();
 
@@ -1068,7 +1104,12 @@ int SceneCollision::GetScore()
 void SceneCollision::SetTempScore(int tempScore)
 {
 	ofstream myFile;
-	myFile.open("Text//TempScore.txt");
+	if (i_saveFile == 1)
+		myFile.open("Save1//TempScore.txt");
+	else if (i_saveFile == 2)
+		myFile.open("Save2//TempScore.txt");
+	else if (i_saveFile == 3)
+		myFile.open("Save3//TempScore.txt");
 	myFile << tempScore << endl;
 	myFile.close();
 }
@@ -1077,7 +1118,12 @@ int SceneCollision::GetTempScore()
 {
 	int tempScore;
 	ifstream myFile;
-	myFile.open("Text//TempScore.txt");
+	if (i_saveFile == 1)
+		myFile.open("Save1//TempScore.txt");
+	else if (i_saveFile == 2)
+		myFile.open("Save2//TempScore.txt");
+	else if (i_saveFile == 3)
+		myFile.open("Save3//TempScore.txt");
 	myFile >> tempScore;
 	myFile.close();
 
@@ -1087,7 +1133,12 @@ int SceneCollision::GetTempScore()
 void SceneCollision::SetCurrency(int currency)
 {
 	ofstream myFile;
-	myFile.open("Text//Currency.txt");
+	if (i_saveFile == 1)
+		myFile.open("Save1//Currency.txt");
+	else if (i_saveFile == 2)
+		myFile.open("Save2//Currency.txt");
+	else if (i_saveFile == 3)
+		myFile.open("Save3//Currency.txt");
 	myFile << currency << endl;
 	myFile.close();
 }
@@ -1096,7 +1147,12 @@ int SceneCollision::GetCurrency()
 {
 	int currency;
 	ifstream myFile;
-	myFile.open("Text//Currency.txt");
+	if (i_saveFile == 1)
+		myFile.open("Save1//Currency.txt");
+	else if (i_saveFile == 2)
+		myFile.open("Save2//Currency.txt");
+	else if (i_saveFile == 3)
+		myFile.open("Save3//Currency.txt");
 	myFile >> currency;
 	myFile.close();
 
@@ -1106,7 +1162,12 @@ int SceneCollision::GetCurrency()
 void SceneCollision::SetTempCurrency(int tempCurrency)
 {
 	ofstream myFile;
-	myFile.open("Text//TempCurrency.txt");
+	if (i_saveFile == 1)
+		myFile.open("Save1//TempCurrency.txt");
+	else if (i_saveFile == 2)
+		myFile.open("Save2//TempCurrency.txt");
+	else if (i_saveFile == 3)
+		myFile.open("Save3//TempCurrency.txt");
 	myFile << tempCurrency << endl;
 	myFile.close();
 }
@@ -1115,11 +1176,27 @@ int SceneCollision::GetTempCurrency()
 {
 	int tempCurrency;
 	ifstream myFile;
-	myFile.open("Text//TempCurrency.txt");
+	if (i_saveFile == 1)
+		myFile.open("Save1//TempCurrency.txt");
+	else if (i_saveFile == 2)
+		myFile.open("Save2//TempCurrency.txt");
+	else if (i_saveFile == 3)
+		myFile.open("Save3//TempCurrency.txt");
 	myFile >> tempCurrency;
 	myFile.close();
 
 	return tempCurrency;
+}
+
+int SceneCollision::GetSaveFile()
+{
+	int saveFile;
+	ifstream myFile;
+	myFile.open("savefile.txt");
+	myFile >> saveFile;
+	myFile.close();
+
+	return saveFile;
 }
 
 void SceneCollision::RenderGO(GameObject *go)

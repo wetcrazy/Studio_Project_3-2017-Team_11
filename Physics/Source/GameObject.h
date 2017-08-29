@@ -51,6 +51,7 @@ struct GameObject
 		GO_HIGHSCOREMENU,
 
 		//Save File Menu
+		GO_SAVEMENU,
 		GO_SAVE1,
 		GO_SAVE2,
 		GO_SAVE3,

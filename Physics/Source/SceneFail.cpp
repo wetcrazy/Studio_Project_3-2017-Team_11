@@ -27,14 +27,29 @@ void SceneFail::Init()
 
 	i_score = GetScore();
 
+	i_saveFile = GetSaveFile();
+
 	file_path = "CSV//highscore.csv";
 
 	highscore = LoadCSV(file_path);
 	QuickSort(&highscore, 1, highscore.size() - 1);
 	WriteCSV(file_path, highscore);
 
-	file_ScoreDestination = "Text//Score.txt";
-	file_LevelDestination = "Text//CurrentLevel.txt";
+	if (i_saveFile == 1)
+	{
+		file_ScoreDestination = "Save1//Score.txt";
+		file_LevelDestination = "Save1//CurrentLevel.txt";
+	}
+	else if (i_saveFile == 2)
+	{
+		file_ScoreDestination = "Save2//Score.txt";
+		file_LevelDestination = "Save2//CurrentLevel.txt";
+	}
+	else if (i_saveFile == 3)
+	{
+		file_ScoreDestination = "Save3//Score.txt";
+		file_LevelDestination = "Save3//CurrentLevel.txt";
+	}
 	curr_highscore.HighScore_Calculator(file_ScoreDestination, file_LevelDestination);
 
 	arrows->type = GameObject::GO_ARROW;	//Arrow 
@@ -165,11 +180,27 @@ int SceneFail::GetScore()
 {
 	int score;
 	ifstream myFile;
-	myFile.open("Text//Score.txt");
+	if (i_saveFile == 1)
+		myFile.open("Save1//Score.txt");
+	else if (i_saveFile == 2)
+		myFile.open("Save2//Score.txt");
+	else if (i_saveFile == 3)
+		myFile.open("Save3//Score.txt");
 	myFile >> score;
 	myFile.close();
 
 	return score;
+}
+
+int SceneFail::GetSaveFile()
+{
+	int saveFile;
+	ifstream myFile;
+	myFile.open("savefile.txt");
+	myFile >> saveFile;
+	myFile.close();
+
+	return saveFile;
 }
 
 void SceneFail::RenderGO(GameObject *go)

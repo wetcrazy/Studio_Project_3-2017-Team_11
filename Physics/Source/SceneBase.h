@@ -80,6 +80,7 @@ public:
 		GEO_HIGHSCOREMENU,
 
 		//Save File Menu
+		GEO_SAVEMENU,
 		GEO_SAVE1,
 		GEO_SAVE2,
 		GEO_SAVE3,

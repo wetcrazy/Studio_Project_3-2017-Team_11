@@ -178,6 +178,8 @@ void SceneBase::Init()
 	meshList[GEO_HIGHSCOREMENU]->textureID = LoadTGA("Image//Menu/HighScore Menu//highscore.tga");
 
 	//Save File Menu
+	meshList[GEO_SAVEMENU] = MeshBuilder::GenerateQuad("save", Color(1, 1, 1));
+	meshList[GEO_SAVEMENU]->textureID = LoadTGA("Image//Menu/Save File//save.tga");
 	meshList[GEO_SAVE1] = MeshBuilder::GenerateQuad("save1", Color(1, 1, 1));
 	meshList[GEO_SAVE1]->textureID = LoadTGA("Image//Menu/Save File//save1.tga");
 	meshList[GEO_SAVE2] = MeshBuilder::GenerateQuad("save2", Color(1, 1, 1));
