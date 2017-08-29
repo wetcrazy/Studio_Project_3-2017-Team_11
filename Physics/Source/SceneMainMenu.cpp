@@ -84,12 +84,10 @@ void SceneMainMenu::Update(double dt)
 
 	//Position values (arrows)
 	float posXDownArrow = 0.67f;
-	float posYDownArrow_Play = 0.69f;
-	float posYDownArrow_Levels = 0.84f;
-	float posYDownArrow_Instructions = 1.07f;
-	float posYDownArrow_Highscore = 1.45f;
-	float posYDownArrow_Options = 2.25f;
-	float posYDownArrow_Quit = 5.1f;
+	float posYDownArrow_Play = 0.75f;
+	float posYDownArrow_Instructions = 1.0f;
+	float posYDownArrow_Highscore = 1.465f;
+	float posYDownArrow_Quit = 2.85f;
 
 	//Scale values
 	float scaleDown_Arrow = 20.f;
@@ -105,18 +103,12 @@ void SceneMainMenu::Update(double dt)
 		if ((Application::IsKeyPressed(VK_UP)) && pressDelay >= cooldownPressed)
 		{
 			if (selectOptions == QUIT)
-				selectOptions = OPTIONS;
-
-			else if (selectOptions == OPTIONS)
 				selectOptions = HIGHSCORE;
 
 			else if (selectOptions == HIGHSCORE)
 				selectOptions = INSTRUCTIONS;
 
 			else if (selectOptions == INSTRUCTIONS)
-				selectOptions = LEVELS;
-
-			else if (selectOptions == LEVELS)
 				selectOptions = NEWGAME;
 
 			else if (selectOptions == NEWGAME)
@@ -131,18 +123,12 @@ void SceneMainMenu::Update(double dt)
 				selectOptions = NEWGAME;
 
 			else if (selectOptions == NEWGAME)
-				selectOptions = LEVELS;
-
-			else if (selectOptions == LEVELS)
 				selectOptions = INSTRUCTIONS;
 
 			else if (selectOptions == INSTRUCTIONS)
 				selectOptions = HIGHSCORE;
 
 			else if (selectOptions == HIGHSCORE)
-				selectOptions = OPTIONS;
-
-			else if (selectOptions == OPTIONS)
 				selectOptions = QUIT;
 
 			pressDelay = 0.f;
@@ -177,16 +163,6 @@ void SceneMainMenu::Update(double dt)
 		menu->scale.Set(w_temp + 2, h_temp, 1);
 		break;
 
-	case LEVELS:
-		//Arrow
-		arrows->pos.Set((w_temp / 2) / posXDownArrow, (h_temp / 2) / posYDownArrow_Levels, 1);
-		arrows->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
-
-		//Menu
-		menu->pos.Set(w_temp / 2, h_temp / 2, -5);
-		menu->scale.Set(w_temp + 2, h_temp, 1);
-		break;
-
 	case INSTRUCTIONS:
 		//Arrow
 		arrows->pos.Set((w_temp / 2) / posXDownArrow, (h_temp / 2) / posYDownArrow_Instructions, 1);
@@ -200,16 +176,6 @@ void SceneMainMenu::Update(double dt)
 	case HIGHSCORE:
 		//Arrow
 		arrows->pos.Set((w_temp / 2) / posXDownArrow, (h_temp / 2) / posYDownArrow_Highscore, 1);
-		arrows->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
-
-		//Menu
-		menu->pos.Set(w_temp / 2, h_temp / 2, -5);
-		menu->scale.Set(w_temp + 2, h_temp, 1);
-		break;
-
-	case OPTIONS:
-		//Arrow
-		arrows->pos.Set((w_temp / 2) / posXDownArrow, (h_temp / 2) / posYDownArrow_Options, 1);
 		arrows->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
 
 		//Menu
