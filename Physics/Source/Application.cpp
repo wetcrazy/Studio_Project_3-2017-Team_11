@@ -13,6 +13,7 @@
 
 #include "SceneManager.h"
 #include "SceneMainMenu.h"
+#include "SceneCredit.h"
 
 GLFWwindow* m_window;
 const unsigned char FPS = 60; // FPS of this game
@@ -146,7 +147,7 @@ void Application::Run()
 
 	//SceneManager codes
 	SceneManager* scene = SceneManager::getInstance();
-	scene->changeScene(new SceneMainMenu());
+	scene->changeScene(new SceneCredit());
 	scene->Update();
 }
 

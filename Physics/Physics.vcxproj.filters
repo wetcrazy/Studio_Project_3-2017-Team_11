@@ -125,6 +125,9 @@
     <ClCompile Include="Source\SceneSaveFile.cpp">
       <Filter>Scene UI</Filter>
     </ClCompile>
+    <ClCompile Include="Source\SceneCredit.cpp">
+      <Filter>Scene UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -221,6 +224,9 @@
       <Filter>Classes/Functions</Filter>
     </ClInclude>
     <ClInclude Include="Source\SceneSaveFile.h">
+      <Filter>Scene UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SceneCredit.h">
       <Filter>Scene UI</Filter>
     </ClInclude>
   </ItemGroup>
