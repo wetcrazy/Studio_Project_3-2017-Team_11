@@ -231,6 +231,7 @@ void SceneSaveFile::Update(double dt)
 					upgraded.ReadFile("Save1//Speed_Upgrade.txt");
 					upgraded.DeleteTextFile("Save1//Speed_Multiplyer_Upgrade.txt");
 					upgraded.ReadFile("Save1//Speed_Multiplyer_Upgrade.txt");
+					DeleteCSV_2(1); // Deleting profile
 				}
 				else if (select2)
 				{
@@ -238,6 +239,7 @@ void SceneSaveFile::Update(double dt)
 					upgraded.ReadFile("Save2//Speed_Upgrade.txt");
 					upgraded.DeleteTextFile("Save2//Speed_Multiplyer_Upgrade.txt");
 					upgraded.ReadFile("Save2//Speed_Multiplyer_Upgrade.txt");
+					DeleteCSV_2(2); // Deleting profile
 				}
 				else if (select3)
 				{
@@ -245,6 +247,7 @@ void SceneSaveFile::Update(double dt)
 					upgraded.ReadFile("Save3//Speed_Upgrade.txt");
 					upgraded.DeleteTextFile("Save3//Speed_Multiplyer_Upgrade.txt");
 					upgraded.ReadFile("Save3//Speed_Multiplyer_Upgrade.txt");
+					DeleteCSV_2(3); // Deleting profile
 				}
 
 			}

@@ -6,6 +6,7 @@
 #include "SceneBase.h"
 #include "LoadingUpgrades.h"
 #include "LoadTXT.h"
+#include "LoadCSV.h"
 #include "ClassRace.h"
 
 class SceneCollision : public SceneBase
@@ -149,6 +150,9 @@ protected:
 
 	// Indicator
 	GameObject *indicator;
+
+	// Profile
+	std::vector<Profile> profile;
 };
 
 #endif

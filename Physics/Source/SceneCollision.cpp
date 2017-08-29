@@ -39,6 +39,9 @@ void SceneCollision::Init()
 	else if (i_saveFile == 3)
 		upgraded.ReadFile("Save3//Speed_Upgrade.txt");
 
+	// Profile
+	profile = LoadCSV_2(i_saveFile);
+
 	//Physics code here
 	m_speed = 1.f;
 
@@ -789,6 +792,13 @@ void SceneCollision::Update(double dt)
 		SetCurrency(i_tempCurrency);
 		i_CurrentLevel++;
 		SetCurrentLevel(i_CurrentLevel);
+
+		// Profile Stuff
+		Profile here_only;
+		here_only.Table.level = std::to_string(GetCurrentLevel() - 1);
+		here_only.Table.score = std::to_string(i_levelScore);
+		profile.push_back(here_only);
+		WriteCSV_2(profile, i_saveFile);
 	}
 	//If did not destroy all blocks
 	if (fortCount != 0)
