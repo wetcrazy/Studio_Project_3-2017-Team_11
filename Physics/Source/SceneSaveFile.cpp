@@ -2,22 +2,14 @@
 
 #include "SceneUpgrade.h"
 #include "GL\glew.h"
-#include "GLFW\glfw3.h"
-#include "Mtx44.h"
-#include "Application.h"
-#include "Vertex.h"
-#include "Utility.h"
-#include "shader.hpp"
 #include "LoadTGA.h"
-#include "Camera.h"
-#include "MeshBuilder.h"
-#include "Mesh.h"
 
 #include <sstream>
 
 #include "SceneManager.h"
 #include "SceneMainMenu.h"
 #include "SceneCollision.h"
+#include "SceneCredit.h"
 
 SceneSaveFile::SceneSaveFile()
 {
@@ -195,17 +187,29 @@ void SceneSaveFile::Update(double dt)
 				if (select1)
 				{
 					SetSaveFile(1);
-					SceneManager::getInstance()->changeScene(new SceneCollision());
+					int i_currentLevel_1 = GetCurrentLevel("Save1//CurrentLevel.txt");
+					if (i_currentLevel_1 >= 10)
+						SceneManager::getInstance()->changeScene(new SceneCredit());
+					else
+						SceneManager::getInstance()->changeScene(new SceneCollision());
 				}
 				else if (select2)
 				{
 					SetSaveFile(2);
-					SceneManager::getInstance()->changeScene(new SceneCollision());
+					int i_currentLevel_2 = GetCurrentLevel("Save2//CurrentLevel.txt");
+					if (i_currentLevel_2 >= 10)
+						SceneManager::getInstance()->changeScene(new SceneCredit());
+					else
+						SceneManager::getInstance()->changeScene(new SceneCollision());
 				}
 				else if (select3)
 				{
 					SetSaveFile(3);
-					SceneManager::getInstance()->changeScene(new SceneCollision());
+					int i_currentLevel_3 = GetCurrentLevel("Save3//CurrentLevel.txt");
+					if (i_currentLevel_3 >= 10)
+						SceneManager::getInstance()->changeScene(new SceneCredit());
+					else
+						SceneManager::getInstance()->changeScene(new SceneCollision());
 				}
 			}
 
@@ -217,22 +221,29 @@ void SceneSaveFile::Update(double dt)
 				SetCurrentLevel(1);
 				SetTempScore(0);
 				SetTotalScore(0);
+				SetLevelScore(0);
 				SetCurrency(0);
 				SetTempCurrency(0);
 				if (select1)
 				{
 					upgraded.DeleteTextFile("Save1//Speed_Upgrade.txt");
 					upgraded.ReadFile("Save1//Speed_Upgrade.txt");
+					upgraded.DeleteTextFile("Save1//Speed_Multiplyer_Upgrade.txt");
+					upgraded.ReadFile("Save1//Speed_Multiplyer_Upgrade.txt");
 				}
 				else if (select2)
 				{
 					upgraded.DeleteTextFile("Save2//Speed_Upgrade.txt");
 					upgraded.ReadFile("Save2//Speed_Upgrade.txt");
+					upgraded.DeleteTextFile("Save2//Speed_Multiplyer_Upgrade.txt");
+					upgraded.ReadFile("Save2//Speed_Multiplyer_Upgrade.txt");
 				}
 				else if (select3)
 				{
 					upgraded.DeleteTextFile("Save3//Speed_Upgrade.txt");
 					upgraded.ReadFile("Save3//Speed_Upgrade.txt");
+					upgraded.DeleteTextFile("Save3//Speed_Multiplyer_Upgrade.txt");
+					upgraded.ReadFile("Save3//Speed_Multiplyer_Upgrade.txt");
 				}
 
 			}
@@ -410,6 +421,19 @@ void SceneSaveFile::SetTempScore(int tempScore)
 	myFile.close();
 }
 
+void SceneSaveFile::SetLevelScore(int tempScore)
+{
+	ofstream myFile;
+	if (select1)
+		myFile.open("Save1//Score.txt");
+	else if (select2)
+		myFile.open("Save2//Score.txt");
+	else if (select3)
+		myFile.open("Save3//Score.txt");
+	myFile << tempScore << endl;
+	myFile.close();
+}
+
 void SceneSaveFile::SetCurrency(int currency)
 {
 	ofstream myFile;
@@ -540,7 +564,7 @@ void SceneSaveFile::Render()
 	int i_currentLevel_1 = GetCurrentLevel("Save1//CurrentLevel.txt");
 	ss.str(std::string());
 	ss.precision(5);
-	if (i_currentLevel_1 == 10)
+	if (i_currentLevel_1 >= 10)
 	{
 		ss << "max" << endl;
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2.3f, 45, 36.7);
@@ -555,7 +579,7 @@ void SceneSaveFile::Render()
 	int i_currentLevel_2 = GetCurrentLevel("Save2//CurrentLevel.txt");
 	ss.str(std::string());
 	ss.precision(5);
-	if (i_currentLevel_2 == 10)
+	if (i_currentLevel_2 >= 10)
 	{
 		ss << "max" << endl;
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2.3f, 45, 24.7);
@@ -570,7 +594,7 @@ void SceneSaveFile::Render()
 	int i_currentLevel_3 = GetCurrentLevel("Save3//CurrentLevel.txt");
 	ss.str(std::string());
 	ss.precision(5);
-	if (i_currentLevel_3 == 10)
+	if (i_currentLevel_3 >= 10)
 	{
 		ss << "max" << endl;
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2.3f, 45, 12.7);

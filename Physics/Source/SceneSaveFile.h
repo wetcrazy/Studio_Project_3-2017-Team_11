@@ -23,6 +23,7 @@ public:
 	void SetCurrentLevel(int levelNo);
 	void SetTotalScore(int score);
 	void SetTempScore(int score);
+	void SetLevelScore(int score);
 
 	//Setting of currency
 	void SetCurrency(int currency);

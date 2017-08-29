@@ -66,7 +66,7 @@ void SceneCollision::Init()
 	projectile = FetchGO();
 	projectile->active = false;
 
-	i_projectileCount = 12;
+	i_projectileCount = 16;
 
 	i_despawnHexa = 3;
 	b_splitDone = false;
@@ -886,7 +886,7 @@ void SceneCollision::Update(double dt)
 		}
 	}
 
-	if (i_CurrentLevel == 10)
+	if (i_CurrentLevel >= 10)
 	{
 		SceneManager::getInstance()->changeScene(new SceneCredit());
 	}
@@ -1476,13 +1476,15 @@ void SceneCollision::Render()
 	ss << "FPS: " << fps;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 0);
 
-	//	RenderTextOnScreen(meshList[GEO_TEXT], "Collision", Color(0, 1, 0), 3, 0, 0);
-	//}
-
 	ss.str(std::string());
 	ss.precision(5);
 	ss << "Score: " << i_levelScore;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 3);
+
+	ss.str(std::string());
+	ss.precision(5);
+	ss << "Shots Left: " << i_projectileCount;
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 6);
 
 	float textsize = 2.0f;
 	float spacing = 0.4f;

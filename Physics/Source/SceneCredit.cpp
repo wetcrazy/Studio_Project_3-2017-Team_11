@@ -78,8 +78,6 @@ void SceneCredit::Update(double dt)
 
 	//Scale values
 	float scaleDown_Arrow = 20.f;
-	float scaleXDown_Highlight = 2.4f;
-	float scaleYDown_Highlight = 17.f;
 
 	//UP, DOWN and ENTER controls
 	{
@@ -87,28 +85,10 @@ void SceneCredit::Update(double dt)
 		if (pressDelay > 0.5f)
 			pressDelay = 0.5f;
 
-		if ((Application::IsKeyPressed(VK_UP)) && pressDelay >= cooldownPressed)
-		{
-			if (selectOptions == BACK)
-				selectOptions = BACK;
-
-			pressDelay = 0.f;
-		}
-
-		if ((Application::IsKeyPressed(VK_DOWN)) && pressDelay >= cooldownPressed)
-		{
-			if (selectOptions == BACK)
-				selectOptions = BACK;
-
-			pressDelay = 0.f;
-		}
-
 		if (Application::IsKeyPressed(VK_RETURN) && pressDelay >= cooldownPressed)
 		{
 			if (selectOptions == BACK)
 				SceneManager::getInstance()->changeScene(new SceneMainMenu());
-			else
-				exit(0);
 
 			pressDelay = 0.f;
 		}
@@ -122,7 +102,7 @@ void SceneCredit::Update(double dt)
 		arrows->pos.Set((w_temp / 4.5) / posXDownArrow, (h_temp / 9.5) / posYDownArrow, 1);
 		arrows->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
 
-		//Credit
+		//Credits
 		credits->active = true;
 		credits->pos.Set(w_temp / 2, h_temp / 2, -5);
 		credits->scale.Set(w_temp + 2, h_temp, 1);
@@ -244,5 +224,4 @@ void SceneCredit::Exit()
 	glDeleteProgram(m_programID);
 
 	Credit->stopAllSounds();
-
 }
