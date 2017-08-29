@@ -540,22 +540,46 @@ void SceneSaveFile::Render()
 	int i_currentLevel_1 = GetCurrentLevel("Save1//CurrentLevel.txt");
 	ss.str(std::string());
 	ss.precision(5);
-	ss << i_currentLevel_1;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 45, 36.5);
+	if (i_currentLevel_1 == 10)
+	{
+		ss << "max" << endl;
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2.3f, 45, 36.7);
+	}
+	else
+	{
+		ss << i_currentLevel_1;
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 45, 36.5);
+	}
 
 	//Show current level of save file 2
 	int i_currentLevel_2 = GetCurrentLevel("Save2//CurrentLevel.txt");
 	ss.str(std::string());
 	ss.precision(5);
-	ss << i_currentLevel_2;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 45, 24.5);
+	if (i_currentLevel_2 == 10)
+	{
+		ss << "max" << endl;
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2.3f, 45, 36.7);
+	}
+	else
+	{
+		ss << i_currentLevel_2;
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 45, 36.5);
+	}
 
 	//Show current level of save file 3
 	int i_currentLevel_3 = GetCurrentLevel("Save3//CurrentLevel.txt");
 	ss.str(std::string());
 	ss.precision(5);
-	ss << i_currentLevel_3;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 45, 12.5);
+	if (i_currentLevel_3 == 10)
+	{
+		ss << "max" << endl;
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2.3f, 45, 36.7);
+	}
+	else
+	{
+		ss << i_currentLevel_3;
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 45, 36.5);
+	}
 }
 
 void SceneSaveFile::Exit()
