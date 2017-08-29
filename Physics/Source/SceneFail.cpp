@@ -42,7 +42,7 @@ void SceneFail::Init()
 	arrows->pos.Set(-10, -10, 1);
 	arrows->scale.Set(1.0f, 1.0f, 1.0f);
 
-	failMenu->type = GameObject::GO_FAILMENU;	//Success Menu
+	failMenu->type = GameObject::GO_FAILMENU;	//Fail Menu
 	failMenu->active = true;
 	failMenu->pos.Set(-10, -10, -5);
 	failMenu->scale.Set(1.0f, 1.0f, 1.0f);
@@ -83,12 +83,12 @@ void SceneFail::Update(double dt)
 	int h_temp = 100;
 	int w_temp = 100 * Application::GetWindowWidth() / Application::GetWindowHeight();
 
-	//Position values (for success menu)
+	//Position values (for fail menu)
 	float posXDownArrow_MainMenu = 1.15f;
 	float posXDownArrow_Next = 0.59f;
 	float posYDownArrow = 3.37f;
 
-	//Scale values (for success menu)
+	//Scale values (for fail menu)
 	float scaleDown_Arrow = 20.f;
 	float scaleXDown_Star = 8.9f;
 	float scaleYDown_Star = 6.3f;
@@ -141,7 +141,7 @@ void SceneFail::Update(double dt)
 		arrows->pos.Set((w_temp / 2) / posXDownArrow_Next, (h_temp / 2) / posYDownArrow, 1);
 		arrows->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
 
-		//Render in success menu
+		//Render in fail menu
 		failMenu->active = true;
 		failMenu->pos.Set(w_temp / 2, h_temp / 2, -5);
 		failMenu->scale.Set(w_temp + 2, h_temp, 1);
@@ -153,7 +153,7 @@ void SceneFail::Update(double dt)
 		arrows->pos.Set((w_temp / 2) / posXDownArrow_MainMenu, (h_temp / 2) / posYDownArrow, 1);
 		arrows->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
 
-		//Render in success menu
+		//Render in fail menu
 		failMenu->pos.Set(w_temp / 2, h_temp / 2, -5);
 		failMenu->scale.Set(w_temp + 2, h_temp, 1);
 
