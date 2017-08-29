@@ -31,8 +31,10 @@ void HighScore::HighScore_Calculator(const char *file_ScoreDestination, const ch
 	curr_File.close();
 
 	// Return Highscore (Total_Score / Num_Levels Done)
-	
-	
+	int level = curr_level - 1; //while in fail screen, the level switches to next level
+	if (level < 1)
+		level = 1;
+	this->Data.score = std::to_string(curr_score / level);
 }
 
 
