@@ -37,30 +37,4 @@ public:
 	// Operator
 	friend ostream &operator<<(ostream &os, HighScore &input);
 };
-
-class Upgrade
-{
-public:
-	// Constructor & Destructor
-	Upgrade();
-	~Upgrade();
-
-	// Setter
-	void set_Gravity(Vector3 input);
-	void set_MaxShots(int input);
-	void set_Speed(float input);
-	void set_SpeedMultiplyer(float input);
-	// Getter
-	Vector3 get_Gravity();
-	int get_MaxShots();
-	float get_Speed();
-	float get_SpeedMultiplyer(float input);
-
-private:
-	// Variables
-	Vector3 gravity; // Barrel Upgrade
-	int max_shots; // Max number of shots
-	float speed; // Speed of shot
-};
-
 #endif
