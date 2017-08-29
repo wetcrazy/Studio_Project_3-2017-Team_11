@@ -101,3 +101,31 @@ ostream &operator<<(ostream &os, HighScore &input)
 	return os;
 }
 // ======================================================================================
+
+// Profile Class
+// ======================================================================================
+
+// Constructor & Destructor
+Profile::Profile()
+{
+
+}
+
+Profile::~Profile()
+{
+
+}
+
+// Setters
+void Profile::Set_Name(string input)
+{
+	this->name = input;
+}
+
+// Getters
+string Profile::Get_Name()
+{
+	return this->name;
+}
+
+// ======================================================================================

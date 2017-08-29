@@ -5,9 +5,11 @@
 #include <string>
 
 class HighScore;
-class Upgrade;
+class Profile;
 
 using std::string;
+
+// HighScore
 
 // Function to Load .CSV
 // Returns vector<HighScore>
@@ -20,5 +22,20 @@ std::vector<HighScore> DeleteCSV(const char *file_path);
 // Function to Write into .CSV
 // Returns vectore<HighScore>
 void WriteCSV(const char *file_path, std::vector<HighScore> input);
+
+
+// Profile
+
+// Function to Load .CSV
+// Returns Profile, temp is just there to overload function
+std::vector<Profile> LoadCSV_2(string file_path);
+
+// Function to Delete .CSV
+// Returns Profile, temp is just there to overload function
+void DeleteCSV_2(string file_path);
+
+// Function to Write into .CSV
+// Returns Profile
+void WriteCSV_2(string file_path, std::vector<Profile> input);
 
 #endif

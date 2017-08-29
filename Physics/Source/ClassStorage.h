@@ -37,4 +37,30 @@ public:
 	// Operator
 	friend ostream &operator<<(ostream &os, HighScore &input);
 };
+
+class Profile
+{
+protected:
+	// Struct Storage for Level_Table
+	struct Level_Table
+	{
+		string level;
+		string score;
+	};
+
+	string name;
+
+public:
+	// Constructor & Destructor
+	Profile();
+	~Profile();
+
+	// Setters
+	void Set_Name(string input);
+	// Getters
+	string Get_Name();
+
+	// Struct Storage for Level Table
+	Level_Table Table;
+};
 #endif
