@@ -558,12 +558,12 @@ void SceneSaveFile::Render()
 	if (i_currentLevel_2 == 10)
 	{
 		ss << "max" << endl;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2.3f, 45, 36.7);
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2.3f, 45, 24.7);
 	}
 	else
 	{
 		ss << i_currentLevel_2;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 45, 36.5);
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 45, 24.5);
 	}
 
 	//Show current level of save file 3
@@ -573,12 +573,12 @@ void SceneSaveFile::Render()
 	if (i_currentLevel_3 == 10)
 	{
 		ss << "max" << endl;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2.3f, 45, 36.7);
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2.3f, 45, 12.7);
 	}
 	else
 	{
 		ss << i_currentLevel_3;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 45, 36.5);
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 45, 12.5);
 	}
 }
 
