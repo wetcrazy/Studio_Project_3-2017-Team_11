@@ -31,7 +31,71 @@ void SceneHighScore::Init()
 	file_path = "CSV//highscore.csv";
 
 	CreateStuff();
+
+	// Highscore Stuff
 	highscore = LoadCSV(file_path);
+	highscore = DeleteCSV(file_path);
+
+	// Profile
+	profile1 = LoadCSV_2(1);
+	profile2 = LoadCSV_2(2);
+	profile3 = LoadCSV_2(3);
+
+	for (int check_profile = 1; check_profile <= 3; ++check_profile)
+	{
+		int temp_score = 0;
+		HighScore *temp_store;
+		if (check_profile == 1)
+		{
+			if (!profile1[0].Table.score.empty() && !profile1[0].Table.level.empty())
+			{
+				temp_store = new HighScore;
+				for (int check_index = 0; check_index < profile1.size(); ++check_index)
+				{
+					temp_score += std::atoi(profile1[check_index].Table.score.c_str());
+				}
+				temp_store->Data.name = "SAVE1";
+				temp_store->Data.level = std::to_string(profile1.size());
+				temp_store->Data.score = std::to_string(temp_score / std::atoi(temp_store->Data.level.c_str()));
+				highscore.push_back(*temp_store);
+			}
+			
+		}
+		else if (check_profile == 2)
+		{
+			if (!profile2[0].Table.score.empty() && !profile2[0].Table.level.empty())
+			{
+				temp_store = new HighScore;
+				for (int check_index = 0; check_index < profile2.size(); ++check_index)
+				{
+					temp_score += std::atoi(profile2[check_index].Table.score.c_str());
+				}
+				temp_store->Data.name = "SAVE2";
+				temp_store->Data.level = std::to_string(profile2.size());
+				temp_store->Data.score = std::to_string(temp_score / std::atoi(temp_store->Data.level.c_str()));;
+				highscore.push_back(*temp_store);
+			}
+			
+		}
+		else if (check_profile == 3)
+		{
+			if (!profile3[0].Table.score.empty() && !profile3[0].Table.level.empty())
+			{
+				temp_store = new HighScore;
+				for (int check_index = 0; check_index < profile3.size(); ++check_index)
+				{
+					temp_score += std::atoi(profile3[check_index].Table.score.c_str());
+				}
+				temp_store->Data.name = "SAVE3";
+				temp_store->Data.level = std::to_string(profile3.size());
+				temp_store->Data.score = std::to_string(temp_score / std::atoi(temp_store->Data.level.c_str()));;
+				highscore.push_back(*temp_store);
+			}
+			
+		}
+		
+	}
+
 	QuickSort(&highscore, 1, highscore.size() - 1);
 	WriteCSV(file_path, highscore);
 }
@@ -265,9 +329,10 @@ void SceneHighScore::Render()
 
 	//On screen text
 	float textsize = 3.0f;
+	float spacing = 0.7f;
 	std::ostringstream ss;
 	ss << highscore[0];
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), textsize, 18, 43);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), textsize, textsize+1, 18, 43, spacing);
 	ss.str("");
 	// HighScore Table (Prints out only 10)
 	if (highscore.size() > 11) // Force set print less than 11
@@ -275,7 +340,7 @@ void SceneHighScore::Render()
 		for (int check_index = 1, sizer = 0; check_index < 11; ++check_index)
 		{
 			ss << highscore[check_index];
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), textsize, 18, 40 - sizer);
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), textsize, textsize + 1, 18, 40 - sizer, spacing);
 			ss.str("");
 			sizer += 3;
 		}
@@ -284,7 +349,7 @@ void SceneHighScore::Render()
 		for (int check_index = 1, sizer = 0; check_index < highscore.size(); ++check_index)
 		{
 			ss << highscore[check_index];
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), textsize, 18, 40 - sizer);
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), textsize, textsize + 1, 18, 40 - sizer, spacing);
 			ss.str("");
 			sizer += 3;
 		}

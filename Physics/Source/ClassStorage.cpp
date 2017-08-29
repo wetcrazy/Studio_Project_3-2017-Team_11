@@ -42,22 +42,12 @@ void HighScore::HighScore_Calculator(const char *file_ScoreDestination, const ch
 ostream &operator<<(ostream &os, HighScore &input)
 {
 	string temp;
-	for (int check_mode = 0; check_mode < 3; ++check_mode)
+	for (int check_mode = 0; check_mode < 4; ++check_mode)
 	{
-		// For Rank and Name (4 placments)
-		if (check_mode != 2)
+		// For Rank (4 placments)
+		if (check_mode == 0)
 		{
-			switch (check_mode)
-			{
-			case 0:
-				temp = input.Data.rank;
-				break;
-			case 1:
-				temp = input.Data.name;
-				break;
-			default:
-				break;
-			}
+			temp = input.Data.rank;
 			switch (temp.size())
 			{
 			case 1:
@@ -72,11 +62,30 @@ ostream &operator<<(ostream &os, HighScore &input)
 			case 4:
 				os << temp << ' ';
 				break;
-			
 			}
 		}
-		// For Score (5 Placement)
+		// For Rank
+		else if (check_mode == 1)
+		{
+			temp = input.Data.level;
+			switch (temp.size())
+			{
+			case 1:
+				os << "  " << temp << "   ";
+				break;
+			case 5:
+				os << temp << ' ';
+				break;
+			}		
+		}
+		// For Saved file number
 		else if (check_mode == 2)
+		{
+			temp = input.Data.name;
+			os << temp << ' ';
+		}
+		// For Score (5 Placement)
+		else if (check_mode == 3)
 		{
 			temp = input.Data.score;
 			switch (temp.size())
@@ -95,8 +104,9 @@ ostream &operator<<(ostream &os, HighScore &input)
 				break;
 			case 5:
 				os << temp;
+				break;
 			}
-		}		
+		}
 	}
 	return os;
 }
@@ -115,17 +125,4 @@ Profile::~Profile()
 {
 
 }
-
-// Setters
-void Profile::Set_Name(string input)
-{
-	this->name = input;
-}
-
-// Getters
-string Profile::Get_Name()
-{
-	return this->name;
-}
-
 // ======================================================================================

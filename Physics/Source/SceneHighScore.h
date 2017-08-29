@@ -35,10 +35,6 @@ public:
 
 	GameObject* FetchGO();
 
-	bool CheckCollision(GameObject *go1, GameObject *go2, float dt);
-	float CheckCollision2(GameObject *go1, GameObject *go2);
-	void CollisionResponse(GameObject *go1, GameObject *go2);
-
 protected:
 
 	//Physics
@@ -73,6 +69,11 @@ protected:
 	// HighScore Stuff
 	std::vector<HighScore> highscore;
 	const char *file_path;
+
+	// Profile
+	std::vector<Profile> profile1;
+	std::vector<Profile> profile2;
+	std::vector<Profile> profile3;
 };
 
 #endif

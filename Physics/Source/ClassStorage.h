@@ -18,6 +18,7 @@ protected:
 	struct Score
 	{
 		string rank;
+		string level;
 		string name;
 		string score;
 	}; 
@@ -48,17 +49,10 @@ protected:
 		string score;
 	};
 
-	string name;
-
 public:
 	// Constructor & Destructor
 	Profile();
 	~Profile();
-
-	// Setters
-	void Set_Name(string input);
-	// Getters
-	string Get_Name();
 
 	// Struct Storage for Level Table
 	Level_Table Table;

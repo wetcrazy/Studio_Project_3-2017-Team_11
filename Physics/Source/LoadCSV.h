@@ -28,14 +28,14 @@ void WriteCSV(const char *file_path, std::vector<HighScore> input);
 
 // Function to Load .CSV
 // Returns Profile, temp is just there to overload function
-std::vector<Profile> LoadCSV_2(string name);
+std::vector<Profile> LoadCSV_2(size_t loadnum);
 
 // Function to Delete .CSV
 // Returns Profile, temp is just there to overload function
-void DeleteCSV_2(string name);
+void DeleteCSV_2(size_t loadnum);
 
 // Function to Write into .CSV
 // Returns Profile
-void WriteCSV_2(string name, std::vector<Profile> input);
+void WriteCSV_2(std::vector<Profile> input, size_t loadnum);
 
 #endif
