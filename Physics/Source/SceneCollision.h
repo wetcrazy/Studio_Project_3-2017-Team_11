@@ -146,6 +146,9 @@ protected:
 	float speed_multiplyer;
 
 	Race raceTemp;
+
+	// Indicator
+	GameObject *indicator;
 };
 
 #endif

@@ -1000,6 +1000,12 @@ void SceneCollision::CreateStuff()
 		guidemarker->scale.Set(1, 1, 1);
 		m_goList.push_back(guidemarker);
 	}
+	// Indicator
+	indicator = new GameObject(GameObject::GO_INDICATOR);
+	indicator->active = true;
+	indicator->pos.Set(70.5, m_worldHeight - 47, 0);
+	indicator->scale.Set(20, 15, 10);
+	m_goList.push_back(indicator);
 
 	//{ // Testing Structure
 	//	GameObject* blocks = FetchGO();
@@ -1355,35 +1361,22 @@ void SceneCollision::RenderGO(GameObject *go)
 		break;
 	case GameObject::GO_POWERBAR:
 		modelStack.PushMatrix();
-		//modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		//modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		//RenderMesh(meshList[GEO_POWERBAR], true, go->Color);
 		RenderMeshOnScreen(meshList[GEO_POWERBAR], go->pos.x, go->pos.y, go->scale.x, go->scale.y, 1);
 		modelStack.PopMatrix();
 		break;
 	case GameObject::GO_POWER_BG:
 		modelStack.PushMatrix();
-		//modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		//modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		//RenderMesh(meshList[GEO_POWERBAR], true, go->Color);
 		RenderMeshOnScreen(meshList[GEO_POWER_BG], go->pos.x, go->pos.y, go->scale.x, go->scale.y, 1);
 		modelStack.PopMatrix();
 		break;
 	case GameObject::GO_POWERRANGE:
 		modelStack.PushMatrix();
-		//modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		//modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		//RenderMesh(meshList[GEO_POWERRANGE], true, go->Color);
 		RenderMeshOnScreen(meshList[GEO_POWERRANGE], go->pos.x, go->pos.y, go->scale.x, go->scale.y, 1);
 		modelStack.PopMatrix();
 		break;
 	case GameObject::GO_POWERRANGE_FIRED:
 		modelStack.PushMatrix();
-		//modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		//modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		//RenderMesh(meshList[GEO_POWERRANGE], true, go->Color);
-		// Add abit more to pos x to make it not move too much
-		RenderMeshOnScreen(meshList[GEO_POWERRANGE_FIRED], go->pos.x, go->pos.y, go->scale.x, go->scale.y, 1); // Added some numbers to pos.x to make an illusion that the object is not moving after obj being changed
+		RenderMeshOnScreen(meshList[GEO_POWERRANGE_FIRED], go->pos.x, go->pos.y, go->scale.x, go->scale.y, 1); 
 		modelStack.PopMatrix();
 		break;
 	case GameObject::GO_GUIDEMARKER:
@@ -1395,6 +1388,11 @@ void SceneCollision::RenderGO(GameObject *go)
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_GUIDEMARKER], true, go->Color);
 		modelStack.PopMatrix();
+		modelStack.PopMatrix();
+		break;
+	case GameObject::GO_INDICATOR:
+		modelStack.PushMatrix();
+		RenderMeshOnScreen(meshList[GEO_INDICATOR], go->pos.x, go->pos.y, go->scale.x, go->scale.y, 1);
 		modelStack.PopMatrix();
 		break;
 	}
@@ -1480,10 +1478,11 @@ void SceneCollision::Render()
 	ss.precision(5);
 	ss << "Score: " << i_levelScore;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 3);
-	
+
 	float textsize = 2.0f;
 	float spacing = 0.4f;
 	ss.str("");
+	// Number for Percentage of Power Bar
 	ss << percentage_of_powerbar;
 	if (std::to_string(percentage_of_powerbar).size() == 3)
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 0), textsize + 0.5, textsize + 2, 2.5, m_worldHeight - 45.5, spacing);
@@ -1493,6 +1492,16 @@ void SceneCollision::Render()
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 0), textsize + 0.5, textsize + 2, 2.5 + (2 * spacing + 0.1), m_worldHeight - 45.5, spacing);
 	ss.str("");
 
+	// Number of Current level
+	textsize = 3.0f;
+	ss << i_CurrentLevel;
+	if (std::to_string(percentage_of_powerbar).size() == 3)
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 0), textsize + 1, textsize + 2, 75.6, m_worldHeight - 53.3, spacing);
+	else if (std::to_string(percentage_of_powerbar).size() == 2)
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 0), textsize + 1, textsize + 2, 75.6 + spacing, m_worldHeight - 53.3, spacing);
+	else if (std::to_string(percentage_of_powerbar).size() == 1)
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 0), textsize + 1, textsize + 2, 75.6 + (2 * spacing + 0.1), m_worldHeight - 53.3, spacing);
+	ss.str("");
 }
 
 void SceneCollision::Exit()
