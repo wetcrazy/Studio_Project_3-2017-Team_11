@@ -113,14 +113,14 @@
     <ClCompile Include="Source\ClassRace.cpp">
       <Filter>Classes/Functions</Filter>
     </ClCompile>
-    <ClCompile Include="Source\SpriteAnimation.cpp">
-      <Filter>Playground Scenes</Filter>
-    </ClCompile>
     <ClCompile Include="Source\SceneFail.cpp">
       <Filter>Scene UI</Filter>
     </ClCompile>
     <ClCompile Include="Source\SceneSuccess.cpp">
       <Filter>Scene UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SpriteAnimation.cpp">
+      <Filter>Classes/Functions</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -208,14 +208,14 @@
     <ClInclude Include="Source\ClassRace.h">
       <Filter>Classes/Functions</Filter>
     </ClInclude>
-    <ClInclude Include="Source\SpriteAnimation.h">
-      <Filter>Playground Scenes</Filter>
-    </ClInclude>
     <ClInclude Include="Source\SceneFail.h">
       <Filter>Scene UI</Filter>
     </ClInclude>
     <ClInclude Include="Source\SceneSuccess.h">
       <Filter>Scene UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SpriteAnimation.h">
+      <Filter>Classes/Functions</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
