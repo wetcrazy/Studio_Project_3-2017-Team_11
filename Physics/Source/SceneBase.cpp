@@ -188,6 +188,8 @@ void SceneBase::Init()
 	meshList[GEO_INSTRUCTIONS2]->textureID = LoadTGA("Image//Menu/Instructions//pg2.tga");
 	meshList[GEO_INSTRUCTIONS3] = MeshBuilder::GenerateQuad("pg 3", Color(1, 1, 1));
 	meshList[GEO_INSTRUCTIONS3]->textureID = LoadTGA("Image//Menu/Instructions//pg3.tga");
+	meshList[GEO_INSTRUCTIONS4] = MeshBuilder::GenerateQuad("pg 4", Color(1, 1, 1));
+	meshList[GEO_INSTRUCTIONS4]->textureID = LoadTGA("Image//Menu/Instructions//pg4.tga");
 
 	//Save File Menu
 	meshList[GEO_SAVEMENU] = MeshBuilder::GenerateQuad("save", Color(1, 1, 1));
