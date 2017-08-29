@@ -23,6 +23,11 @@ void SceneInstructions::Init()
 
 	Math::InitRNG();
 
+	b_page1 = true;
+	b_page2 = false;
+	b_page3 = false;
+	b_page4 = false;
+
 	arrows->type = GameObject::GO_ARROW;	//Arrow 
 	arrows->active = true;
 	arrows->pos.Set(-10, -10, 1);
@@ -43,10 +48,10 @@ void SceneInstructions::Init()
 	pg3->pos.Set(-10, -10, -5);
 	pg3->scale.Set(1.0f, 1.0f, 1.0f);
 
-	next_page1 = false;
-	next_page2 = false;
-	previous_page1 = false;
-	previous_page2 = false;
+	pg4->type = GameObject::GO_INSTRUCTIONS4;	//Pg 4
+	pg4->active = true;
+	pg4->pos.Set(-10, -10, -5);
+	pg4->scale.Set(1.0f, 1.0f, 1.0f);
 }
 
 GameObject* SceneInstructions::FetchGO()
@@ -60,6 +65,19 @@ GameObject* SceneInstructions::FetchGO()
 			return go;
 		}
 	}
+	for (unsigned i = 0; i < 40; ++i)
+	{
+		GameObject *go = new GameObject(GameObject::GO_BALL);
+		m_goList.push_back(go);
+	}
+	for (unsigned i = 0; i < 40; ++i)
+	{
+		GameObject *go = new GameObject(GameObject::GO_CUBE);
+		m_goList.push_back(go);
+	}
+	GameObject *go = m_goList.back();
+	go->active = true;
+	return go;
 }
 
 void SceneInstructions::Update(double dt)
@@ -72,14 +90,15 @@ void SceneInstructions::Update(double dt)
 	int w_temp = 100 * Application::GetWindowWidth() / Application::GetWindowHeight();
 
 	//Position values (for instructions file)
-	float posXDownArrow_Saves = 0.72f;
-	float posXDownArrow_Select = 1.55f;
-	float posXDownArrow_Delete = 0.9f;
-	float posXDownArrow_MainMenu = 0.57f;
-	float posYDownArrow_Save1 = 0.765f;
-	float posYDownArrow_Save2 = 1.1f;
-	float posYDownArrow_Save3 = 1.89f;
-	float posYDownArrow_Options = 5.f;
+	float posXArrow_MainMenu_Page1 = 1.12f;
+	float posXArrow_Next_Page1 = 0.6f;
+	float posXArrow_Previous_Page2 = 1.28f;
+	float posXArrow_Next_Page2 = 0.6f;
+	float posXArrow_Previous_Page3 = 1.28f;
+	float posXArrow_Next_Page3 = 0.6f;
+	float posXArrow_Previous_Page4 = 1.28f;
+	float posXArrow_MainMenu_Page4 = 0.59f;
+	float posYArrow = 3.6f;
 
 	//Scale values (for instructions file)
 	float scaleDown_Arrow = 20.f;
@@ -93,22 +112,28 @@ void SceneInstructions::Update(double dt)
 		if ((Application::IsKeyPressed(VK_LEFT)) && pressDelay >= cooldownPressed)
 		{
 			//First Page
-			if (selectOptions == NEXT_1)
-				selectOptions = MAIN_MENU;
-			else if (selectOptions == MAIN_MENU)
-				selectOptions = NEXT_1;
+			if (selectOptions == NEXT_PAGE1)
+				selectOptions = MAIN_MENU_PAGE1;
+			else if (selectOptions == MAIN_MENU_PAGE1)
+				selectOptions = NEXT_PAGE1;
 
 			//Second Page
-			else if (selectOptions == PREVIOUS_1)
-				selectOptions = NEXT_2;
-			else if (selectOptions == NEXT_2)
-				selectOptions = PREVIOUS_1;
+			else if (selectOptions == PREVIOUS_PAGE2)
+				selectOptions = NEXT_PAGE2;
+			else if (selectOptions == NEXT_PAGE2)
+				selectOptions = PREVIOUS_PAGE2;
 
 			//Third Page
-			else if (selectOptions == PREVIOUS_2)
-				selectOptions = MAIN_MENU;
-			else if (selectOptions == MAIN_MENU)
-				selectOptions = PREVIOUS_2;
+			else if (selectOptions == PREVIOUS_PAGE3)
+				selectOptions = NEXT_PAGE3;
+			else if (selectOptions == NEXT_PAGE3)
+				selectOptions = PREVIOUS_PAGE3;
+
+			//Fourth Page
+			else if (selectOptions == PREVIOUS_PAGE4)
+				selectOptions = MAIN_MENU_PAGE4;
+			else if (selectOptions == MAIN_MENU_PAGE4)
+				selectOptions = PREVIOUS_PAGE4;
 
 			pressDelay = 0.f;
 		}
@@ -116,68 +141,93 @@ void SceneInstructions::Update(double dt)
 		if ((Application::IsKeyPressed(VK_RIGHT)) && pressDelay >= cooldownPressed)
 		{
 			//First Page
-			if (selectOptions == MAIN_MENU)
-				selectOptions = NEXT_1;
-			else if (selectOptions == NEXT_1)
-				selectOptions = MAIN_MENU;
+			if (selectOptions == NEXT_PAGE1)
+				selectOptions = MAIN_MENU_PAGE1;
+			else if (selectOptions == MAIN_MENU_PAGE1)
+				selectOptions = NEXT_PAGE1;
 
 			//Second Page
-			else if (selectOptions == NEXT_2)
-				selectOptions = PREVIOUS_1;
-			else if (selectOptions == PREVIOUS_1)
-				selectOptions = NEXT_2;
+			else if (selectOptions == PREVIOUS_PAGE2)
+				selectOptions = NEXT_PAGE2;
+			else if (selectOptions == NEXT_PAGE2)
+				selectOptions = PREVIOUS_PAGE2;
 
 			//Third Page
-			else if (selectOptions == MAIN_MENU)
-				selectOptions = PREVIOUS_2;
-			else if (selectOptions == PREVIOUS_2)
-				selectOptions = MAIN_MENU;
+			else if (selectOptions == PREVIOUS_PAGE3)
+				selectOptions = NEXT_PAGE3;
+			else if (selectOptions == NEXT_PAGE3)
+				selectOptions = PREVIOUS_PAGE3;
+
+			//Fourth Page
+			else if (selectOptions == PREVIOUS_PAGE4)
+				selectOptions = MAIN_MENU_PAGE4;
+			else if (selectOptions == MAIN_MENU_PAGE4)
+				selectOptions = PREVIOUS_PAGE4;
 
 			pressDelay = 0.f;
 		}
 
 		if (Application::IsKeyPressed(VK_RETURN) && pressDelay >= cooldownPressed)
 		{
-			if (selectOptions == MAIN_MENU)
+			if (selectOptions == MAIN_MENU_PAGE1 || selectOptions == MAIN_MENU_PAGE4)
 				SceneManager::getInstance()->changeScene(new SceneMainMenu());
 
-			else if (selectOptions == NEXT_1)
+			else if (selectOptions == NEXT_PAGE1)
 			{
-				next_page1 = true;
-				next_page2 = false;
-				previous_page1 = false;
-				previous_page2 = false;
+				b_page2 = true;
+				b_page1 = false;
+				b_page3 = false;
+				b_page4 = false;
 
-				selectOptions = NEXT_2; //default selection for next page
+				selectOptions = PREVIOUS_PAGE2; //default selection for next page
 			}
-			if (selectOptions == NEXT_2)
+			else if (selectOptions == NEXT_PAGE2)
 			{
-				next_page1 = false;
-				next_page2 = true;
-				previous_page1 = false;
-				previous_page2 = false;
+				b_page3 = true;
+				b_page1 = false;
+				b_page2 = false;
+				b_page4 = false;
 
-				selectOptions = MAIN_MENU; //default selection for next page
+				selectOptions = PREVIOUS_PAGE3; //default selection for next page
+			}
+			else if (selectOptions == NEXT_PAGE3)
+			{
+				b_page4 = true;
+				b_page1 = false;
+				b_page2 = false;
+				b_page3 = false;
+
+				selectOptions = PREVIOUS_PAGE4; //default selection for next page
 			}
 
-			else if (selectOptions == PREVIOUS_1)
+			else if (selectOptions == PREVIOUS_PAGE2 && b_page2)
 			{
-				next_page1 = false;
-				next_page2 = false;
-				previous_page1 = true;
-				previous_page2 = false;
+				b_page1 = true;
+				b_page2 = false;
+				b_page3 = false;
+				b_page4 = false;
 
-				selectOptions = MAIN_MENU; //default selection for next page
+				selectOptions = MAIN_MENU_PAGE1; //default selection for previous page
 			}
 
-			else if (selectOptions == PREVIOUS_2)
+			else if (selectOptions == PREVIOUS_PAGE3 && b_page3)
 			{
-				next_page1 = false;
-				next_page2 = false;
-				previous_page1 = false;
-				previous_page2 = true;
+				b_page2 = true;
+				b_page1 = false;
+				b_page3 = false;
+				b_page4 = false;
 
-				selectOptions = NEXT_1; //default selection for next page
+				selectOptions = PREVIOUS_PAGE2; //default selection for previous page
+			}
+
+			else if (selectOptions == PREVIOUS_PAGE4 && b_page4)
+			{
+				b_page3 = true;
+				b_page1 = false;
+				b_page2 = false;
+				b_page4 = false;
+
+				selectOptions = PREVIOUS_PAGE3; //default selection for previous page
 			}
 
 			pressDelay = 0.f;
@@ -186,28 +236,24 @@ void SceneInstructions::Update(double dt)
 
 	switch (selectOptions)
 	{
-	case NEXT_1:
+	case MAIN_MENU_PAGE1:
 		//Render arrow
-		arrows->pos.Set((w_temp / 2) / posXDownArrow_Saves, (h_temp / 2) / posYDownArrow_Save2, 1);
+		arrows->active = true;
+		arrows->pos.Set((w_temp / 2) / posXArrow_MainMenu_Page1, (h_temp / 2) / posYArrow, 1);
 		arrows->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
 
 		//Render instructions menu
-		pg2->pos.Set(w_temp / 2, h_temp / 2, -5);
-		pg2->scale.Set(w_temp + 2, h_temp, 1);
+		pg2->active = false;
+		pg3->active = false;
+		pg4->active = false;
+		pg1->active = true;
+		pg1->pos.Set(w_temp / 2, h_temp / 2, -5);
+		pg1->scale.Set(w_temp + 2, h_temp, 1);
 		break;
 
-	case NEXT_2:
+	case NEXT_PAGE1:
 		//Render arrow
-		arrows->pos.Set((w_temp / 2) / posXDownArrow_Saves, (h_temp / 2) / posYDownArrow_Save3, 1);
-		arrows->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
-
-		//Render instructions menu
-		pg3->pos.Set(w_temp / 2, h_temp / 2, -5);
-		pg3->scale.Set(w_temp + 2, h_temp, 1);
-		break;
-	case PREVIOUS_1:
-		//Render arrow
-		arrows->pos.Set((w_temp / 2) / posXDownArrow_Saves, (h_temp / 2) / posYDownArrow_Save2, 1);
+		arrows->pos.Set((w_temp / 2) / posXArrow_Next_Page1, (h_temp / 2) / posYArrow, 1);
 		arrows->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
 
 		//Render instructions menu
@@ -215,15 +261,110 @@ void SceneInstructions::Update(double dt)
 		pg1->scale.Set(w_temp + 2, h_temp, 1);
 		break;
 
-	case PREVIOUS_2:
+	case PREVIOUS_PAGE2:
 		//Render arrow
-		arrows->pos.Set((w_temp / 2) / posXDownArrow_Saves, (h_temp / 2) / posYDownArrow_Save3, 1);
+		arrows->pos.Set((w_temp / 2) / posXArrow_Previous_Page2, (h_temp / 2) / posYArrow, 1);
+		arrows->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
+
+		//Render instructions menu
+		pg1->active = false;
+		pg3->active = false;
+		pg4->active = false;
+		pg2->active = true;
+		pg2->pos.Set(w_temp / 2, h_temp / 2, -5);
+		pg2->scale.Set(w_temp + 2, h_temp, 1);
+		break;
+
+	case NEXT_PAGE2:
+		//Render arrow
+		arrows->pos.Set((w_temp / 2) / posXArrow_Next_Page2, (h_temp / 2) / posYArrow, 1);
 		arrows->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
 
 		//Render instructions menu
 		pg2->pos.Set(w_temp / 2, h_temp / 2, -5);
 		pg2->scale.Set(w_temp + 2, h_temp, 1);
 		break;
+
+	case PREVIOUS_PAGE3:
+		//Render arrow
+		arrows->pos.Set((w_temp / 2) / posXArrow_Previous_Page3, (h_temp / 2) / posYArrow, 1);
+		arrows->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
+
+		//Render instructions menu
+		pg1->active = false;
+		pg3->active = false;
+		pg4->active = false;
+		pg3->active = true;
+		pg3->pos.Set(w_temp / 2, h_temp / 2, -5);
+		pg3->scale.Set(w_temp + 2, h_temp, 1);
+		break;
+
+	case NEXT_PAGE3:
+		//Render arrow
+		arrows->pos.Set((w_temp / 2) / posXArrow_Next_Page3, (h_temp / 2) / posYArrow, 1);
+		arrows->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
+
+		//Render instructions menu
+		pg3->pos.Set(w_temp / 2, h_temp / 2, -5);
+		pg3->scale.Set(w_temp + 2, h_temp, 1);
+		break;
+
+	case PREVIOUS_PAGE4:
+		//Render arrow
+		arrows->pos.Set((w_temp / 2) / posXArrow_Previous_Page4, (h_temp / 2) / posYArrow, 1);
+		arrows->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
+
+		//Render instructions menu
+		pg1->active = false;
+		pg3->active = false;
+		pg3->active = false;
+		pg4->active = true;
+		pg4->pos.Set(w_temp / 2, h_temp / 2, -5);
+		pg4->scale.Set(w_temp + 2, h_temp, 1);
+		break;
+
+	case MAIN_MENU_PAGE4:
+		//Render arrow
+		arrows->pos.Set((w_temp / 2) / posXArrow_MainMenu_Page4, (h_temp / 2) / posYArrow, 1);
+		arrows->scale.Set((w_temp + 2) / scaleDown_Arrow, h_temp / scaleDown_Arrow, 1);
+
+		//Render instructions menu
+		pg4->pos.Set(w_temp / 2, h_temp / 2, -5);
+		pg4->scale.Set(w_temp + 2, h_temp, 1);
+		break;
+	}
+
+	//If at first page
+	if (b_page1)
+	{
+		pg1->active = true;
+		pg2->active = false;
+		pg3->active = false;
+		pg4->active = false;
+	}
+	//If at second page
+	if (b_page2)
+	{
+		pg2->active = true;
+		pg1->active = false;
+		pg3->active = false;
+		pg4->active = false;
+	}
+	//If at third page
+	if (b_page3)
+	{
+		pg3->active = true;
+		pg1->active = false;
+		pg2->active = false;
+		pg4->active = false;
+	}
+	//If at fourth page
+	if (b_page4)
+	{
+		pg4->active = true;
+		pg1->active = false;
+		pg2->active = false;
+		pg3->active = false;
 	}
 }
 
@@ -257,6 +398,13 @@ void SceneInstructions::RenderGO(GameObject *go)
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_INSTRUCTIONS3], true, go->Color);
+		modelStack.PopMatrix();
+		break;
+	case GameObject::GO_INSTRUCTIONS4:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_INSTRUCTIONS4], true, go->Color);
 		modelStack.PopMatrix();
 		break;
 	}

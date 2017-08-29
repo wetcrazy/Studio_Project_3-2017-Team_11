@@ -20,11 +20,14 @@ public:
 
 	enum INSTRUCTIONS_MENU
 	{
-		MAIN_MENU,
-		NEXT_1,
-		NEXT_2,
-		PREVIOUS_1,
-		PREVIOUS_2
+		MAIN_MENU_PAGE1,
+		NEXT_PAGE1,
+		PREVIOUS_PAGE2,
+		NEXT_PAGE2,
+		PREVIOUS_PAGE3,
+		NEXT_PAGE3,
+		PREVIOUS_PAGE4,
+		MAIN_MENU_PAGE4
 	};
 
 protected:
@@ -36,7 +39,7 @@ protected:
 	float m_worldHeight;
 
 	//Default optoin
-	INSTRUCTIONS_MENU selectOptions = MAIN_MENU;
+	INSTRUCTIONS_MENU selectOptions = MAIN_MENU_PAGE1;
 
 	GameObject* FetchGO();
 
@@ -45,13 +48,10 @@ protected:
 	GameObject *pg1 = FetchGO();
 	GameObject *pg2 = FetchGO();
 	GameObject *pg3 = FetchGO();
+	GameObject *pg4 = FetchGO();
 
 	//Next page
-	bool next_page1;
-	bool next_page2;
-	//Previous page
-	bool previous_page1;
-	bool previous_page2;
+	bool b_page1, b_page2, b_page3, b_page4;
 
 	//Options
 	float pressDelay = 0.f;
