@@ -16,6 +16,11 @@
 #include "SceneHighScore.h"
 #include "SceneSaveFile.h"
 
+#include "../IK/irrKlang.h"
+using namespace irrklang;
+#pragma comment(lib,"irrKlang.lib")
+ISoundEngine*Menu = createIrrKlangDevice();
+
 SceneMainMenu::SceneMainMenu()
 {
 }
@@ -39,6 +44,8 @@ void SceneMainMenu::Init()
 	menu->active = true;
 	menu->pos.Set(-10, -10, -5);
 	menu->scale.Set(1.0f, 1.0f, 1.0f);
+
+	Menu->play2D("PocketMorty.mp3", GL_TRUE);
 }
 
 GameObject* SceneMainMenu::FetchGO()
@@ -334,4 +341,7 @@ void SceneMainMenu::Exit()
 
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 	glDeleteProgram(m_programID);
+
+	Menu->stopAllSounds();
+
 }

@@ -10,6 +10,10 @@
 
 #include "SpriteAnimation.h"
 // #include "LoadTXT.h"
+#include "../IK/irrKlang.h"
+using namespace irrklang;
+#pragma comment(lib,"irrKlang.lib")
+ISoundEngine*Audio = createIrrKlangDevice();
 
 SceneCollision::SceneCollision()
 {
@@ -87,6 +91,9 @@ void SceneCollision::Init()
 
 	CreateStuff();
 	CreateLevel(i_CurrentLevel);
+
+	Audio->play2D("8BitRadioactive.mp3", GL_TRUE);
+
 }
 
 GameObject* SceneCollision::FetchGO()
@@ -1503,4 +1510,6 @@ void SceneCollision::Exit()
 		delete m_ghost;
 		m_ghost = NULL;
 	}
+
+	Audio->stopAllSounds();
 }
