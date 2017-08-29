@@ -167,13 +167,11 @@
     <ClCompile Include="Source\Mesh.cpp" />
     <ClCompile Include="Source\MeshBuilder.cpp" />
     <ClCompile Include="Source\QuickSort.cpp" />
-    <ClCompile Include="Source\SceneAsteroid.cpp" />
     <ClCompile Include="Source\SceneBase.cpp" />
     <ClCompile Include="Source\SceneCollision.cpp" />
     <ClCompile Include="Source\SceneCredit.cpp" />
     <ClCompile Include="Source\SceneFail.cpp" />
     <ClCompile Include="Source\SceneHighScore.cpp" />
-    <ClCompile Include="Source\SceneKinematics.cpp" />
     <ClCompile Include="Source\SceneMainMenu.cpp" />
     <ClCompile Include="Source\SceneManager.cpp" />
     <ClCompile Include="Source\SceneSaveFile.cpp" />
@@ -201,13 +199,11 @@
     <ClInclude Include="Source\MeshBuilder.h" />
     <ClInclude Include="Source\QuickSort.h" />
     <ClInclude Include="Source\Scene.h" />
-    <ClInclude Include="Source\SceneAsteroid.h" />
     <ClInclude Include="Source\SceneBase.h" />
     <ClInclude Include="Source\SceneCollision.h" />
     <ClInclude Include="Source\SceneCredit.h" />
     <ClInclude Include="Source\SceneFail.h" />
     <ClInclude Include="Source\SceneHighScore.h" />
-    <ClInclude Include="Source\SceneKinematics.h" />
     <ClInclude Include="Source\SceneMainMenu.h" />
     <ClInclude Include="Source\SceneManager.h" />
     <ClInclude Include="Source\SceneSaveFile.h" />

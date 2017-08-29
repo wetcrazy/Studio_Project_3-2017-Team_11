@@ -15,12 +15,6 @@ struct GameObject
 		GO_WALL,
 		GO_PILLAR,
 		GO_BLOCKS,
-		GO_ASTEROID, //asteroid
-		GO_SHIP, //player ship
-		GO_BULLET, //player bullet
-		GO_ENEMY,
-		GO_ENEMY_BULLET,
-		GO_POWERUP,
 
 		//Background
 		GO_MOUNTAIN,

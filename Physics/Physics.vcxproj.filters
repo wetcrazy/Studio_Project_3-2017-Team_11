@@ -53,9 +53,6 @@
     <ClCompile Include="Source\SceneCollision.cpp">
       <Filter>Playground Scenes</Filter>
     </ClCompile>
-    <ClCompile Include="Source\SceneKinematics.cpp">
-      <Filter>Playground Scenes</Filter>
-    </ClCompile>
     <ClCompile Include="Source\SceneBase.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
@@ -76,9 +73,6 @@
     </ClCompile>
     <ClCompile Include="Source\MeshBuilder.cpp">
       <Filter>GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\SceneAsteroid.cpp">
-      <Filter>Playground Scenes</Filter>
     </ClCompile>
     <ClCompile Include="Source\LoadCSV.cpp">
       <Filter>Loading Files</Filter>
@@ -148,9 +142,6 @@
     <ClInclude Include="Source\SceneCollision.h">
       <Filter>Playground Scenes</Filter>
     </ClInclude>
-    <ClInclude Include="Source\SceneKinematics.h">
-      <Filter>Playground Scenes</Filter>
-    </ClInclude>
     <ClInclude Include="Source\SceneBase.h">
       <Filter>Scenes</Filter>
     </ClInclude>
@@ -177,9 +168,6 @@
     </ClInclude>
     <ClInclude Include="Source\MeshBuilder.h">
       <Filter>GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\SceneAsteroid.h">
-      <Filter>Playground Scenes</Filter>
     </ClInclude>
     <ClInclude Include="Source\LoadCSV.h">
       <Filter>Loading Files</Filter>

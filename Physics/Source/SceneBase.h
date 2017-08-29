@@ -48,8 +48,6 @@ public:
 		GEO_BALL,
 		GEO_CUBE,
 		GEO_HEXA,
-		GEO_ASTEROID,
-		GEO_SHIP,
 
 		//Background
 		GEO_MOUNTAIN,
