@@ -71,8 +71,8 @@ void SceneUpgrade::Init()
 	i_currency = GetCurrency();
 
 	//Cost of upgrades
-	i_cost_speed_upgrade_1 = 5;
-	i_cost_speed_upgrade_2 = 15;
+	i_cost_speed_upgrade_1 = 100;
+	i_cost_speed_upgrade_2 = 150;
 	i_cost_speed_multiplyer_upgrade_1 = 100;
 	i_cost_speed_multiplyer_upgrade_2 = 150;
 }
