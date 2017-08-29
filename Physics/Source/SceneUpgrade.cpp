@@ -728,7 +728,7 @@ void SceneUpgrade::Render()
 	ss.str(std::string());
 	ss.precision(5);
 	ss << "Currency: " << GetCurrency();
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0.580, 1, 0.827), 3, 0, 0);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0.580, 0, 0.827), 3, 0, 0);
 
 	switch (selectOptions)
 	{

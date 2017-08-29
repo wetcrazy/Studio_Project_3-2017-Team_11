@@ -10,7 +10,6 @@
 #include "SceneCredit.h"
 
 #include "SpriteAnimation.h"
-// #include "LoadTXT.h"
 #include "../IK/irrKlang.h"
 using namespace irrklang;
 #pragma comment(lib,"irrKlang.lib")
@@ -570,44 +569,6 @@ void SceneCollision::Update(double dt)
 		}
 		percentage_of_powerbar = ((powerbar->pos.x - original_position_powerbar) / (powerrange->scale.x - 22)) * 100; // Updater for power percentage (I know! Very werid numbers - Ryan)
 	}
-	
-	//RButton Down
-	static bool bRButtonState = false;
-	if (!bRButtonState && Application::IsMousePressed(1))
-	{
-		bRButtonState = true;
-
-		m_ghost->pos.Set(posX, posY, 0); //IMPT
-		m_ghost->active = true;
-		float sc = 3;
-		m_ghost->scale.Set(sc, sc, sc);
-	}
-	//RButton Up
-	else if (bRButtonState && !Application::IsMousePressed(1))
-	{
-		bRButtonState = false;
-
-		//spawn large GO_BALL
-		GameObject *go = FetchGO();
-		go->active = true;
-
-		if (i_projectileType == 1)
-			go->type = GameObject::GO_CUBE;
-		else if (i_projectileType == 2)
-			go->type = GameObject::GO_HEXA;
-		else if (i_projectileType == 3)
-			go->type = GameObject::GO_BALL;
-
-		go->pos = m_ghost->pos;
-		go->vel.Set(m_ghost->pos.x - posX, m_ghost->pos.y - posY, 0);
-		m_ghost->active = false;
-		float sc = 3;
-		go->scale.Set(sc, sc, sc);
-		go->mass = sc * sc * sc;
-
-		// Randomize color of ball
-		go->Color.Set(Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1), Math::RandFloatMinMax(0, 1));
-	}
 
 	if (Application::IsKeyPressed(VK_SPACE))
 	{
@@ -747,30 +708,6 @@ void SceneCollision::Update(double dt)
 		sa1->m_anim->animActive = true;
 	}
 	//End of Background stuff=====================================//
-
-
-	//Press O to reset entire game
-	if (Application::IsKeyPressed('O'))
-	{
-		SceneManager::getInstance()->changeScene(new SceneMainMenu());
-		SetCurrentLevel(1);
-		SetTempScore(0);
-		SetTotalScore(0);
-		SetTempCurrency(0);
-		SetCurrency(0);
-		if (i_saveFile == 1)
-		{
-			upgraded.DeleteTextFile("Save1//Speed_Upgrade.txt");
-		}
-		else if (i_saveFile == 2)
-		{
-			upgraded.DeleteTextFile("Save2//Speed_Upgrade.txt");
-		}
-		else if (i_saveFile == 3)
-		{
-			upgraded.DeleteTextFile("Save3//Speed_Upgrade.txt");
-		}
-	}
 
 	//Press R to reset current level
 	if (Application::IsKeyPressed('R'))
