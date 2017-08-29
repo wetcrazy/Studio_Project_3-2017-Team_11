@@ -22,7 +22,7 @@ public:
 	void RenderGO(GameObject *go);
 
 	//Getter for score
-	int GetScore();
+	int GetLevelScore();
 
 	//Getter for save file
 	int GetSaveFile();

@@ -61,7 +61,7 @@ void SceneCollision::Init()
 	projectile = FetchGO();
 	projectile->active = false;
 
-	i_projectileCount = 5;
+	i_projectileCount = 12;
 
 	i_despawnHexa = 3;
 	b_splitDone = false;
@@ -81,7 +81,8 @@ void SceneCollision::Init()
 	b_abilityUsed = false;
 
 	i_CurrentLevel = GetCurrentLevel();
-	i_tempScore = GetScore();
+	i_levelScore = 0;
+	i_tempScore = GetTotalScore();
 	i_tempCurrency = GetCurrency();
 
 	CreateStuff();
@@ -369,6 +370,7 @@ void SceneCollision::CollisionResponse(GameObject * go1, GameObject * go2)
 		m_objectCount--;
 		fortCount--;
 		i_tempScore += 10;
+		i_levelScore += 10;
 		i_tempCurrency += 2;
 		NumMode_tiggered_powerbar = 1;
 		b_raceConfirmed = false;
@@ -414,6 +416,7 @@ void SceneCollision::Update(double dt)
 	
 	SceneBase::Update(dt);
 
+	SetLevelScore(i_levelScore);
 	SetTempScore(i_tempScore);
 	SetTempCurrency(i_tempCurrency);
 
@@ -769,7 +772,7 @@ void SceneCollision::Update(double dt)
 		SceneManager::getInstance()->changeScene(new SceneMainMenu());
 		SetCurrentLevel(1);
 		SetTempScore(0);
-		SetScore(0);
+		SetTotalScore(0);
 		SetTempCurrency(0);
 		SetCurrency(0);
 		if (i_saveFile == 1)
@@ -855,19 +858,24 @@ void SceneCollision::Update(double dt)
 	if (fortCount == 0)
 	{
 		SceneManager::getInstance()->changeScene(new SceneSuccess());
+		SetLevelScore(i_levelScore);
 		SetTempScore(i_tempScore);
-		SetScore(i_tempScore);
+		SetTotalScore(i_tempScore);
 		SetTempCurrency(i_tempCurrency);
 		SetCurrency(i_tempCurrency);
 		i_CurrentLevel++;
 		SetCurrentLevel(i_CurrentLevel);
 	}
 
-	if (i_projectileCount == 0 && !projectile->active)
+	if (fortCount != 0)
 	{
-		SceneManager::getInstance()->changeScene(new SceneFail());
+		if (i_projectileCount == 0 && !projectile->active)
+		{
+			SceneManager::getInstance()->changeScene(new SceneFail());
 
+		}
 	}
+	
 }
 
 void SceneCollision::CreateStuff()
@@ -1080,29 +1088,29 @@ int SceneCollision::GetCurrentLevel()
 	return level;
 }
 
-void SceneCollision::SetScore(int score)
+void SceneCollision::SetTotalScore(int score)
 {
 	ofstream myFile;
 	if (i_saveFile == 1)
-		myFile.open("Save1//Score.txt");
+		myFile.open("Save1//TotalScore.txt");
 	else if (i_saveFile == 2)
-		myFile.open("Save2//Score.txt");
+		myFile.open("Save2//TotalScore.txt");
 	else if (i_saveFile == 3)
-		myFile.open("Save3//Score.txt");
+		myFile.open("Save3//TotalScore.txt");
 	myFile << score << endl;
 	myFile.close();
 }
 
-int SceneCollision::GetScore()
+int SceneCollision::GetTotalScore()
 {
 	int score;
 	ifstream myFile;
 	if (i_saveFile == 1)
-		myFile.open("Save1//Score.txt");
+		myFile.open("Save1//TotalScore.txt");
 	else if (i_saveFile == 2)
-		myFile.open("Save2//Score.txt");
+		myFile.open("Save2//TotalScore.txt");
 	else if (i_saveFile == 3)
-		myFile.open("Save3//Score.txt");
+		myFile.open("Save3//TotalScore.txt");
 	myFile >> score;
 	myFile.close();
 
@@ -1136,6 +1144,19 @@ int SceneCollision::GetTempScore()
 	myFile.close();
 
 	return tempScore;
+}
+
+void SceneCollision::SetLevelScore(int tempScore)
+{
+	ofstream myFile;
+	if (i_saveFile == 1)
+		myFile.open("Save1//Score.txt");
+	else if (i_saveFile == 2)
+		myFile.open("Save2//Score.txt");
+	else if (i_saveFile == 3)
+		myFile.open("Save3//Score.txt");
+	myFile << tempScore << endl;
+	myFile.close();
 }
 
 void SceneCollision::SetCurrency(int currency)
@@ -1448,7 +1469,7 @@ void SceneCollision::Render()
 
 	ss.str(std::string());
 	ss.precision(5);
-	ss << "TempScore: " << i_tempScore;
+	ss << "Score: " << i_levelScore;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 3);
 	
 	float textsize = 2.0f;

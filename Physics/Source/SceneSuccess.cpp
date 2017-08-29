@@ -27,10 +27,10 @@ void SceneSuccess::Init()
 
 	i_saveFile = GetSaveFile();
 
-	i_score = GetScore();
+	i_score = GetLevelScore();
 
 	//Setting star requirements
-	//If score is less than i_first, get 1 star
+	//If score is less than, or equal to i_first, get 1 star
 	//If score is between i_first and i_second, get 2 stars
 	//If score is more than i_second, get 3 stars
 	i_first = 60;
@@ -48,17 +48,17 @@ void SceneSuccess::Init()
 
 	if (i_saveFile == 1)
 	{
-		file_ScoreDestination = "Save1//Score.txt";
+		file_ScoreDestination = "Save1//TotalScore.txt";
 		file_LevelDestination = "Save1//CurrentLevel.txt";
 	}
 	else if (i_saveFile == 2)
 	{
-		file_ScoreDestination = "Save2//Score.txt";
+		file_ScoreDestination = "Save2//TotalScore.txt";
 		file_LevelDestination = "Save2//CurrentLevel.txt";
 	}
 	else if (i_saveFile == 3)
 	{
-		file_ScoreDestination = "Save3//Score.txt";
+		file_ScoreDestination = "Save3//TotalScore.txt";
 		file_LevelDestination = "Save3//CurrentLevel.txt";
 	}
 	curr_highscore.HighScore_Calculator(file_ScoreDestination, file_LevelDestination);
@@ -262,7 +262,7 @@ void SceneSuccess::Update(double dt)
 	}
 }
 
-int SceneSuccess::GetScore()
+int SceneSuccess::GetLevelScore()
 {
 	int score;
 	ifstream myFile;

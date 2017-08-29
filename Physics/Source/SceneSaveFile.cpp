@@ -216,7 +216,7 @@ void SceneSaveFile::Update(double dt)
 
 				SetCurrentLevel(1);
 				SetTempScore(0);
-				SetScore(0);
+				SetTotalScore(0);
 				SetCurrency(0);
 				SetTempCurrency(0);
 				if (select1)
@@ -384,15 +384,15 @@ void SceneSaveFile::SetCurrentLevel(int levelNo)
 	myFile.close();
 }
 
-void SceneSaveFile::SetScore(int score)
+void SceneSaveFile::SetTotalScore(int score)
 {
 	ofstream myFile;
 	if (select1)
-		myFile.open("Save1//Score.txt");
+		myFile.open("Save1//TotalScore.txt");
 	else if (select2)
-		myFile.open("Save2//Score.txt");
+		myFile.open("Save2//TotalScore.txt");
 	else if (select3)
-		myFile.open("Save3//Score.txt");
+		myFile.open("Save3//TotalScore.txt");
 	myFile << score << endl;
 	myFile.close();
 }

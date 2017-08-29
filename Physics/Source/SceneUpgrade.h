@@ -20,7 +20,7 @@ public:
 
 	//Setters
 	void SetCurrentLevel(int levelNo);
-	void SetScore(int score);
+	void SetTotalScore(int score);
 	void SetTempScore(int score);
 
 	//Getting and Setting of currency

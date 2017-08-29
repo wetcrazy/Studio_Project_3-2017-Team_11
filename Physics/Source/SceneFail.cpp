@@ -27,7 +27,7 @@ void SceneFail::Init()
 
 	i_saveFile = GetSaveFile();
 
-	i_score = GetScore();
+	i_score = GetLevelScore();
 
 	file_path = "CSV//highscore.csv";
 
@@ -37,17 +37,17 @@ void SceneFail::Init()
 
 	if (i_saveFile == 1)
 	{
-		file_ScoreDestination = "Save1//Score.txt";
+		file_ScoreDestination = "Save1//TotalScore.txt";
 		file_LevelDestination = "Save1//CurrentLevel.txt";
 	}
 	else if (i_saveFile == 2)
 	{
-		file_ScoreDestination = "Save2//Score.txt";
+		file_ScoreDestination = "Save2//TotalScore.txt";
 		file_LevelDestination = "Save2//CurrentLevel.txt";
 	}
 	else if (i_saveFile == 3)
 	{
-		file_ScoreDestination = "Save3//Score.txt";
+		file_ScoreDestination = "Save3//TotalScore.txt";
 		file_LevelDestination = "Save3//CurrentLevel.txt";
 	}
 	curr_highscore.HighScore_Calculator(file_ScoreDestination, file_LevelDestination);
@@ -99,8 +99,8 @@ void SceneFail::Update(double dt)
 	int w_temp = 100 * Application::GetWindowWidth() / Application::GetWindowHeight();
 
 	//Position values (for fail menu)
-	float posXDownArrow_MainMenu = 1.15f;
-	float posXDownArrow_Next = 0.59f;
+	float posXDownArrow_MainMenu = 1.14f;
+	float posXDownArrow_Next = 0.57f;
 	float posYDownArrow = 3.37f;
 
 	//Scale values (for fail menu)
@@ -176,7 +176,7 @@ void SceneFail::Update(double dt)
 	}
 }
 
-int SceneFail::GetScore()
+int SceneFail::GetLevelScore()
 {
 	int score;
 	ifstream myFile;

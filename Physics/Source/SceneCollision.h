@@ -40,12 +40,15 @@ public:
 	int GetCurrentLevel();
 
 	//Getting and Setting of score
-	void SetScore(int score);
-	int GetScore();
+	void SetTotalScore(int score);
+	int GetTotalScore();
 
 	//Getting and Setting of temporary score
 	void SetTempScore(int score);
 	int GetTempScore();
+
+	//Getting and Setting of level score
+	void SetLevelScore(int score);
 
 	//Getting and Setting of currency
 	void SetCurrency(int currency);
@@ -122,6 +125,9 @@ protected:
 
 	//TempScore.txt
 	int i_tempScore;
+
+	//Level score
+	int i_levelScore;
 
 	//TempCurrency.txt
 	int i_tempCurrency;

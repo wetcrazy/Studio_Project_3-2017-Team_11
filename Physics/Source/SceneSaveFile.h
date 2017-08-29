@@ -21,7 +21,7 @@ public:
 	//Setters
 	void SetSaveFile(int selected_file);
 	void SetCurrentLevel(int levelNo);
-	void SetScore(int score);
+	void SetTotalScore(int score);
 	void SetTempScore(int score);
 
 	//Setting of currency

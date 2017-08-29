@@ -149,7 +149,7 @@ void SceneUpgrade::Update(double dt)
 		SceneManager::getInstance()->changeScene(new SceneMainMenu());
 		SetCurrentLevel(1);
 		SetTempScore(0);
-		SetScore(0);
+		SetTotalScore(0);
 		SetCurrency(0);
 		SetTempCurrency(0);
 		if (i_saveFile == 1)
@@ -538,15 +538,15 @@ void SceneUpgrade::SetCurrentLevel(int levelNo)
 	myFile.close();
 }
 
-void SceneUpgrade::SetScore(int score)
+void SceneUpgrade::SetTotalScore(int score)
 {
 	ofstream myFile;
 	if (i_saveFile == 1)
-		myFile.open("Save1//Score.txt");
+		myFile.open("Save1//TotalScore.txt");
 	else if (i_saveFile == 2)
-		myFile.open("Save2//Score.txt");
+		myFile.open("Save2//TotalScore.txt");
 	else if (i_saveFile == 3)
-		myFile.open("Save3//Score.txt");
+		myFile.open("Save3//TotalScore.txt");
 	myFile << score << endl;
 	myFile.close();
 }
