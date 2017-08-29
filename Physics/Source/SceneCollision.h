@@ -88,6 +88,8 @@ protected:
 	//Scrolling
 	GameObject *projectile;
 
+	int i_projectileCount;
+
 	bool b_splitDone;
 	int i_despawnHexa;
 

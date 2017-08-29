@@ -53,6 +53,8 @@ void SceneCollision::Init()
 	projectile = FetchGO();
 	projectile->active = false;
 
+	i_projectileCount = 5;
+
 	i_despawnHexa = 3;
 	b_splitDone = false;
 
@@ -390,6 +392,7 @@ void SceneCollision::CollisionResponse(GameObject * go1, GameObject * go2)
 
 void SceneCollision::Update(double dt)
 {
+	std::cout << i_projectileCount << std::endl;
 	//std::cout << i_CurrentLevel << std::endl;
 	std::cout << i_despawnHexa << std::endl;
 	//if (b_raceConfirmed)
@@ -401,7 +404,6 @@ void SceneCollision::Update(double dt)
 	m_worldHeight = 100.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
 	
-	//std::cout << "Count : " << m_objectCount << " / " << m_objRestrict << std::endl;
 	SceneBase::Update(dt);
 
 	SetTempScore(i_tempScore);
@@ -460,7 +462,13 @@ void SceneCollision::Update(double dt)
 
 		if (posY > cannon->pos.y)
 		{
-			projectile->active = true;
+			if (i_projectileCount != 0)
+			{
+				projectile->active = true;
+				i_projectileCount--;
+			}
+			else
+				projectile->active = false;
 			//
 			if (i_projectileType == 1)
 				projectile->type = GameObject::GO_BALL;
@@ -671,7 +679,7 @@ void SceneCollision::Update(double dt)
 	{
 		speed = 45;
 	}
-	if (!projectile->active && i_despawnHexa == 0)
+	if (!projectile->active && i_despawnHexa <= 0)
 	{
 			i_despawnHexa = 3;
 			b_splitDone = false;
@@ -724,7 +732,7 @@ void SceneCollision::Update(double dt)
 			launched = 0;
 		else 
 		{
-			if (i_despawnHexa == 3)
+			if (i_despawnHexa == 3 || !b_splitDone)
 				launched = 0;
 		}
 	}
