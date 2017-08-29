@@ -391,7 +391,12 @@ void SceneCollision::CollisionResponse(GameObject * go1, GameObject * go2)
 void SceneCollision::Update(double dt)
 {
 	//std::cout << i_CurrentLevel << std::endl;
-	//std::cout << i_despawnHexa << std::endl;
+	std::cout << i_despawnHexa << std::endl;
+	//if (b_raceConfirmed)
+	//	std::cout << "Confirmed!\n";
+	//else
+	//	std::cout << "Unconfirmed!\n";
+	//
 	//Calculating aspect ratio
 	m_worldHeight = 100.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
@@ -533,14 +538,12 @@ void SceneCollision::Update(double dt)
 	{
 		bLButtonState = true;
 		std::cout << "LBUTTON UP" << std::endl;
-
 		//NumMode_tiggered_powerbar = 3;
 	}
 	else if (bLButtonState && !Application::IsMousePressed(0))
 	{
 		bLButtonState = false;
 		std::cout << "LBUTTON DOWN" << std::endl;
-		
 		NumMode_tiggered_powerbar = 3;
 	}
 	// Power Bar movement
@@ -620,11 +623,7 @@ void SceneCollision::Update(double dt)
 			m_objectCount = 0;
 		}
 	}
-	//if (b_raceConfirmed)
-	//	std::cout << "Confirmed!\n";
-	//else
-	//	std::cout << "Unconfirmed!\n";
-	//
+
 	if (projectile->active && !bLButtonState && Application::IsMousePressed(0) && !b_abilityUsed)
 	{
 		if (i_projectileType == 1)
@@ -672,16 +671,10 @@ void SceneCollision::Update(double dt)
 	{
 		speed = 45;
 	}
-	if (!projectile->active)
+	if (!projectile->active && i_despawnHexa == 0)
 	{
-		if (i_despawnHexa < 3)
-		{
 			i_despawnHexa = 3;
 			b_splitDone = false;
-		}
-		else
-		{
-		}
 	}
 
 	//Manual Scrolling=============================================//
@@ -726,7 +719,15 @@ void SceneCollision::Update(double dt)
 		launched = m_worldWidth;
 
 	if (!projectile->active)	//reset camera.position.x to initial position
-		launched = 0;
+	{
+		if (i_projectileType != 3)
+			launched = 0;
+		else 
+		{
+			if (i_despawnHexa == 3)
+				launched = 0;
+		}
+	}
 	//End of Scrolling============================================//
 
 
@@ -781,6 +782,7 @@ void SceneCollision::Update(double dt)
 				{
 					go->pos.SetZero();
 					go->active = false;
+					--i_despawnHexa;
 					--m_objectCount;
 					NumMode_tiggered_powerbar = 1;
 				}
