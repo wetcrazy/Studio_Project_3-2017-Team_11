@@ -95,8 +95,7 @@ void SceneCollision::Init()
 	CreateStuff();
 	CreateLevel(i_CurrentLevel);
 
-	Audio->play2D("8BitRadioactive.mp3", GL_TRUE);
-
+	Audio->play2D("moonman.mp3", GL_TRUE);
 }
 
 GameObject* SceneCollision::FetchGO()
@@ -529,6 +528,8 @@ void SceneCollision::Update(double dt)
 			raceTemp.f_setDraft(projectile);
 			raceTemp.sf_CheckRace_PTR();
 			b_raceConfirmed = raceTemp.b_CheckRace_GENERAL();
+
+			Audio->play2D("blast.wav", GL_FALSE);
 		}
 	}
 	//LButton Up
